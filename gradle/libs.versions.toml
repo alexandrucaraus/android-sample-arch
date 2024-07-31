@@ -1,4 +1,6 @@
+#################################
 [versions]
+#################################
 
 # Android
 appPackageId = "com.germanautolabs.acaraus"
@@ -12,17 +14,25 @@ coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
 composeBom = "2024.06.00"
+compose = "1.7.0-beta06"
+compose-nav = "2.8.0-beta06"
+
+koin-bom = "4.0.0-RC1"
+koin-ksp = "1.4.0-RC3"
 
 espressoCore = "3.6.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 
 # Plugins
-ktlint = "12.1.1"
 agp = "8.6.0-beta02"
+ksp = "2.0.0-1.0.24"
+ktlint = "12.1.1"
 test-coverage-plugin = "1.8.0"
 
+###################################
 [libraries]
+###################################
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -34,18 +44,39 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+androidx-compose-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "compose" }
+
+androidx-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-nav" }
+androidx-compose-navigation-common = { module = "androidx.navigation:navigation-common", version.ref = "compose-nav" }
+androidx-compose-navigation-common-ktx = { module = "androidx.navigation:navigation-common-ktx", version.ref = "compose-nav" }
+
+koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-android-compose = { module = "io.insert-koin:koin-androidx-compose" }
+koin-annotations = { module = "io.insert-koin:koin-annotations", version.ref = "koin-ksp" }
+koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-ksp" }
+
+
 # Instrumented tests
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
+
 # Unit tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
+#######################
 [plugins]
+######################
+
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 test-coverage = { id = "nl.neotech.plugin.rootcoverage", version.ref = "test-coverage-plugin" }
+
