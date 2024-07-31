@@ -6,3 +6,7 @@ plugins {
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.test.coverage) apply true
 }
+
+rootCoverage {
+    generateCsv = true
+}

@@ -27,8 +27,6 @@ dependencies {
     testImplementation(libs.junit)
 }
 
-ktlint { }
-
 android {
     namespace = libs.versions.appPackageId.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
