@@ -27,7 +27,8 @@ fun ArticleDetailScreen(
         navigationIcon = {
             IconButton(
                 modifier = Modifier.testTag("Close"),
-                onClick = { onNavigateBack() }) {
+                onClick = { onNavigateBack() },
+            ) {
                 Icon(imageVector = Icons.Default.Close, null)
             }
         },
