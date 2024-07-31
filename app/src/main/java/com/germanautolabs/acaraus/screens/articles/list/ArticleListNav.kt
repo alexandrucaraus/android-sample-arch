@@ -1,6 +1,7 @@
 package com.germanautolabs.acaraus.screens.articles.list
 
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.germanautolabs.acaraus.models.Article
@@ -16,7 +17,8 @@ fun NavGraphBuilder.articleListScreen(
         val vm = koinViewModel<ArticleListViewModel>()
         ArticleListScreen(
             modifier = modifier,
-            vm = vm,
+            listState = vm.listState.collectAsStateWithLifecycle().value,
+            filterState = vm.filterState.collectAsStateWithLifecycle().value,
             onNavigateToDetails = onNavigateToDetails,
         )
     }

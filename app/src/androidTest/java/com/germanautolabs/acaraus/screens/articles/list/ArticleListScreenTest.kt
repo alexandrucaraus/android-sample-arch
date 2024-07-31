@@ -2,6 +2,7 @@ package com.germanautolabs.acaraus.screens.articles.list
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.germanautolabs.acaraus.main.MainActivity
@@ -22,7 +23,7 @@ class ArticleListScreenTest {
 
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithText("Close").performClick()
+        composeTestRule.onNodeWithTag("Close").performClick()
 
         composeTestRule.waitForIdle()
 
