@@ -14,7 +14,6 @@ class ArticleListScreenTest {
 
     @Test
     fun testArticleListScreenToArticleDetailScreenNavigationAndBack() {
-
         composeTestRule.onNodeWithText("Title: Old news").performClick()
 
         composeTestRule.waitForIdle()
@@ -28,6 +27,5 @@ class ArticleListScreenTest {
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithText("Title: Old news").assertIsDisplayed()
-
     }
 }

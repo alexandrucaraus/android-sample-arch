@@ -14,7 +14,6 @@ fun ArticleDetailScreen(
     vm: ArticleDetailViewModel,
     onNavigateBack: () -> Unit,
 ) = Column(modifier = modifier.padding(all = 16.dp)) {
-
     Button(onClick = onNavigateBack) {
         Text("Close")
     }
