@@ -15,18 +15,17 @@ class ArticleListScreenTest {
 
     @Test
     fun testArticleListScreenToArticleDetailScreenNavigationAndBack() {
-        composeTestRule.onNodeWithText("Title: Old news").performClick()
+        composeTestRule.onNodeWithText("Old news").performClick()
 
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithText("Article Detail Screen article: 0").assertIsDisplayed()
-
+        composeTestRule.onNodeWithText("If you're someone who's got an iPhone", substring = true).assertIsDisplayed()
         composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithTag("Close").performClick()
 
         composeTestRule.waitForIdle()
 
-        composeTestRule.onNodeWithText("Title: Old news").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Old news").assertIsDisplayed()
     }
 }

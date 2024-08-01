@@ -5,7 +5,9 @@ data class Article(
     val source: String,
     val title: String,
     val description: String?,
+    val content: String,
     val imageURL: String?,
+    val contentUrl: String,
 )
 
 // todo remove
@@ -15,6 +17,8 @@ private val dummyArticle = Article(
     description = "Everything new is a well-forgotten old",
     source = "Internet",
     imageURL = null,
+    content = "",
+    contentUrl = "https://www.wired.com/story/bitcoin-bros-go-wild-for-donald-trump/",
 )
 
 val dummyArticleList = listOf(

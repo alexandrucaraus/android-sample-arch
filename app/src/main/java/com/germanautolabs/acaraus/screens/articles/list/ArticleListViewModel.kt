@@ -2,16 +2,14 @@ package com.germanautolabs.acaraus.screens.articles.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.germanautolabs.acaraus.models.Article
-import com.germanautolabs.acaraus.models.ArticleFilter
-import com.germanautolabs.acaraus.models.Result
-import com.germanautolabs.acaraus.models.dummyArticleList
+import com.germanautolabs.acaraus.data.ArticleRepository
+import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterState
+import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.android.annotation.KoinViewModel
-import org.koin.core.annotation.Factory
 
 @KoinViewModel
 class ArticleListViewModel(
@@ -25,6 +23,7 @@ class ArticleListViewModel(
 
     private val defaultFilterState = ArticleFilterState(
         setQuery = ::setFilterQuery,
+        show = ::toggleFilter,
     )
 
     val listState = MutableStateFlow(defaultArticleListState)
@@ -68,31 +67,8 @@ class ArticleListViewModel(
 
     private fun setFilterQuery(query: String) {
     }
-}
 
-data class ArticleListState(
-    val list: List<Article> = emptyList(),
-    val isLoading: Boolean = false,
-    val isError: Boolean = false,
-    val errorMessage: String? = null,
-    val isListening: Boolean = false,
-    val load: () -> Unit,
-    val toggleListening: () -> Unit,
-)
-
-data class ArticleFilterState(
-    val filter: ArticleFilter = ArticleFilter(),
-    val setQuery: (String) -> Unit,
-)
-
-@Factory
-class ArticleRepository {
-
-    suspend fun get(param: Params): Result<List<Article>, String> {
-        return Result.success(dummyArticleList)
+    private fun toggleFilter() {
+        filterState.update { it.copy(isVisible = !it.isVisible) }
     }
-
-    data class Params(
-        val filter: ArticleFilter,
-    )
 }
