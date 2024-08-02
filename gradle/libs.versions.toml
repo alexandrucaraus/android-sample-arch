@@ -22,8 +22,6 @@ koin-ksp = "1.4.0-RC3"
 
 coil = "2.6.0"
 
-compose-calendar = "1.3.0"
-
 espressoCore = "3.6.1"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -66,8 +64,6 @@ koin-ksp = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-ks
 coil = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 androidx-browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
-
-compose-calendar = { module="io.github.boguszpawlowski.composecalendar:composecalendar", version.ref = "compose-calendar" }
 
 # Instrumented tests
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

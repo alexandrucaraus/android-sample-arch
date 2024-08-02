@@ -18,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import io.github.boguszpawlowski.composecalendar.SelectableCalendar
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -79,7 +78,7 @@ fun IntervalDatePickerScreen(
                 Text("Cancel")
             }
         }) {
-            SelectableCalendar()
+            DatePicker(state = datePickerState)
         }
     }
 }

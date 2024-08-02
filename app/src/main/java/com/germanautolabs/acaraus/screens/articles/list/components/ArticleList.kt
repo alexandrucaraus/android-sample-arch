@@ -33,8 +33,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.germanautolabs.acaraus.data.dummyArticleList
 import com.germanautolabs.acaraus.models.Article
-import com.germanautolabs.acaraus.models.dummyArticleList
 import com.germanautolabs.acaraus.screens.articles.list.ArticleListScreen
 
 data class ArticleListState(
@@ -97,12 +97,11 @@ fun ArticleListItem(
     modifier = modifier.fillMaxWidth(),
     onClick = { onNavigateToDetails(article) },
 ) {
-    val imageUrl = "https://fastly.picsum.photos/id/633/200/300.jpg?hmac=TdUWNg34fjigifBBMXrwci0tVpiezw92QqwoO2oDJak"
     var expanded by remember { mutableStateOf(false) }
     AsyncImage(
         modifier = Modifier.fillMaxWidth().height(200.dp),
         contentDescription = article.description,
-        model = imageUrl,
+        model = article.imageURL,
         contentScale = ContentScale.Crop,
     )
     Row(
