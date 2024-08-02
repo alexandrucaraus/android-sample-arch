@@ -2,11 +2,18 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
+    kotlin("plugin.parcelize")
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
 }
 
 dependencies {
+
+    implementation(kotlin("reflect"))
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialisation.json)
+    implementation(libs.kotlinx.datetime)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -27,10 +34,20 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.android.compose)
     implementation(libs.koin.annotations)
-    implementation(libs.androidx.browser)
     ksp(libs.koin.ksp)
 
     implementation(libs.coil)
+
+    implementation(libs.androidx.browser)
+
+    implementation(libs.ktor)
+    implementation(libs.ktor.cio)
+    implementation(libs.ktor.logging)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.serialization.json)
+    implementation(libs.ktor.encoding)
+    implementation(libs.ktor.okhttp)
+    implementation(libs.ktor.logback)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -41,6 +58,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.koin.test)
 }
 
 android {
@@ -87,7 +106,7 @@ android {
 
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/{AL2.0,LGPL2.1,INDEX.LIST}"
         }
     }
 }

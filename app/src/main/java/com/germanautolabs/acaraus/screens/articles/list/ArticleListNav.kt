@@ -17,8 +17,8 @@ fun NavGraphBuilder.articleListScreen(
         val vm = koinViewModel<ArticleListViewModel>()
         ArticleListScreen(
             modifier = modifier,
-            articleListState = vm.listState.collectAsStateWithLifecycle().value,
-            articleFilterState = vm.filterState.collectAsStateWithLifecycle().value,
+            articleListState = vm.articleListState.collectAsStateWithLifecycle().value,
+            articleFilterState = vm.filterEditorState.collectAsStateWithLifecycle().value,
             onNavigateToDetails = onNavigateToDetails,
         )
     }

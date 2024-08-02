@@ -9,4 +9,3 @@ data class Article(
     val imageURL: String?,
     val contentUrl: String,
 )
-

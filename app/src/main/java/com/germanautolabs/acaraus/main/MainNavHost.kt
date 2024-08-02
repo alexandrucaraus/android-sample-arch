@@ -1,5 +1,8 @@
 package com.germanautolabs.acaraus.main
 
+import android.content.Context
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -32,4 +35,12 @@ fun MainNavHost(
         modifier = modifier,
         onNavigateBack = navController::popBackStack,
     )
+}
+
+fun launchBrowserCustomTab(activityContext: Context, url: String) {
+    val uri = Uri.parse(url)
+    val customTabsIntent = CustomTabsIntent.Builder()
+        .setShowTitle(true)
+        .build()
+    customTabsIntent.launchUrl(activityContext, uri)
 }

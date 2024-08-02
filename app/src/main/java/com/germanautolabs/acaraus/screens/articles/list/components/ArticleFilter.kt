@@ -13,13 +13,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.germanautolabs.acaraus.models.ArticleFilter
@@ -32,7 +30,6 @@ import java.time.LocalDate
 data class ArticleFilterState(
     val filter: ArticleFilter = ArticleFilter(),
     val isVisible: Boolean = false,
-    val isSet: Boolean = false,
     val setQuery: (String) -> Unit = {},
     val setSortBy: (SortBy) -> Unit = {},
     val setSource: (ArticleSource) -> Unit = {},
@@ -40,27 +37,30 @@ data class ArticleFilterState(
     val setFromDate: (LocalDate) -> Unit = {},
     val setToDate: (LocalDate) -> Unit = {},
     val show: () -> Unit = {},
+    val hide: () -> Unit = {},
     val apply: () -> Unit = {},
     val reset: () -> Unit = {},
-)
+) {
+    val isSet get() = filter != ArticleFilter()
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleFilter(
     modifier: Modifier = Modifier,
     filterState: ArticleFilterState,
-    initialValue: SheetValue = SheetValue.Hidden,
+    // initialValue: SheetValue = SheetValue.Hidden,
 ) {
     if (filterState.isVisible.not()) return
 
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
+
     ModalBottomSheet(
         modifier = modifier,
-        sheetState = SheetState(
-            skipPartiallyExpanded = true,
-            density = LocalDensity.current,
-            initialValue = initialValue,
-        ),
-        onDismissRequest = filterState.show,
+        sheetState = sheetState,
+        onDismissRequest = filterState.hide,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             OutlinedTextField(
@@ -80,9 +80,10 @@ fun ArticleFilter(
             Dropdown(
                 modifier = Modifier.padding(top = 16.dp),
                 label = "Sort by",
-                selection = "Most recent",
-                options = setOf("Most recent", "Relevancy", "Popularity"),
-            ) { }
+                selection = filterState.filter.sortedBy.name,
+                options = SortBy.entries.map { it.name }.toSet(),
+                onSelect = { filterState.setSortBy(SortBy.valueOf(it)) },
+            )
             Dropdown(
                 modifier = Modifier.padding(top = 16.dp),
                 label = "Sources",
@@ -123,9 +124,8 @@ fun ArticleFilter(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview(showBackground = true)
 fun ArticleFilterPreview() {
-    ArticleFilter(filterState = ArticleFilterState().copy(isVisible = true), initialValue = SheetValue.Expanded)
+    // ArticleFilter(filterState = ArticleFilterState().copy(isVisible = true), initialValue = SheetValue.Expanded)
 }

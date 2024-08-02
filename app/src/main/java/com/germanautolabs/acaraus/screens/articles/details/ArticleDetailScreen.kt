@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.germanautolabs.acaraus.data.launchBrowserCustomTab
+import com.germanautolabs.acaraus.main.launchBrowserCustomTab
 
 data class ArticleDetailState(
     val imageUrl: String,

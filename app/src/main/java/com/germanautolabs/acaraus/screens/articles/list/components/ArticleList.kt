@@ -30,10 +30,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.germanautolabs.acaraus.data.dummyArticleList
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.screens.articles.list.ArticleListScreen
 
@@ -109,7 +109,12 @@ fun ArticleListItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(modifier = Modifier.weight(1f).padding(start = 8.dp, top = 8.dp, bottom = 8.dp)) {
-            Text(style = MaterialTheme.typography.titleMedium, text = article.title)
+            Text(
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                text = article.title,
+            )
             Text(style = MaterialTheme.typography.labelMedium, text = article.source)
         }
         if (article.description != null) {
@@ -155,16 +160,16 @@ fun ArticleListError(
     }
 }
 
-@Composable
-@Preview
-fun ArticleListStateSuccessPreview() {
-    ArticleListScreen(
-        modifier = Modifier.fillMaxSize(),
-        articleListState = ArticleListState(list = dummyArticleList),
-        articleFilterState = ArticleFilterState(),
-        onNavigateToDetails = {},
-    )
-}
+// @Composable
+// @Preview
+// fun ArticleListStateSuccessPreview() {
+//    ArticleListScreen(
+//        modifier = Modifier.fillMaxSize(),
+//        articleListState = ArticleListState(list = dummyArticleList),
+//        articleFilterState = ArticleFilterState(),
+//        onNavigateToDetails = {},
+//    )
+// }
 
 @Composable
 @Preview
