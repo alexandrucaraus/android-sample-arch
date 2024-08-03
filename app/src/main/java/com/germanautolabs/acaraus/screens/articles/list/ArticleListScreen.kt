@@ -26,6 +26,7 @@ import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilter
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterState
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleList
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
+import com.germanautolabs.acaraus.screens.components.RequestRecordAudioPermission
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +58,11 @@ fun ArticleListScreen(
     )
 }, floatingActionButton = {
     FloatingActionButton(onClick = articleListState.toggleListening) {
-        Icon(Icons.Default.Mic, contentDescription = "Listen commands")
+        Icon(
+            Icons.Default.Mic,
+            tint = if (articleListState.isListening) Color.Red else Color.Black,
+            contentDescription = "Listen commands",
+        )
     }
 }, content = { padding ->
     Column {
@@ -68,5 +73,7 @@ fun ArticleListScreen(
         )
 
         ArticleFilter(filterState = articleFilterState)
+
+        RequestRecordAudioPermission()
     }
 })

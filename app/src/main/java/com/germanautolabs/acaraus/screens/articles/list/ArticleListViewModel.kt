@@ -4,6 +4,8 @@ package com.germanautolabs.acaraus.screens.articles.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.germanautolabs.acaraus.data.SpeechEvent
+import com.germanautolabs.acaraus.data.SpeechRecognizer
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
@@ -31,6 +33,7 @@ class ArticleListViewModel(
     setLocale: SetLocale,
     getLocale: GetLocale,
     newsLanguage: GetNewsLanguage,
+    private val speechRecognizer: SpeechRecognizer,
 ) : ViewModel() {
 
     private val defaultArticleListState = ArticleListState(
@@ -58,6 +61,16 @@ class ArticleListViewModel(
             .flatMapLatest(observeArticles::stream)
             .onEach(::updateArticleListState)
             .launchIn(viewModelScope)
+
+        speechRecognizer.events().onEach { event ->
+            when (event) {
+                is SpeechEvent.Result -> println(event.result)
+                is SpeechEvent.PartialResult -> println(event.result)
+                is SpeechEvent.BeginOfSpeech -> articleListState.update { it.copy(isListening = true) }
+                is SpeechEvent.EndOfSpeech -> articleListState.update { it.copy(isListening = false) }
+                else -> println(event)
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun updateArticleListState(result: Result<List<Article>, Error>) {
@@ -87,5 +100,11 @@ class ArticleListViewModel(
         viewModelScope.launch { articleListLoadRetry.emit(Unit) }
     }
 
-    private fun toggleListening() {}
+    private fun toggleListening() {
+        if (speechRecognizer.isListening.value) {
+            speechRecognizer.stopListening()
+        } else {
+            speechRecognizer.startListening()
+        }
+    }
 }
