@@ -29,20 +29,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.germanautolabs.acaraus.main.launchBrowserCustomTab
-
-data class ArticleDetailState(
-    val imageUrl: String,
-    val title: String,
-    val content: String,
-    val contentUrl: String,
-    val source: String,
-)
+import com.germanautolabs.acaraus.models.Article
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ArticleDetailScreen(
     modifier: Modifier = Modifier,
-    state: ArticleDetailState,
+    state: Article,
     onNavigateBack: () -> Unit,
 ) = Scaffold(
     modifier = modifier,
@@ -77,7 +70,7 @@ fun ArticleDetailScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            model = state.imageUrl,
+            model = state.imageURL,
             contentScale = ContentScale.Crop,
             contentDescription = null,
         )

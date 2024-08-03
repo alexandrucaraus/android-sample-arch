@@ -5,15 +5,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.germanautolabs.acaraus.models.Article
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 
-const val ARTICLE_LIST_ROUTE = "article-list"
+@Serializable
+object ArticleListNode
 
-fun NavGraphBuilder.articleListScreen(
+fun NavGraphBuilder.articleListNavNode(
     modifier: Modifier = Modifier,
     onNavigateToDetails: (article: Article) -> Unit,
 ) {
-    composable(route = ARTICLE_LIST_ROUTE) {
+    composable<ArticleListNode> {
         val vm = koinViewModel<ArticleListViewModel>()
         ArticleListScreen(
             modifier = modifier,

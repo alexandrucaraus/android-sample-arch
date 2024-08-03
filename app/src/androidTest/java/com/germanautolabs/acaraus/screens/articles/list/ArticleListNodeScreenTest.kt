@@ -9,7 +9,7 @@ import com.germanautolabs.acaraus.main.MainActivity
 import org.junit.Rule
 import org.junit.Test
 
-class ArticleListScreenTest {
+class ArticleListNodeScreenTest {
 
     @get:Rule val composeTestRule = createAndroidComposeRule<MainActivity>()
 

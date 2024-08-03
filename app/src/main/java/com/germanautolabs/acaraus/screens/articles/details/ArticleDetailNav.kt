@@ -5,23 +5,28 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
+import com.germanautolabs.acaraus.main.serializableType
 import com.germanautolabs.acaraus.models.Article
+import kotlinx.serialization.Serializable
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.reflect.typeOf
 
-const val ARTICLE_DETAIL_ROUTE = "article-detail"
-private const val ARTICLE_ID_PARAM = "article-id"
+@Serializable
+data class ArticleDetailNode(val article: Article)
 
-fun NavController.onNavigateToDetails(article: Article) =
-    navigate("$ARTICLE_DETAIL_ROUTE/?$ARTICLE_ID_PARAM=${article.id}")
+fun NavController.onNavigateToArticleDetail(article: Article) = navigate(ArticleDetailNode(article))
 
-fun NavGraphBuilder.articleDetailScreen(
+fun NavGraphBuilder.articleDetailNavNode(
     modifier: Modifier = Modifier,
     onNavigateBack: () -> Unit,
 ) {
-    composable(route = "$ARTICLE_DETAIL_ROUTE/?$ARTICLE_ID_PARAM={$ARTICLE_ID_PARAM}") { backStack ->
-        val articleId = backStack.arguments?.getString(ARTICLE_ID_PARAM)
-        val vm = koinViewModel<ArticleDetailViewModel> { parametersOf(articleId) }
+    composable<ArticleDetailNode>(
+        typeMap = mapOf(typeOf<Article>() to serializableType<Article>()),
+    ) { backStack ->
+        val article = backStack.toRoute<ArticleDetailNode>().article
+        val vm = koinViewModel<ArticleDetailViewModel> { parametersOf(article) }
         ArticleDetailScreen(
             modifier = modifier,
             state = vm.state.collectAsStateWithLifecycle().value,

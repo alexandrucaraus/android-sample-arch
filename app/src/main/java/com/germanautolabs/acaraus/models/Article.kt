@@ -1,5 +1,8 @@
 package com.germanautolabs.acaraus.models
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Article(
     val id: String,
     val source: String,

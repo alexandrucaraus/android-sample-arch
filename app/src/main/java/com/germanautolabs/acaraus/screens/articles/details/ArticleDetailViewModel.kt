@@ -1,23 +1,25 @@
 package com.germanautolabs.acaraus.screens.articles.details
 
 import androidx.lifecycle.ViewModel
+import com.germanautolabs.acaraus.models.Article
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class ArticleDetailViewModel(
-    @InjectedParam val articleId: String,
+    @InjectedParam val article: Article,
 ) : ViewModel() {
-
-    val state = MutableStateFlow(dummyArticleDetails)
+    val state = MutableStateFlow(article)
 }
 
-val dummyArticleDetails = ArticleDetailState(
-    imageUrl = "https://picsum.photos/200",
+val dummyArticleDetails = Article(
+    id = "",
+    imageURL = "https://picsum.photos/200",
     title = "Belkin's 3-in-1 MagSafe Charging Stand Is as Cheap Now as It Was During Prime Day",
     source = "CNET",
     contentUrl = "https://www.cnet.com/news/belkins-3-in-1-magsafe-charging-stand-is-as-cheap-now-as-it-was-during-prime-day/",
+    description = null,
     content = "\n" +
         "If you're someone who's got an iPhone, an Apple Watch and some AirPods, then having a convenient way to charge them all is a huge boon. Belkin has just the ticket with its three-in-one BoostCharge Pro MagSafe charger, now on sale for just \$100 at Amazon -- the same record-low price it hit during Prime Day. It's one of our favorite wireless chargers for those after a MagSafe-enabled solution. \n" +
         "\n" +
