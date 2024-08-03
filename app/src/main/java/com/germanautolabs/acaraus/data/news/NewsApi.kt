@@ -105,7 +105,6 @@ class NewsApiImpl(
 
     companion object {
 
-        const val COUNTRY = "country"
         const val CATEGORY = "category"
 
         const val QUERY = "q"

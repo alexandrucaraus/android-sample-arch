@@ -18,11 +18,11 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 class ArticleFilterStateHolder(
-    private val observeSources: ObserveSources,
+    observeSources: ObserveSources,
     private val setLocale: SetLocale,
     private val getLocale: GetLocale,
     private val newsLanguage: GetNewsLanguage,
-    private val currentScope: CoroutineScope,
+    currentScope: CoroutineScope,
 ) {
 
     private val defaultFilterState = ArticleFilterState(

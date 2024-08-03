@@ -27,10 +27,10 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class ArticleListViewModel(
     private val observeArticles: ObserveArticles,
-    private val observeSources: ObserveSources,
-    private val setLocale: SetLocale,
-    private val getLocale: GetLocale,
-    private val newsLanguage: GetNewsLanguage,
+    observeSources: ObserveSources,
+    setLocale: SetLocale,
+    getLocale: GetLocale,
+    newsLanguage: GetNewsLanguage,
 ) : ViewModel() {
 
     private val defaultArticleListState = ArticleListState(
@@ -49,7 +49,7 @@ class ArticleListViewModel(
     )
 
     val filterEditorState = filterStateHolder.filterEditorState
-    val currentFilter = filterStateHolder.currentFilter
+    private val currentFilter = filterStateHolder.currentFilter
 
     init {
         merge(articleListLoadRetry, filterStateHolder.currentFilter)

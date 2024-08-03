@@ -8,5 +8,4 @@ class GetLocale(
     private val localeStore: LocaleStore,
 ) {
     fun languageCode(): String = localeStore.getLanguageCode()
-    fun countryCode(): String = localeStore.getCountryCode()
 }

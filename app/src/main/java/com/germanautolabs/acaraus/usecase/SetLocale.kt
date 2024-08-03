@@ -10,7 +10,4 @@ class SetLocale(
     fun languageCode(code: String) {
         localeStore.setLanguageCode(code)
     }
-    fun countryCode(code: String) {
-        localeStore.setCountryCode(code)
-    }
 }
