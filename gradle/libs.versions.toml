@@ -17,7 +17,7 @@ kotlin = "2.0.0"
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
-composeBom = "2024.06.00"
+composeBom = "2024.06.00" # TODO should use 1.7
 compose = "1.7.0-beta06"
 compose-nav = "2.8.0-beta06"
 

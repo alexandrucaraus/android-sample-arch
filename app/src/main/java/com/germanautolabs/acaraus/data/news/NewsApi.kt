@@ -9,10 +9,8 @@ import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.request.HttpSendPipeline
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
-import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Named
@@ -22,10 +20,13 @@ interface NewsApi {
 
     suspend fun getHeadlines(
         language: String = "de",
-        country: String = "de",
+        category: String = "general",
     ): Result<List<Article>, Error>
 
-    suspend fun getSources(): Result<List<ArticleSource>, Error>
+    suspend fun getSources(
+        language: String = "de",
+        category: String = "general",
+    ): Result<List<ArticleSource>, Error>
 
     suspend fun getEverything(filter: ArticleFilter): Result<List<Article>, Error>
 }
@@ -34,23 +35,16 @@ interface NewsApi {
 class NewsApiImpl(
     private val httpClient: HttpClient,
     @Named("baseUrl") private val baseUrl: String,
-    @Named("newsApiKey") private val newsApiKey: String,
     private val dispatchers: Dispatchers,
 ) : NewsApi {
 
-    init {
-        httpClient.sendPipeline.intercept(HttpSendPipeline.State) {
-            context.headers.append(HttpHeaders.Authorization, newsApiKey)
-        }
-    }
-
     override suspend fun getHeadlines(
         language: String,
-        country: String,
+        category: String,
     ): Result<List<Article>, Error> = withContext(dispatchers.io) {
         val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines")) {
             parameter(LANGUAGE, language)
-            parameter(COUNTRY, country)
+            parameter(CATEGORY, category)
         }.body()
 
         when (response) {
@@ -63,9 +57,13 @@ class NewsApiImpl(
         }
     }
 
-    override suspend fun getSources(): Result<List<ArticleSource>, Error> =
+    override suspend fun getSources(
+        language: String,
+        category: String,
+    ): Result<List<ArticleSource>, Error> =
         withContext(dispatchers.io) {
-            val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines/sources")).body()
+            val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines/sources")) {
+            }.body()
 
             when (response) {
                 is NewsApiSources -> response.sources.map(NewsApiSource::toArticleSource)
@@ -85,7 +83,7 @@ class NewsApiImpl(
                     parameter(QUERY, filter.query)
                 }
                 if (filter.sources.isNotEmpty()) {
-                    parameter(SOURCES, filter.sources.joinToString(","))
+                    parameter(SOURCES, filter.sources.joinToString(",") { it.id })
                 }
                 if (filter.sources.isNotEmpty()) {
                     parameter(SORT_BY, filter.sortedBy.toNewsApiSortBy())
@@ -108,6 +106,7 @@ class NewsApiImpl(
     companion object {
 
         const val COUNTRY = "country"
+        const val CATEGORY = "category"
 
         const val QUERY = "q"
         const val SOURCES = "sources"
@@ -124,7 +123,12 @@ private fun SortBy.toNewsApiSortBy() = when (this) {
     SortBy.MostRecent -> "publishedAt"
 }
 
-private fun NewsApiSource.toArticleSource() = ArticleSource(name = name)
+private fun NewsApiSource.toArticleSource() = ArticleSource(
+    id = id ?: "",
+    name = name,
+    language = language ?: "en",
+    category = category ?: "general",
+)
 
 private fun NewsApiArticle.toArticle() = Article(
     id = hashCode().toString(),

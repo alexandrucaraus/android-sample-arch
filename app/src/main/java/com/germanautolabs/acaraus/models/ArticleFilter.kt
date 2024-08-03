@@ -18,5 +18,8 @@ enum class SortBy {
 }
 
 data class ArticleSource(
+    val id: String,
     val name: String,
+    val language: String,
+    val category: String,
 )

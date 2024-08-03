@@ -30,10 +30,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.germanautolabs.acaraus.R
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.screens.articles.list.ArticleListScreen
 
@@ -43,7 +45,7 @@ data class ArticleListState(
     val isError: Boolean = false,
     val errorMessage: String? = null,
     val isListening: Boolean = false,
-    val load: () -> Unit = {},
+    val retry: () -> Unit = {},
     val toggleListening: () -> Unit = {},
 )
 
@@ -57,11 +59,16 @@ fun ArticleList(
         listState.isLoading -> ArticleListLoading(
             modifier = Modifier.align(Alignment.Center),
         )
+
         listState.isError -> ArticleListError(
             modifier = Modifier.align(Alignment.Center),
-            retry = listState.load,
+            retry = listState.retry,
             errorMessage = listState.errorMessage!!,
         )
+
+        listState.list.isEmpty() ->
+            ArticleListEmpty(modifier = Modifier.align(Alignment.Center))
+
         else -> ArticleListSuccess(
             articles = listState.list,
             onNavigateToDetails = onNavigateToDetails,
@@ -98,17 +105,26 @@ fun ArticleListItem(
     onClick = { onNavigateToDetails(article) },
 ) {
     var expanded by remember { mutableStateOf(false) }
-    AsyncImage(
-        modifier = Modifier.fillMaxWidth().height(200.dp),
-        contentDescription = article.description,
-        model = article.imageURL,
-        contentScale = ContentScale.Crop,
-    )
+    if (article.imageURL.isNullOrEmpty().not()) {
+        AsyncImage(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp),
+            contentDescription = article.description,
+            model = article.imageURL,
+            placeholder = painterResource(id = R.drawable.ic_launcher_foreground),
+            contentScale = ContentScale.Crop,
+        )
+    }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Column(modifier = Modifier.weight(1f).padding(start = 8.dp, top = 8.dp, bottom = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp, top = 8.dp, bottom = 8.dp),
+        ) {
             Text(
                 style = MaterialTheme.typography.titleMedium,
                 maxLines = 2,
@@ -117,7 +133,7 @@ fun ArticleListItem(
             )
             Text(style = MaterialTheme.typography.labelMedium, text = article.source)
         }
-        if (article.description != null) {
+        if (article.description.isNullOrEmpty().not()) {
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
                     imageVector = if (expanded) Icons.Default.UnfoldLess else Icons.Default.UnfoldMore,
@@ -128,7 +144,9 @@ fun ArticleListItem(
     }
     AnimatedVisibility(
         visible = expanded,
-        modifier = Modifier.padding(horizontal = 16.dp).padding(bottom = 8.dp),
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .padding(bottom = 8.dp),
     ) {
         Text(
             style = MaterialTheme.typography.bodySmall,
@@ -147,6 +165,15 @@ fun ArticleListLoading(
 }
 
 @Composable
+fun ArticleListEmpty(
+    modifier: Modifier = Modifier,
+) = Card(modifier = modifier) {
+    Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("No results, change filter settings")
+    }
+}
+
+@Composable
 fun ArticleListError(
     modifier: Modifier = Modifier,
     retry: () -> Unit,
@@ -159,17 +186,6 @@ fun ArticleListError(
         }
     }
 }
-
-// @Composable
-// @Preview
-// fun ArticleListStateSuccessPreview() {
-//    ArticleListScreen(
-//        modifier = Modifier.fillMaxSize(),
-//        articleListState = ArticleListState(list = dummyArticleList),
-//        articleFilterState = ArticleFilterState(),
-//        onNavigateToDetails = {},
-//    )
-// }
 
 @Composable
 @Preview

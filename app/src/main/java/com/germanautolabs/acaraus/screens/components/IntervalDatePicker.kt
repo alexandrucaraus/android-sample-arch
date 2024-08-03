@@ -25,7 +25,9 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun IntervalDatePickerScreen(
     modifier: Modifier = Modifier,
+    fromLabel: String = "Oldest",
     from: LocalDate = LocalDate.now(),
+    toLabel: String = "Newest",
     to: LocalDate = LocalDate.now().minusMonths(1),
     onFromChange: (LocalDate) -> Unit = {},
     onToChange: (LocalDate) -> Unit = {},
@@ -39,10 +41,10 @@ fun IntervalDatePickerScreen(
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Button(onClick = { showStartDatePicker = true }) {
-            Text("From: ${from.format()}")
+            Text("$fromLabel: ${from.format()}")
         }
         Button(onClick = { showEndDatePicker = true }) {
-            Text("To: ${to.format()}")
+            Text("$toLabel: ${to.format()}")
         }
     }
 

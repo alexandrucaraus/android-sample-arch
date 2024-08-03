@@ -20,28 +20,47 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.germanautolabs.acaraus.models.ArticleFilter
-import com.germanautolabs.acaraus.models.ArticleSource
-import com.germanautolabs.acaraus.models.SortBy
 import com.germanautolabs.acaraus.screens.components.Dropdown
 import com.germanautolabs.acaraus.screens.components.IntervalDatePickerScreen
 import java.time.LocalDate
 
 data class ArticleFilterState(
-    val filter: ArticleFilter = ArticleFilter(),
+
     val isVisible: Boolean = false,
+
+    val query: String = "",
     val setQuery: (String) -> Unit = {},
-    val setSortBy: (SortBy) -> Unit = {},
-    val setSource: (ArticleSource) -> Unit = {},
+
+    val setSortBy: (String) -> Unit = {},
+    val sortBy: String = "MostRecent",
+    val sortByOptions: Set<String> = emptySet(),
+
+    val source: String = "All",
+    val sourceOptions: Set<String> = emptySet(),
+    val setSource: (String) -> Unit = {},
+
+    val language: String = "English",
+    val languageOptions: Set<String> = emptySet(),
     val setLanguage: (String) -> Unit = {},
+
+    val fromOldestDate: LocalDate = LocalDate.now().minusMonths(1),
     val setFromDate: (LocalDate) -> Unit = {},
+
+    val toNewestDate: LocalDate = LocalDate.now(),
     val setToDate: (LocalDate) -> Unit = {},
+
     val show: () -> Unit = {},
     val hide: () -> Unit = {},
     val apply: () -> Unit = {},
     val reset: () -> Unit = {},
+
 ) {
-    val isSet get() = filter != ArticleFilter()
+    val isSet get() =
+        query.isNotBlank() ||
+            sortBy != "MostRecent" ||
+            source != "All" ||
+            fromOldestDate != LocalDate.now().minusMonths(1) ||
+            toNewestDate != LocalDate.now()
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -65,41 +84,45 @@ fun ArticleFilter(
         Column(modifier = Modifier.padding(16.dp)) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
-                value = filterState.filter.query,
+                value = filterState.query,
                 onValueChange = filterState.setQuery,
                 placeholder = { Text("Search topics") },
                 trailingIcon = {
-                    IconButton(onClick = { filterState.setQuery("") }) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = null,
-                        )
+                    if (filterState.query.isNotBlank()) {
+                        IconButton(onClick = { filterState.setQuery("") }) {
+                            Icon(
+                                imageVector = Icons.Default.Close,
+                                contentDescription = null,
+                            )
+                        }
                     }
                 },
             )
             Dropdown(
                 modifier = Modifier.padding(top = 16.dp),
                 label = "Sort by",
-                selection = filterState.filter.sortedBy.name,
-                options = SortBy.entries.map { it.name }.toSet(),
-                onSelect = { filterState.setSortBy(SortBy.valueOf(it)) },
+                selection = filterState.sortBy,
+                options = filterState.sortByOptions,
+                onSelect = filterState.setSortBy,
             )
             Dropdown(
                 modifier = Modifier.padding(top = 16.dp),
                 label = "Sources",
-                selection = "All",
-                options = setOf("All", "Source 1", "Source 2"),
-            ) { }
+                selection = filterState.source,
+                options = filterState.sourceOptions,
+                onSelect = filterState.setSource,
+            )
             Dropdown(
                 modifier = Modifier.padding(top = 16.dp),
                 label = "Language",
-                selection = "All",
-                options = setOf("English", "French", "German"),
-            ) { }
+                selection = filterState.language,
+                options = filterState.languageOptions,
+                onSelect = filterState.setLanguage,
+            )
             IntervalDatePickerScreen(
                 modifier = Modifier.padding(top = 16.dp),
-                from = filterState.filter.fromDate,
-                to = filterState.filter.toDate,
+                from = filterState.fromOldestDate,
+                to = filterState.toNewestDate,
                 onFromChange = filterState.setFromDate,
                 onToChange = filterState.setToDate,
             )

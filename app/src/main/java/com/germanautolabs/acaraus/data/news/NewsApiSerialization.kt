@@ -12,7 +12,7 @@ import kotlinx.serialization.modules.subclass
 
 object NewsApiResponseSerializer :
     JsonContentPolymorphicSerializer<NewsApiResponse>(NewsApiResponse::class) {
-    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<out NewsApiResponse> {
+    override fun selectDeserializer(element: JsonElement): DeserializationStrategy<NewsApiResponse> {
         return when (element.jsonObject["status"]?.jsonPrimitive?.content) {
             "ok" -> objectDeserializer(element)
             "error" -> NewsApiError.serializer()
