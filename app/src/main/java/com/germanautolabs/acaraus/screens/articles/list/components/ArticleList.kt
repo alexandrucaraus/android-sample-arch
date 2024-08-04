@@ -45,6 +45,7 @@ data class ArticleListState(
     val isError: Boolean = false,
     val errorMessage: String? = null,
     val isListening: Boolean = false,
+    val hasSpeechRecognition: Boolean = false,
     val retry: () -> Unit = {},
     val toggleListening: () -> Unit = {},
 )

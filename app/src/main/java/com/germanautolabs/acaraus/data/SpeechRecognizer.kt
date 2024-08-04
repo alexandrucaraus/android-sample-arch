@@ -18,23 +18,31 @@ sealed class SpeechEvent {
     data class RmsChanged(val rms: Float) : SpeechEvent()
     data class BufferReceived(val buffer: ByteArray) : SpeechEvent()
     data object EndOfSpeech : SpeechEvent()
-    data class Error(val code: Int) : SpeechEvent()
-    data class PartialResult(val result: Bundle) : SpeechEvent()
-    data class Result(val result: Bundle) : SpeechEvent()
+    data class Error(val code: String) : SpeechEvent()
+    data class PartialResult(val matches: List<String>) : SpeechEvent()
+    data class Result(val matches: List<String>) : SpeechEvent()
     data class SubEvent(val subEvent: Int) : SpeechEvent()
 }
 
 interface SpeechRecognizer {
+    val isListening: MutableStateFlow<Boolean>
+    val isAvailable: MutableStateFlow<Boolean>
     fun startListening()
     fun stopListening()
     fun events(): Flow<SpeechEvent>
-    val isListening: MutableStateFlow<Boolean>
+    fun destroy()
 }
 
 @Factory(binds = [SpeechRecognizer::class])
 class SpeechRecognizerImpl(
     private val context: Context,
 ) : SpeechRecognizer {
+
+    override val isAvailable = MutableStateFlow(
+        AndroidSpeechRecognizer.isRecognitionAvailable(context)
+    )
+
+    override val isListening = MutableStateFlow(false)
 
     private val androidRecognizer: AndroidSpeechRecognizer =
         AndroidSpeechRecognizer.createSpeechRecognizer(context)
@@ -47,15 +55,18 @@ class SpeechRecognizerImpl(
         androidRecognizer.stopListening()
     }
 
-    override val isListening = MutableStateFlow(false)
+    override fun destroy() {
+        androidRecognizer.destroy()
+    }
 
     override fun events(): Flow<SpeechEvent> = callbackFlow {
+
         androidRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
-                isListening.value = true
                 trySend(SpeechEvent.ReadyForSpeech)
             }
             override fun onBeginningOfSpeech() {
+                isListening.value = true
                 trySend(SpeechEvent.BeginOfSpeech)
             }
 
@@ -73,17 +84,19 @@ class SpeechRecognizerImpl(
             }
 
             override fun onError(error: Int) {
-                trySend(SpeechEvent.Error(error))
+                trySend(SpeechEvent.Error(getSpeechRecognizerErrorString(error)))
+                isListening.value = false
             }
 
             override fun onResults(results: Bundle?) {
-                println("Results $results")
-                results?.let { res -> trySend(SpeechEvent.Result(res)) }
+                val matches = results?.getStringArrayList(AndroidSpeechRecognizer.RESULTS_RECOGNITION)?.toList().orEmpty()
+                trySend(SpeechEvent.Result(matches))
+                isListening.value = false
             }
 
             override fun onPartialResults(partialResults: Bundle?) {
-                println("Partial results $partialResults")
-                partialResults?.let { res -> trySend(SpeechEvent.PartialResult(res)) }
+                val matches = partialResults?.getStringArrayList(AndroidSpeechRecognizer.RESULTS_RECOGNITION)?.toList().orEmpty()
+                trySend(SpeechEvent.PartialResult(matches))
             }
 
             override fun onEvent(eventType: Int, params: Bundle?) {
@@ -91,14 +104,29 @@ class SpeechRecognizerImpl(
             }
         })
 
-        awaitClose { /* hehe */ }
+        awaitClose { /* no op */ }
+    }
+
+    fun getSpeechRecognizerErrorString(errorCode: Int): String {
+        return when (errorCode) {
+            AndroidSpeechRecognizer.ERROR_AUDIO -> "Audio recording error"
+            AndroidSpeechRecognizer.ERROR_CLIENT -> "Client side error"
+            AndroidSpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> "Insufficient permissions"
+            AndroidSpeechRecognizer.ERROR_NETWORK -> "Network error"
+            AndroidSpeechRecognizer.ERROR_NETWORK_TIMEOUT -> "Network timeout"
+            AndroidSpeechRecognizer.ERROR_NO_MATCH -> "No match found"
+            AndroidSpeechRecognizer.ERROR_RECOGNIZER_BUSY -> "Recognition service busy"
+            AndroidSpeechRecognizer.ERROR_SERVER -> "Server error"
+            AndroidSpeechRecognizer.ERROR_SPEECH_TIMEOUT -> "No speech input"
+            else -> "Unknown error"
+        }
     }
 
     private fun startParams(): Intent {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
-        // intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now")
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now")
         return intent
     }
 }

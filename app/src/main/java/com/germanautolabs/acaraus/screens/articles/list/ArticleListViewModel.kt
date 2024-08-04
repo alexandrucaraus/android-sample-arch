@@ -2,6 +2,8 @@
 
 package com.germanautolabs.acaraus.screens.articles.list
 
+import android.content.Context
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.germanautolabs.acaraus.data.SpeechEvent
@@ -34,9 +36,11 @@ class ArticleListViewModel(
     getLocale: GetLocale,
     newsLanguage: GetNewsLanguage,
     private val speechRecognizer: SpeechRecognizer,
+    private val context: Context,
 ) : ViewModel() {
 
     private val defaultArticleListState = ArticleListState(
+        hasSpeechRecognition = speechRecognizer.isAvailable.value,
         retry = ::retryLoading,
         toggleListening = ::toggleListening,
     )
@@ -62,13 +66,15 @@ class ArticleListViewModel(
             .onEach(::updateArticleListState)
             .launchIn(viewModelScope)
 
+        speechRecognizer.isListening.onEach { isListening ->
+            articleListState.update { it.copy(isListening = isListening) }
+        }.launchIn(viewModelScope)
+
         speechRecognizer.events().onEach { event ->
             when (event) {
-                is SpeechEvent.Result -> println(event.result)
-                is SpeechEvent.PartialResult -> println(event.result)
-                is SpeechEvent.BeginOfSpeech -> articleListState.update { it.copy(isListening = true) }
-                is SpeechEvent.EndOfSpeech -> articleListState.update { it.copy(isListening = false) }
-                else -> println(event)
+                is SpeechEvent.Result -> reloadVoiceCommand(event.matches)
+                is SpeechEvent.Error -> Toast.makeText(context,"Error: ${event.code}", Toast.LENGTH_LONG).show()
+                else -> { /* no op */ }
             }
         }.launchIn(viewModelScope)
     }
@@ -96,6 +102,13 @@ class ArticleListViewModel(
         }
     }
 
+    private fun reloadVoiceCommand(spokenWords: List<String>) {
+        spokenWords.find { it.contains("Reload", ignoreCase = true) }?.let {
+            Toast.makeText(context, "Reloading", Toast.LENGTH_LONG).show()
+            retryLoading()
+        }
+    }
+
     private fun retryLoading() {
         viewModelScope.launch { articleListLoadRetry.emit(Unit) }
     }
@@ -106,5 +119,10 @@ class ArticleListViewModel(
         } else {
             speechRecognizer.startListening()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        speechRecognizer.destroy()
     }
 }
