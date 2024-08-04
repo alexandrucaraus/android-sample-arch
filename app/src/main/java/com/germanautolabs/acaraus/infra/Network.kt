@@ -23,7 +23,7 @@ fun baseUrl(): String = "https://newsapi.org/"
 
 @Single
 @Named("newsApiKey")
-fun newsApiKey(): String = "89c24df786c04686b4130855488e1dd9"
+fun newsApiKey(): String = "a6d3cd2d5932471db7c7d8e68628bc5e" //"89c24df786c04686b4130855488e1dd9"
 
 @Single
 fun client(
