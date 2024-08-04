@@ -14,8 +14,8 @@ import com.germanautolabs.acaraus.models.SortBy
 import com.germanautolabs.acaraus.screens.articles.list.ArticleFilterStateHolder
 import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
-import com.germanautolabs.acaraus.usecase.GetArticleSources
 import com.germanautolabs.acaraus.usecase.GetArticlesLanguages
+import com.germanautolabs.acaraus.usecase.GetArticlesSources
 import com.germanautolabs.acaraus.usecase.GetLocale
 import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.CoroutineScope
@@ -39,13 +39,13 @@ class ArticleFilterStateHolderTest : KoinTest {
     val coroutinesTestRule = CoroutinesTestRule()
 
     private fun createSubject(coroutineScope: CoroutineScope): ArticleFilterStateHolder {
-        val getArticleSources by inject<GetArticleSources>()
+        val getArticlesSources by inject<GetArticlesSources>()
         val setLocale by inject<SetLocale>()
         val getLocale by inject<GetLocale>()
         val newsLanguage by inject<GetArticlesLanguages>()
 
         return ArticleFilterStateHolder(
-            getArticleSources = getArticleSources,
+            getArticlesSources = getArticlesSources,
             setLocale = setLocale,
             getLocale = getLocale,
             newsLanguage = newsLanguage,

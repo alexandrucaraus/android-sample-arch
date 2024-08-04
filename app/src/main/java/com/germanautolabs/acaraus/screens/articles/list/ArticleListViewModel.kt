@@ -12,9 +12,9 @@ import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
 import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandState
 import com.germanautolabs.acaraus.screens.components.ToasterState
-import com.germanautolabs.acaraus.usecase.GetArticleSources
 import com.germanautolabs.acaraus.usecase.GetArticles
 import com.germanautolabs.acaraus.usecase.GetArticlesLanguages
+import com.germanautolabs.acaraus.usecase.GetArticlesSources
 import com.germanautolabs.acaraus.usecase.GetLocale
 import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,7 +31,7 @@ import org.koin.android.annotation.KoinViewModel
 @KoinViewModel
 class ArticleListViewModel(
     private val getArticles: GetArticles,
-    getArticleSources: GetArticleSources,
+    getArticlesSources: GetArticlesSources,
     setLocale: SetLocale,
     getLocale: GetLocale,
     newsLanguage: GetArticlesLanguages,
@@ -44,7 +44,7 @@ class ArticleListViewModel(
     val articleListState = MutableStateFlow(defaultArticleListState)
 
     private val filterStateHolder = ArticleFilterStateHolder(
-        getArticleSources = getArticleSources,
+        getArticlesSources = getArticlesSources,
         setLocale = setLocale,
         getLocale = getLocale,
         newsLanguage = newsLanguage,

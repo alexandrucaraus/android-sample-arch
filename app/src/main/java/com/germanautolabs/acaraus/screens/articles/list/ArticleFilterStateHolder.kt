@@ -6,8 +6,8 @@ import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterState
-import com.germanautolabs.acaraus.usecase.GetArticleSources
 import com.germanautolabs.acaraus.usecase.GetArticlesLanguages
+import com.germanautolabs.acaraus.usecase.GetArticlesSources
 import com.germanautolabs.acaraus.usecase.GetLocale
 import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 class ArticleFilterStateHolder(
-    getArticleSources: GetArticleSources,
+    getArticlesSources: GetArticlesSources,
     private val setLocale: SetLocale,
     private val getLocale: GetLocale,
     private val newsLanguage: GetArticlesLanguages,
@@ -47,7 +47,7 @@ class ArticleFilterStateHolder(
 
     init {
         // TODO relaunch on error
-        getArticleSources.stream().onEach { updateArticleSources(it) }.launchIn(currentScope)
+        getArticlesSources.stream().onEach { updateArticleSources(it) }.launchIn(currentScope)
     }
 
     private fun updateArticleSources(result: Result<List<ArticleSource>, Error>) {
