@@ -32,22 +32,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.germanautolabs.acaraus.R
 import com.germanautolabs.acaraus.models.Article
-import com.germanautolabs.acaraus.screens.articles.list.ArticleListScreen
 
 data class ArticleListState(
     val list: List<Article> = emptyList(),
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String? = null,
-    val isListening: Boolean = false,
-    val hasSpeechRecognition: Boolean = false,
-    val retry: () -> Unit = {},
-    val toggleListening: () -> Unit = {},
+    val reoad: () -> Unit = {},
 )
 
 @Composable
@@ -63,7 +58,7 @@ fun ArticleList(
 
         listState.isError -> ArticleListError(
             modifier = Modifier.align(Alignment.Center),
-            retry = listState.retry,
+            retry = listState.reoad,
             errorMessage = listState.errorMessage!!,
         )
 
@@ -186,26 +181,4 @@ fun ArticleListError(
             Text("Retry")
         }
     }
-}
-
-@Composable
-@Preview
-fun ArticleListStateLoadingPreview() {
-    ArticleListScreen(
-        modifier = Modifier.fillMaxSize(),
-        articleListState = ArticleListState(isLoading = true),
-        articleFilterState = ArticleFilterState(),
-        onNavigateToDetails = {},
-    )
-}
-
-@Composable
-@Preview
-fun ArticleListStateErrorPreview() {
-    ArticleListScreen(
-        modifier = Modifier.fillMaxSize(),
-        articleListState = ArticleListState(isError = true, errorMessage = "null"),
-        articleFilterState = ArticleFilterState(),
-        onNavigateToDetails = {},
-    )
 }

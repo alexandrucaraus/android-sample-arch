@@ -1,33 +1,25 @@
 package com.germanautolabs.acaraus.screens.articles.list
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilter
+import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterActionIcon
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterState
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleList
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
-import com.germanautolabs.acaraus.screens.components.RequestRecordAudioPermission
+import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandButton
+import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandState
+import com.germanautolabs.acaraus.screens.components.Toaster
+import com.germanautolabs.acaraus.screens.components.ToasterState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,39 +27,16 @@ fun ArticleListScreen(
     modifier: Modifier = Modifier,
     articleListState: ArticleListState,
     articleFilterState: ArticleFilterState,
+    audioCommandState: AudioCommandState,
+    toasterState: ToasterState,
     onNavigateToDetails: (article: Article) -> Unit,
 ) = Scaffold(modifier = modifier, topBar = {
     TopAppBar(
         title = { Text("News") },
-        actions = {
-            IconButton(onClick = articleFilterState.show) {
-                Box {
-                    if (articleFilterState.isSet) {
-                        Box(
-                            modifier = Modifier.align(Alignment.BottomCenter)
-                                .background(Color.Red, shape = CircleShape)
-                                .size(8.dp),
-                        )
-                    }
-                    Icon(
-                        imageVector = Icons.Default.FilterList,
-                        "Open filter",
-                    )
-                }
-            }
-        },
+        actions = { ArticleFilterActionIcon(filterState = articleFilterState) },
     )
 }, floatingActionButton = {
-    if (articleListState.hasSpeechRecognition) {
-        val iconTint = if (articleListState.isListening) Color.Red else LocalContentColor.current
-        FloatingActionButton(onClick = articleListState.toggleListening) {
-            Icon(
-                Icons.Default.Mic,
-                tint = iconTint,
-                contentDescription = "Listen commands",
-            )
-        }
-    }
+    AudioCommandButton(state = audioCommandState)
 }, content = { padding ->
     Column {
         ArticleList(
@@ -78,6 +47,32 @@ fun ArticleListScreen(
 
         ArticleFilter(filterState = articleFilterState)
 
-        RequestRecordAudioPermission()
+        Toaster(state = toasterState)
     }
 })
+
+@Composable
+@Preview
+fun ArticleListStateLoadingPreview() {
+    ArticleListScreen(
+        modifier = Modifier.fillMaxSize(),
+        articleListState = ArticleListState(isLoading = true),
+        articleFilterState = ArticleFilterState(),
+        toasterState = ToasterState(),
+        audioCommandState = AudioCommandState(),
+        onNavigateToDetails = {},
+    )
+}
+
+@Composable
+@Preview
+fun ArticleListStateErrorPreview() {
+    ArticleListScreen(
+        modifier = Modifier.fillMaxSize(),
+        articleListState = ArticleListState(isError = true, errorMessage = "null"),
+        articleFilterState = ArticleFilterState(),
+        toasterState = ToasterState(),
+        audioCommandState = AudioCommandState(),
+        onNavigateToDetails = {},
+    )
+}

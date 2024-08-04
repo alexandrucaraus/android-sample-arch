@@ -23,7 +23,7 @@ fun baseUrl(): String = "https://newsapi.org/"
 
 @Single
 @Named("newsApiKey")
-fun newsApiKey(): String = "a6d3cd2d5932471db7c7d8e68628bc5e" //"89c24df786c04686b4130855488e1dd9"
+fun newsApiKey(): String = "a6d3cd2d5932471db7c7d8e68628bc5e" // "89c24df786c04686b4130855488e1dd9"
 
 @Single
 fun client(
@@ -31,6 +31,9 @@ fun client(
     @Named("newsApiKey") newsApiKey: String,
 ): HttpClient =
     HttpClient(OkHttp) {
+        install(DefaultRequest) {
+            header(HttpHeaders.Authorization, newsApiKey)
+        }
         if (IS_LOGGING_ENABLED) {
             install(Logging) {
                 logger = Logger.DEFAULT
@@ -40,41 +43,16 @@ fun client(
         install(ContentNegotiation) {
             json(json)
         }
-//        install(HttpTimeout) {
-//            socketTimeoutMillis = 60_000
-//            connectTimeoutMillis = 60_000
-//            requestTimeoutMillis = 60_000
-//        }
         install(ContentEncoding) {
             deflate()
             gzip()
         }
-        install(DefaultRequest) {
-            header(HttpHeaders.Authorization, newsApiKey)
-        }
-//        install(HttpRequestRetry) {
-//            maxRetries = 5
-//            retryOnServerErrors(maxRetries = 5)
-//
-//            retryIf { _, response ->
-//                !response.status.isSuccess()
-//            }
-//            retryOnExceptionIf { _, cause ->
-//                cause is HttpRequestTimeoutException
-//            }
-//            retryOnExceptionIf { _, cause ->
-//                cause is SocketTimeoutException
-//            }
-//
-//            exponentialDelay()
-//        }
     }
 
 @Single
 fun parser(): Json =
     Json {
         serializersModule = newsApiSerializationModule
-        classDiscriminator = "status"
         ignoreUnknownKeys = true
         isLenient = true
     }

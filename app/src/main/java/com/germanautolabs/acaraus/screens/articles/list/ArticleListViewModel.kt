@@ -2,8 +2,6 @@
 
 package com.germanautolabs.acaraus.screens.articles.list
 
-import android.content.Context
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.germanautolabs.acaraus.data.SpeechEvent
@@ -12,6 +10,8 @@ import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
+import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandState
+import com.germanautolabs.acaraus.screens.components.ToasterState
 import com.germanautolabs.acaraus.usecase.GetLocale
 import com.germanautolabs.acaraus.usecase.GetNewsLanguage
 import com.germanautolabs.acaraus.usecase.ObserveArticles
@@ -36,16 +36,12 @@ class ArticleListViewModel(
     getLocale: GetLocale,
     newsLanguage: GetNewsLanguage,
     private val speechRecognizer: SpeechRecognizer,
-    private val context: Context,
 ) : ViewModel() {
 
     private val defaultArticleListState = ArticleListState(
-        hasSpeechRecognition = speechRecognizer.isAvailable.value,
-        retry = ::retryLoading,
-        toggleListening = ::toggleListening,
+        reoad = ::reload,
     )
     val articleListState = MutableStateFlow(defaultArticleListState)
-    private val articleListLoadRetry = MutableSharedFlow<Unit>()
 
     private val filterStateHolder = ArticleFilterStateHolder(
         observeSources = observeSources,
@@ -55,25 +51,41 @@ class ArticleListViewModel(
         currentScope = viewModelScope,
     )
 
-    val filterEditorState = filterStateHolder.filterEditorState
     private val currentFilter = filterStateHolder.currentFilter
+    val filterEditorState = filterStateHolder.filterEditorState
+
+    val audioCommandState = MutableStateFlow(
+        AudioCommandState(
+            hasSpeechRecognition = speechRecognizer.isAvailable.value,
+            toggleListening = ::toggleListening,
+        ),
+    )
+
+    val toasterState = MutableStateFlow(
+        ToasterState(
+            resetToast = ::resetToast,
+        ),
+    )
+
+    private val reloadCommand = MutableSharedFlow<Unit>()
 
     init {
-        merge(articleListLoadRetry, filterStateHolder.currentFilter)
+        merge(reloadCommand, filterStateHolder.currentFilter)
             .map { currentFilter.value }
             .onEach { articleListState.update { it.copy(isLoading = true) } }
-            .flatMapLatest(observeArticles::stream)
-            .onEach(::updateArticleListState)
+               .flatMapLatest(observeArticles::stream)
+               .onEach(::updateArticleListState)
             .launchIn(viewModelScope)
 
         speechRecognizer.isListening.onEach { isListening ->
-            articleListState.update { it.copy(isListening = isListening) }
+            audioCommandState.update { it.copy(isListening = isListening) }
         }.launchIn(viewModelScope)
 
         speechRecognizer.events().onEach { event ->
             when (event) {
                 is SpeechEvent.Result -> reloadVoiceCommand(event.matches)
-                is SpeechEvent.Error -> Toast.makeText(context,"Error: ${event.code}", Toast.LENGTH_LONG).show()
+                is SpeechEvent.Error -> showToast(event.errorMessage)
+                is SpeechEvent.RmsChanged -> audioCommandState.update { it.copy(audioInputChangesDb = event.rmsdB) }
                 else -> { /* no op */ }
             }
         }.launchIn(viewModelScope)
@@ -104,13 +116,15 @@ class ArticleListViewModel(
 
     private fun reloadVoiceCommand(spokenWords: List<String>) {
         spokenWords.find { it.contains("Reload", ignoreCase = true) }?.let {
-            Toast.makeText(context, "Reloading", Toast.LENGTH_LONG).show()
-            retryLoading()
+            showToast("Received reloading command...")
+            reload()
+        } ?: {
+            showToast("Command not recognized")
         }
     }
 
-    private fun retryLoading() {
-        viewModelScope.launch { articleListLoadRetry.emit(Unit) }
+    private fun reload() {
+        viewModelScope.launch { reloadCommand.emit(Unit) }
     }
 
     private fun toggleListening() {
@@ -119,6 +133,14 @@ class ArticleListViewModel(
         } else {
             speechRecognizer.startListening()
         }
+    }
+
+    private fun showToast(message: String) {
+        toasterState.update { it.copy(showToast = true, message = message) }
+    }
+
+    private fun resetToast() {
+        toasterState.update { it.copy(showToast = false, message = "") }
     }
 
     override fun onCleared() {

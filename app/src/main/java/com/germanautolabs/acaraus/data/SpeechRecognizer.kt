@@ -15,31 +15,26 @@ import android.speech.SpeechRecognizer as AndroidSpeechRecognizer
 sealed class SpeechEvent {
     data object ReadyForSpeech : SpeechEvent()
     data object BeginOfSpeech : SpeechEvent()
-    data class RmsChanged(val rms: Float) : SpeechEvent()
-    data class BufferReceived(val buffer: ByteArray) : SpeechEvent()
     data object EndOfSpeech : SpeechEvent()
-    data class Error(val code: String) : SpeechEvent()
-    data class PartialResult(val matches: List<String>) : SpeechEvent()
+    data class RmsChanged(val rmsdB: Float) : SpeechEvent()
+    data class Error(val errorMessage: String) : SpeechEvent()
     data class Result(val matches: List<String>) : SpeechEvent()
-    data class SubEvent(val subEvent: Int) : SpeechEvent()
 }
 
 interface SpeechRecognizer {
     val isListening: MutableStateFlow<Boolean>
     val isAvailable: MutableStateFlow<Boolean>
+    fun events(): Flow<SpeechEvent>
     fun startListening()
     fun stopListening()
-    fun events(): Flow<SpeechEvent>
     fun destroy()
 }
 
 @Factory(binds = [SpeechRecognizer::class])
-class SpeechRecognizerImpl(
-    private val context: Context,
-) : SpeechRecognizer {
+class SpeechRecognizerImpl(context: Context) : SpeechRecognizer {
 
     override val isAvailable = MutableStateFlow(
-        AndroidSpeechRecognizer.isRecognitionAvailable(context)
+        AndroidSpeechRecognizer.isRecognitionAvailable(context),
     )
 
     override val isListening = MutableStateFlow(false)
@@ -60,27 +55,26 @@ class SpeechRecognizerImpl(
     }
 
     override fun events(): Flow<SpeechEvent> = callbackFlow {
-
         androidRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 trySend(SpeechEvent.ReadyForSpeech)
             }
+
             override fun onBeginningOfSpeech() {
                 isListening.value = true
                 trySend(SpeechEvent.BeginOfSpeech)
             }
 
-            override fun onRmsChanged(rmsdB: Float) {
-                trySend(SpeechEvent.RmsChanged(rmsdB))
-            }
-
-            override fun onBufferReceived(buffer: ByteArray?) {
-                buffer?.let { buf -> trySend(SpeechEvent.BufferReceived(buf)) }
-            }
-
             override fun onEndOfSpeech() {
-                isListening.value = false
                 trySend(SpeechEvent.EndOfSpeech)
+            }
+
+            override fun onResults(results: Bundle?) {
+                val matches =
+                    results?.getStringArrayList(AndroidSpeechRecognizer.RESULTS_RECOGNITION)
+                        ?.toList().orEmpty()
+                trySend(SpeechEvent.Result(matches))
+                isListening.value = false
             }
 
             override fun onError(error: Int) {
@@ -88,20 +82,12 @@ class SpeechRecognizerImpl(
                 isListening.value = false
             }
 
-            override fun onResults(results: Bundle?) {
-                val matches = results?.getStringArrayList(AndroidSpeechRecognizer.RESULTS_RECOGNITION)?.toList().orEmpty()
-                trySend(SpeechEvent.Result(matches))
-                isListening.value = false
+            override fun onRmsChanged(rmsdB: Float) {
+                trySend(SpeechEvent.RmsChanged(rmsdB))
             }
-
-            override fun onPartialResults(partialResults: Bundle?) {
-                val matches = partialResults?.getStringArrayList(AndroidSpeechRecognizer.RESULTS_RECOGNITION)?.toList().orEmpty()
-                trySend(SpeechEvent.PartialResult(matches))
-            }
-
-            override fun onEvent(eventType: Int, params: Bundle?) {
-                trySend(SpeechEvent.SubEvent(eventType))
-            }
+            override fun onBufferReceived(buffer: ByteArray?) {}
+            override fun onPartialResults(partialResults: Bundle?) {}
+            override fun onEvent(eventType: Int, params: Bundle?) {}
         })
 
         awaitClose { /* no op */ }
@@ -124,7 +110,10 @@ class SpeechRecognizerImpl(
 
     private fun startParams(): Intent {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(
+            RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM,
+        )
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US")
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak now")
         return intent
