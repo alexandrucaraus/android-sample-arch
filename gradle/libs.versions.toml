@@ -41,6 +41,7 @@ kotlin-serialization-plugin = "2.0.0"
 ksp = "2.0.0-1.0.24"
 ktlint = "12.1.1"
 test-coverage-plugin = "1.8.0"
+turbine = "1.1.0"
 
 ###################################
 [libraries]
@@ -104,6 +105,7 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 
 # Unit tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 
 #######################

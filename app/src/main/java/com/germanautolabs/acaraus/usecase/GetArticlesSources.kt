@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.flow
 import org.koin.core.annotation.Factory
 
 @Factory
-class ObserveSources(
+class GetArticleSources(
     private val newsApi: NewsApi,
     private val localeStore: LocaleStore,
 ) {

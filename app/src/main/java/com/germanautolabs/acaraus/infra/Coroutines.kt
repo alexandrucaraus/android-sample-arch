@@ -1,6 +1,7 @@
 package com.germanautolabs.acaraus.infra
 
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.annotation.Single
 import kotlinx.coroutines.Dispatchers as KotlinProvidedDispatchers
 
 interface Dispatchers {
@@ -10,6 +11,7 @@ interface Dispatchers {
     val ui: CoroutineDispatcher
 }
 
+@Single(binds = [Dispatchers::class])
 class DispatchersApp : Dispatchers {
     override val io: CoroutineDispatcher get() = KotlinProvidedDispatchers.IO
     override val cpu: CoroutineDispatcher get() = KotlinProvidedDispatchers.Default

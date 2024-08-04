@@ -6,9 +6,9 @@ import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterState
+import com.germanautolabs.acaraus.usecase.GetArticleSources
+import com.germanautolabs.acaraus.usecase.GetArticlesLanguages
 import com.germanautolabs.acaraus.usecase.GetLocale
-import com.germanautolabs.acaraus.usecase.GetNewsLanguage
-import com.germanautolabs.acaraus.usecase.ObserveSources
 import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,10 +18,10 @@ import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
 class ArticleFilterStateHolder(
-    observeSources: ObserveSources,
+    getArticleSources: GetArticleSources,
     private val setLocale: SetLocale,
     private val getLocale: GetLocale,
-    private val newsLanguage: GetNewsLanguage,
+    private val newsLanguage: GetArticlesLanguages,
     currentScope: CoroutineScope,
 ) {
 
@@ -43,24 +43,21 @@ class ArticleFilterStateHolder(
     val filterEditorState = MutableStateFlow(defaultFilterState)
     val currentFilter = MutableStateFlow(ArticleFilter())
 
-    private val currentSources = MutableStateFlow(emptyList<ArticleSource>())
+    private val articleSources = MutableStateFlow(emptyList<ArticleSource>())
 
     init {
-
-        observeSources.stream().onEach { updateFilterSources(it) }.launchIn(currentScope)
-
-        currentSources.onEach {
-            filterEditorState.update { it.copy(sourceOptions = buildSourceOptions()) }
-        }.launchIn(currentScope)
+        // TODO relaunch on error
+        getArticleSources.stream().onEach { updateArticleSources(it) }.launchIn(currentScope)
     }
 
-    private fun updateFilterSources(result: Result<List<ArticleSource>, Error>) {
+    private fun updateArticleSources(result: Result<List<ArticleSource>, Error>) {
+        println("Update article sources")
         when {
-            result.isSuccess -> currentSources.update { result.success.orEmpty() }
-            result.isError -> currentFilter.update {
-                it.copy()
-                /* todo handle error */
+            result.isSuccess -> {
+                articleSources.update { result.success.orEmpty() }
+                filterEditorState.update { it.copy(sourceOptions = buildSourceOptions()) }
             }
+            result.isError -> { /* todo handle error */ }
         }
     }
 
@@ -82,7 +79,7 @@ class ArticleFilterStateHolder(
     }
 
     private fun setFilterSource(source: String) {
-        val articleSource = currentSources.value.find { it.name == source } ?: return
+        val articleSource = articleSources.value.find { it.name == source } ?: return
         filterEditorState.update {
             it.copy(source = articleSource.name)
         }
@@ -128,13 +125,13 @@ class ArticleFilterStateHolder(
     private fun buildSourceOptions(
         languageCode: String = getLocale.languageCode(),
     ): Set<String> =
-        setOf("All") + currentSources.value.filter { it.language == languageCode }.map { it.name }
+        setOf("All") + articleSources.value.filter { it.language == languageCode }.map { it.name }
 
     private fun ArticleFilterState.toArticleFilter(): ArticleFilter = ArticleFilter(
         query = query,
         sortedBy = sortBy.let { SortBy.valueOf(it) },
         language = getLocale.languageCode(),
-        sources = currentSources.value.filter { it.name == source },
+        sources = articleSources.value.filter { it.name == source },
         fromDate = fromOldestDate,
         toDate = toNewestDate,
     )

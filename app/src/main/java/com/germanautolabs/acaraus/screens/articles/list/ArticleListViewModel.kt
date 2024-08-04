@@ -12,10 +12,10 @@ import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
 import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandState
 import com.germanautolabs.acaraus.screens.components.ToasterState
+import com.germanautolabs.acaraus.usecase.GetArticleSources
+import com.germanautolabs.acaraus.usecase.GetArticles
+import com.germanautolabs.acaraus.usecase.GetArticlesLanguages
 import com.germanautolabs.acaraus.usecase.GetLocale
-import com.germanautolabs.acaraus.usecase.GetNewsLanguage
-import com.germanautolabs.acaraus.usecase.ObserveArticles
-import com.germanautolabs.acaraus.usecase.ObserveSources
 import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -30,21 +30,21 @@ import org.koin.android.annotation.KoinViewModel
 
 @KoinViewModel
 class ArticleListViewModel(
-    private val observeArticles: ObserveArticles,
-    observeSources: ObserveSources,
+    private val getArticles: GetArticles,
+    getArticleSources: GetArticleSources,
     setLocale: SetLocale,
     getLocale: GetLocale,
-    newsLanguage: GetNewsLanguage,
+    newsLanguage: GetArticlesLanguages,
     private val speechRecognizer: SpeechRecognizer,
 ) : ViewModel() {
 
     private val defaultArticleListState = ArticleListState(
-        reoad = ::reload,
+        reload = ::reload,
     )
     val articleListState = MutableStateFlow(defaultArticleListState)
 
     private val filterStateHolder = ArticleFilterStateHolder(
-        observeSources = observeSources,
+        getArticleSources = getArticleSources,
         setLocale = setLocale,
         getLocale = getLocale,
         newsLanguage = newsLanguage,
@@ -73,8 +73,8 @@ class ArticleListViewModel(
         merge(reloadCommand, filterStateHolder.currentFilter)
             .map { currentFilter.value }
             .onEach { articleListState.update { it.copy(isLoading = true) } }
-               .flatMapLatest(observeArticles::stream)
-               .onEach(::updateArticleListState)
+            .flatMapLatest(getArticles::stream)
+            .onEach(::updateArticleListState)
             .launchIn(viewModelScope)
 
         speechRecognizer.isListening.onEach { isListening ->
@@ -114,6 +114,7 @@ class ArticleListViewModel(
         }
     }
 
+    //
     private fun reloadVoiceCommand(spokenWords: List<String>) {
         spokenWords.find { it.contains("Reload", ignoreCase = true) }?.let {
             showToast("Received reloading command...")

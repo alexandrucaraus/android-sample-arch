@@ -16,15 +16,14 @@ import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Factory
 
 @Factory
-class ObserveArticles(
+class GetArticles(
     private val newsApi: NewsApi,
     private val localeStore: LocaleStore,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
     fun stream(filter: ArticleFilter): Flow<Result<List<Article>, Error>> =
-        flowOf(filter).flatMapLatest {
-            if (filter == ArticleFilter()) headlines() else everything(filter)
-        }
+        flowOf(filter)
+            .flatMapLatest { if (filter == ArticleFilter()) headlines() else everything(filter) }
 
     private fun headlines(): Flow<Result<List<Article>, Error>> = flow {
         emit(

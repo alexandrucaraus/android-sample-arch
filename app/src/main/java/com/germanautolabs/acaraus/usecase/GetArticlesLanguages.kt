@@ -3,7 +3,7 @@ package com.germanautolabs.acaraus.usecase
 import org.koin.core.annotation.Factory
 
 @Factory
-class GetNewsLanguage {
+class GetArticlesLanguages {
 
     private val newsLanguages = mapOf(
         "ar" to "Arabic",

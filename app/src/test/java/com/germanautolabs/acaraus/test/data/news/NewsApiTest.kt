@@ -1,17 +1,23 @@
-package com.germanautolabs.acaraus.data.news
+package com.germanautolabs.acaraus.test.data.news
 
+import com.germanautolabs.acaraus.data.news.NewsApi
+import com.germanautolabs.acaraus.main.DataDi
+import com.germanautolabs.acaraus.main.InfraDi
 import com.germanautolabs.acaraus.models.ArticleFilter
-import com.germanautolabs.acaraus.test.rules.KoinUnitTestRule
+import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
+import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
 
 class NewsApiTest : KoinTest {
 
     @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule()
+    val koinUnitTestRule = KoinUnitTestRule(
+        listOf(InfraDi().module, DataDi().module),
+    )
 
     @Test
     fun fetchNewsHeadlines() = runTest {

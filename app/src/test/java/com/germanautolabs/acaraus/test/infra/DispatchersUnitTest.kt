@@ -1,4 +1,6 @@
-package com.germanautolabs.acaraus.test
+@file:Suppress("All")
+
+package com.germanautolabs.acaraus.test.infra
 
 import com.germanautolabs.acaraus.infra.Dispatchers
 import kotlinx.coroutines.CoroutineDispatcher
@@ -6,16 +8,9 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScheduler
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 
-@Module
-class DispatchersTestDi {
-
-    @Single
-    fun dispatchers(): Dispatchers = DispatchersUnitTest()
-}
-
+@Single(binds = [Dispatchers::class])
 class DispatchersUnitTest : Dispatchers {
 
     @OptIn(ExperimentalCoroutinesApi::class)

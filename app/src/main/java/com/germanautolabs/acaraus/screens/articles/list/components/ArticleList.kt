@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.UnfoldLess
 import androidx.compose.material.icons.filled.UnfoldMore
@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,7 +43,7 @@ data class ArticleListState(
     val isLoading: Boolean = false,
     val isError: Boolean = false,
     val errorMessage: String? = null,
-    val reoad: () -> Unit = {},
+    val reload: () -> Unit = {},
 )
 
 @Composable
@@ -58,7 +59,7 @@ fun ArticleList(
 
         listState.isError -> ArticleListError(
             modifier = Modifier.align(Alignment.Center),
-            retry = listState.reoad,
+            retry = listState.reload,
             errorMessage = listState.errorMessage!!,
         )
 
@@ -80,11 +81,13 @@ fun ArticleListSuccess(
 ) = LazyColumn(
     modifier = modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp),
+        .padding(horizontal = 16.dp)
+        .testTag("ArticleList"),
     verticalArrangement = Arrangement.spacedBy(16.dp),
 ) {
-    items(articles) { article ->
+    itemsIndexed(articles) { index, article ->
         ArticleListItem(
+            index = index,
             article = article,
             onNavigateToDetails = onNavigateToDetails,
         )
@@ -94,10 +97,11 @@ fun ArticleListSuccess(
 @Composable
 fun ArticleListItem(
     modifier: Modifier = Modifier,
+    index: Int,
     article: Article,
     onNavigateToDetails: (article: Article) -> Unit,
 ) = Card(
-    modifier = modifier.fillMaxWidth(),
+    modifier = modifier.fillMaxWidth().testTag("ListItem$index"),
     onClick = { onNavigateToDetails(article) },
 ) {
     var expanded by remember { mutableStateOf(false) }
