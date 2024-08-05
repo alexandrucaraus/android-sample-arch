@@ -95,7 +95,7 @@ android {
 
     signingConfigs {
         getByName("debug") {
-            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
+            storeFile = file("../config/debugKeyStore/debug.keystore")
             storePassword = "password"
             keyAlias = "androiddebugkey"
             keyPassword = "password"
