@@ -89,6 +89,16 @@ android {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
+            storePassword = "password"
+            keyAlias = "androiddebugkey"
+            keyPassword = "password"
         }
     }
 
