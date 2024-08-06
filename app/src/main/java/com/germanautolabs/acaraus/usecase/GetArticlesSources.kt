@@ -2,7 +2,7 @@ package com.germanautolabs.acaraus.usecase
 
 import com.germanautolabs.acaraus.data.LocaleStore
 import com.germanautolabs.acaraus.data.news.NewsApi
-import com.germanautolabs.acaraus.models.ArticleSource
+import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +15,7 @@ class GetArticlesSources(
     private val newsApi: NewsApi,
     private val localeStore: LocaleStore,
 ) {
-    fun stream(): Flow<Result<List<ArticleSource>, Error>> = flow {
+    fun stream(): Flow<Result<List<ArticlesSources>, Error>> = flow {
         emit(
             newsApi.getSources(
                 language = localeStore.getLanguageCode(),

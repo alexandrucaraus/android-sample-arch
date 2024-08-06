@@ -6,8 +6,8 @@ import com.germanautolabs.acaraus.data.LocaleStore
 import com.germanautolabs.acaraus.data.LocaleStoreImpl
 import com.germanautolabs.acaraus.data.news.NewsApi
 import com.germanautolabs.acaraus.models.Article
-import com.germanautolabs.acaraus.models.ArticleFilter
-import com.germanautolabs.acaraus.models.ArticleSource
+import com.germanautolabs.acaraus.models.ArticlesFilter
+import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
@@ -30,7 +30,7 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import kotlin.test.assertEquals
 
-class ArticleFilterStateHolderTest : KoinTest {
+class ArticlesFilterStateHolderTest : KoinTest {
 
     @get:Rule
     val koinUnitTestRule = KoinUnitTestRule(listOf(Test1Fakes().module))
@@ -57,12 +57,12 @@ class ArticleFilterStateHolderTest : KoinTest {
     fun check_that_article_sources_are_loaded() = runTest {
         val filterStateHolder = createSubject(this)
         turbineScope {
-            filterStateHolder.filterEditorState.test {
+            filterStateHolder.articlesFilterUiState.test {
                 skipItems(1)
                 val filterEditorState = awaitItem()
                 assertEquals(
                     actual = filterEditorState.sourceOptions.count(),
-                    expected = dummyArticleSources.count { it.language == "en" } + 1,
+                    expected = dummyArticlesSources.count { it.language == "en" } + 1,
                 ) // +1 for "All"
             }
         }
@@ -72,8 +72,8 @@ class ArticleFilterStateHolderTest : KoinTest {
     fun select_Topics_SortBy_Language_Sources_And_Apply_Filter() = runTest {
         val filterStateHolder = createSubject(this)
         turbineScope {
-            filterStateHolder.filterEditorState.test {
-                skipItems(1)
+            filterStateHolder.articlesFilterUiState.test {
+                skipItems(2)
                 val state = awaitItem()
                 assertEquals(state.sourceOptions.isNotEmpty(), true)
                 state.setQuery("android")
@@ -86,7 +86,7 @@ class ArticleFilterStateHolderTest : KoinTest {
                 assert(awaitItem().source == "Der Spiegel")
                 state.apply()
 
-                filterStateHolder.currentFilter.test {
+                filterStateHolder.articlesFilterState.test {
                     val currentFilter = awaitItem()
                     assert(currentFilter.query == "android")
                     assert(currentFilter.language == "de")
@@ -120,65 +120,65 @@ class NetworkApi : NewsApi {
     override suspend fun getSources(
         language: String,
         category: String,
-    ): Result<List<ArticleSource>, Error> {
-        return Result.success(dummyArticleSources)
+    ): Result<List<ArticlesSources>, Error> {
+        return Result.success(dummyArticlesSources)
     }
 
-    override suspend fun getEverything(filter: ArticleFilter): Result<List<Article>, Error> {
+    override suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error> {
         TODO("Not implemented")
     }
 }
 
-val dummyArticleSources = listOf(
-    ArticleSource(
+val dummyArticlesSources = listOf(
+    ArticlesSources(
         id = "techcrunch",
         name = "TechCrunch",
         language = "en",
         category = "Technology",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "the-verge",
         name = "The Verge",
         language = "en",
         category = "Technology",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "wired",
         name = "Wired",
         language = "en",
         category = "Technology",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "bloomberg",
         name = "Bloomberg",
         language = "en",
         category = "Business",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "national-geographic",
         name = "National Geographic",
         language = "en",
         category = "Science",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "bbc-news",
         name = "BBC News",
         language = "en",
         category = "General",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "le-monde",
         name = "Le Monde",
         language = "fr",
         category = "General",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "der-spiegel",
         name = "Der Spiegel",
         language = "de",
         category = "General",
     ),
-    ArticleSource(
+    ArticlesSources(
         id = "el-pais",
         name = "El País",
         language = "es",

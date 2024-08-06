@@ -3,7 +3,7 @@ package com.germanautolabs.acaraus.test.data.news
 import com.germanautolabs.acaraus.data.news.NewsApi
 import com.germanautolabs.acaraus.main.DataDi
 import com.germanautolabs.acaraus.main.InfraDi
-import com.germanautolabs.acaraus.models.ArticleFilter
+import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -38,7 +38,7 @@ class NewsApiTest : KoinTest {
     @Test
     fun fetchEverything() = runTest {
         val newsApi: NewsApi by inject<NewsApi>()
-        val filter = ArticleFilter(
+        val filter = ArticlesFilter(
             query = "android",
             language = "de",
         )

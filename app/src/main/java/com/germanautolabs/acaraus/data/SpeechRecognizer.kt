@@ -5,10 +5,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
+import androidx.annotation.MainThread
+import com.germanautolabs.acaraus.infra.Dispatchers
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flowOn
 import org.koin.core.annotation.Factory
 import android.speech.SpeechRecognizer as AndroidSpeechRecognizer
 
@@ -31,7 +34,10 @@ interface SpeechRecognizer {
 }
 
 @Factory(binds = [SpeechRecognizer::class])
-class SpeechRecognizerImpl(context: Context) : SpeechRecognizer {
+class SpeechRecognizerImpl(
+    context: Context,
+    private val dispatchers: Dispatchers,
+) : SpeechRecognizer {
 
     override val isAvailable = MutableStateFlow(
         AndroidSpeechRecognizer.isRecognitionAvailable(context),
@@ -45,6 +51,7 @@ class SpeechRecognizerImpl(context: Context) : SpeechRecognizer {
     override fun startListening() {
         androidRecognizer.startListening(startParams())
     }
+
 
     override fun stopListening() {
         androidRecognizer.stopListening()

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.germanautolabs.acaraus.data.SpeechEvent
 import com.germanautolabs.acaraus.data.SpeechRecognizer
 import com.germanautolabs.acaraus.models.Article
+import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
@@ -21,7 +22,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -51,8 +51,8 @@ class ArticleListViewModel(
         currentScope = viewModelScope,
     )
 
-    private val currentFilter = filterStateHolder.currentFilter
-    val filterEditorState = filterStateHolder.filterEditorState
+    private val articlesFilter = filterStateHolder.articlesFilterState
+    val articlesFilterUiState = filterStateHolder.articlesFilterUiState
 
     val audioCommandState = MutableStateFlow(
         AudioCommandState(
@@ -67,11 +67,11 @@ class ArticleListViewModel(
         ),
     )
 
-    private val reloadCommand = MutableSharedFlow<Unit>()
+    private val reloadArticlesCommand = MutableSharedFlow<ArticlesFilter>()
 
     init {
-        merge(reloadCommand, filterStateHolder.currentFilter)
-            .map { currentFilter.value }
+
+        merge(reloadArticlesCommand, articlesFilter)
             .onEach { articleListState.update { it.copy(isLoading = true) } }
             .flatMapLatest(getArticles::stream)
             .onEach(::updateArticleListState)
@@ -125,7 +125,7 @@ class ArticleListViewModel(
     }
 
     private fun reload() {
-        viewModelScope.launch { reloadCommand.emit(Unit) }
+        viewModelScope.launch { reloadArticlesCommand.emit(articlesFilter.value) }
     }
 
     private fun toggleListening() {

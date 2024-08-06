@@ -1,7 +1,7 @@
 package com.germanautolabs.acaraus.screens.articles.list
 
-import com.germanautolabs.acaraus.models.ArticleFilter
-import com.germanautolabs.acaraus.models.ArticleSource
+import com.germanautolabs.acaraus.models.ArticlesFilter
+import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
@@ -11,12 +11,19 @@ import com.germanautolabs.acaraus.usecase.GetArticlesSources
 import com.germanautolabs.acaraus.usecase.GetLocale
 import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
+@Suppress("OPT_IN_USAGE")
 class ArticleFilterStateHolder(
     getArticlesSources: GetArticlesSources,
     private val setLocale: SetLocale,
@@ -25,71 +32,78 @@ class ArticleFilterStateHolder(
     currentScope: CoroutineScope,
 ) {
 
-    private val defaultFilterState = ArticleFilterState(
-        show = ::showFilter,
-        hide = ::hideFilter,
-        setQuery = ::setFilterQuery,
-        setSortBy = ::setFilterSortBy,
+    private val defaultArticlesFilterUiState = ArticleFilterState(
+        show = ::show,
+        hide = ::hide,
+        setQuery = ::setQuery,
+        setSortBy = ::setSortBy,
         sortByOptions = SortBy.entries.map { it.name }.toSet(),
-        setSource = ::setFilterSource,
-        setLanguage = ::setFilterLanguage,
+        setSource = ::setArticleSource,
+        setLanguage = ::setLanguage,
         languageOptions = newsLanguage.options(),
-        setFromDate = ::setFilterFromDate,
-        setToDate = ::setFilterToDate,
+        setFromDate = ::setFromOldestDate,
+        setToDate = ::setToNewestDate,
         reset = ::resetFilter,
         apply = ::applyFilter,
     )
 
-    val filterEditorState = MutableStateFlow(defaultFilterState)
-    val currentFilter = MutableStateFlow(ArticleFilter())
 
-    private val articleSources = MutableStateFlow(emptyList<ArticleSource>())
+    private val filterUiState = MutableStateFlow(defaultArticlesFilterUiState)
+    private val filterState = MutableStateFlow(ArticlesFilter())
+
+    val articlesFilterUiState = filterUiState.asStateFlow()
+    val articlesFilterState = filterState.asStateFlow()
+
+    private val sources = MutableStateFlow(emptyList<ArticlesSources>())
+    private val reloadSourcesCommand = MutableSharedFlow<Unit>()
 
     init {
-        // TODO relaunch on error
-        getArticlesSources.stream().onEach { updateArticleSources(it) }.launchIn(currentScope)
+        merge(flowOf(Unit), reloadSourcesCommand)
+            .flatMapLatest { getArticlesSources.stream() }
+            .onEach { sourcesResult -> updateArticleSources(sourcesResult) }
+            .launchIn(scope = currentScope)
+
+        sources.onEach {
+            filterUiState.update { it.copy(sourceOptions = buildSourceOptions()) }
+        }.launchIn(scope = currentScope)
     }
 
-    private fun updateArticleSources(result: Result<List<ArticleSource>, Error>) {
-        println("Update article sources")
+    private fun updateArticleSources(result: Result<List<ArticlesSources>, Error>) {
         when {
-            result.isSuccess -> {
-                articleSources.update { result.success.orEmpty() }
-                filterEditorState.update { it.copy(sourceOptions = buildSourceOptions()) }
-            }
+            result.isSuccess -> sources.update { result.success.orEmpty() }
             result.isError -> { /* todo handle error */ }
         }
     }
 
-    private fun showFilter() {
-        filterEditorState.update { it.copy(isVisible = true) }
+    private fun show() {
+        filterUiState.update { it.copy(isVisible = true) }
     }
 
-    private fun hideFilter() {
-        filterEditorState.update { it.copy(isVisible = false) }
+    private fun hide() {
+        filterUiState.update { it.copy(isVisible = false) }
     }
 
-    private fun setFilterQuery(query: String) {
-        filterEditorState.update { it.copy(query = query) }
+    private fun setQuery(query: String) {
+        filterUiState.update { it.copy(query = query) }
     }
 
-    private fun setFilterSortBy(sortBy: String) {
+    private fun setSortBy(sortBy: String) {
         val sortOrder = SortBy.entries.find { it.name == sortBy } ?: SortBy.MostRecent
-        filterEditorState.update { it.copy(sortBy = sortOrder.name) }
+        filterUiState.update { it.copy(sortBy = sortOrder.name) }
     }
 
-    private fun setFilterSource(source: String) {
-        val articleSource = articleSources.value.find { it.name == source } ?: return
-        filterEditorState.update {
+    private fun setArticleSource(source: String) {
+        val articleSource = sources.value.find { it.name == source } ?: return
+        filterUiState.update {
             it.copy(source = articleSource.name)
         }
     }
 
-    private fun setFilterLanguage(language: String) {
+    private fun setLanguage(language: String) {
         val languageCode = newsLanguage.getLanguageCodeByName(language)
         val source =
-            if (getLocale.languageCode() !== languageCode) "All" else filterEditorState.value.source
-        filterEditorState.update {
+            if (getLocale.languageCode() !== languageCode) "All" else filterUiState.value.source
+        filterUiState.update {
             it.copy(
                 language = language,
                 source = source,
@@ -99,18 +113,18 @@ class ArticleFilterStateHolder(
         setLocale.languageCode(languageCode)
     }
 
-    private fun setFilterFromDate(date: LocalDate) {
-        filterEditorState.update { it.copy(fromOldestDate = date) }
+    private fun setFromOldestDate(date: LocalDate) {
+        filterUiState.update { it.copy(fromOldestDate = date) }
     }
 
-    private fun setFilterToDate(date: LocalDate) {
-        filterEditorState.update { it.copy(toNewestDate = date) }
+    private fun setToNewestDate(date: LocalDate) {
+        filterUiState.update { it.copy(toNewestDate = date) }
     }
 
     private fun resetFilter() {
-        currentFilter.update { ArticleFilter() }
-        filterEditorState.update {
-            defaultFilterState.copy(
+        filterState.update { ArticlesFilter() }
+        filterUiState.update {
+            defaultArticlesFilterUiState.copy(
                 language = newsLanguage.getLanguageCodeByName(getLocale.languageCode()),
                 sourceOptions = buildSourceOptions(),
             )
@@ -118,20 +132,20 @@ class ArticleFilterStateHolder(
     }
 
     private fun applyFilter() {
-        currentFilter.update { filterEditorState.value.toArticleFilter() }
-        filterEditorState.update { it.copy(isVisible = false) }
+        filterState.update { filterUiState.value.toArticleFilter() }
+        filterUiState.update { it.copy(isVisible = false) }
     }
 
     private fun buildSourceOptions(
         languageCode: String = getLocale.languageCode(),
     ): Set<String> =
-        setOf("All") + articleSources.value.filter { it.language == languageCode }.map { it.name }
+        setOf("All") + sources.value.filter { it.language == languageCode }.map { it.name }
 
-    private fun ArticleFilterState.toArticleFilter(): ArticleFilter = ArticleFilter(
+    private fun ArticleFilterState.toArticleFilter(): ArticlesFilter = ArticlesFilter(
         query = query,
         sortedBy = sortBy.let { SortBy.valueOf(it) },
         language = getLocale.languageCode(),
-        sources = articleSources.value.filter { it.name == source },
+        sources = sources.value.filter { it.name == source },
         fromDate = fromOldestDate,
         toDate = toNewestDate,
     )

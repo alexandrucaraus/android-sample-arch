@@ -2,8 +2,8 @@ package com.germanautolabs.acaraus.data.news
 
 import com.germanautolabs.acaraus.infra.Dispatchers
 import com.germanautolabs.acaraus.models.Article
-import com.germanautolabs.acaraus.models.ArticleFilter
-import com.germanautolabs.acaraus.models.ArticleSource
+import com.germanautolabs.acaraus.models.ArticlesFilter
+import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
@@ -26,9 +26,9 @@ interface NewsApi {
     suspend fun getSources(
         language: String = "de",
         category: String = "general",
-    ): Result<List<ArticleSource>, Error>
+    ): Result<List<ArticlesSources>, Error>
 
-    suspend fun getEverything(filter: ArticleFilter): Result<List<Article>, Error>
+    suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error>
 }
 
 @Factory(binds = [NewsApi::class])
@@ -60,7 +60,7 @@ class NewsApiImpl(
     override suspend fun getSources(
         language: String,
         category: String,
-    ): Result<List<ArticleSource>, Error> =
+    ): Result<List<ArticlesSources>, Error> =
         withContext(dispatchers.io) {
             val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines/sources")) {
             }.body()
@@ -75,7 +75,7 @@ class NewsApiImpl(
             }
         }
 
-    override suspend fun getEverything(filter: ArticleFilter): Result<List<Article>, Error> =
+    override suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error> =
         withContext(dispatchers.io) {
             val response: NewsApiResponse = httpClient.get((path("/v2/everything"))) {
                 parameter(LANGUAGE, filter.language)
@@ -122,7 +122,7 @@ private fun SortBy.toNewsApiSortBy() = when (this) {
     SortBy.MostRecent -> "publishedAt"
 }
 
-private fun NewsApiSource.toArticleSource() = ArticleSource(
+private fun NewsApiSource.toArticleSource() = ArticlesSources(
     id = id ?: "",
     name = name,
     language = language ?: "en",

@@ -3,7 +3,7 @@ package com.germanautolabs.acaraus.usecase
 import com.germanautolabs.acaraus.data.LocaleStore
 import com.germanautolabs.acaraus.data.news.NewsApi
 import com.germanautolabs.acaraus.models.Article
-import com.germanautolabs.acaraus.models.ArticleFilter
+import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,9 +21,9 @@ class GetArticles(
     private val localeStore: LocaleStore,
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    fun stream(filter: ArticleFilter): Flow<Result<List<Article>, Error>> =
+    fun stream(filter: ArticlesFilter): Flow<Result<List<Article>, Error>> =
         flowOf(filter)
-            .flatMapLatest { if (filter == ArticleFilter()) headlines() else everything(filter) }
+            .flatMapLatest { if (filter == ArticlesFilter()) headlines() else everything(filter) }
 
     private fun headlines(): Flow<Result<List<Article>, Error>> = flow {
         emit(
@@ -35,7 +35,7 @@ class GetArticles(
         emit(Result.error(Error("networkError", cause.message ?: "Unknown error")))
     }.filterRemovedArticles()
 
-    private fun everything(filter: ArticleFilter): Flow<Result<List<Article>, Error>> = flow {
+    private fun everything(filter: ArticlesFilter): Flow<Result<List<Article>, Error>> = flow {
         emit(newsApi.getEverything(filter))
     }.catch {
         emit(Result.error(Error("networkError", it.message ?: "Unknown error")))

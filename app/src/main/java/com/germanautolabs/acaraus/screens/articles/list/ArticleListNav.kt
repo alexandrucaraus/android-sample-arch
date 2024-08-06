@@ -20,7 +20,7 @@ fun NavGraphBuilder.articleListNavNode(
         ArticleListScreen(
             modifier = modifier,
             articleListState = vm.articleListState.collectAsStateWithLifecycle().value,
-            articleFilterState = vm.filterEditorState.collectAsStateWithLifecycle().value,
+            articleFilterState = vm.articlesFilterUiState.collectAsStateWithLifecycle().value,
             audioCommandState = vm.audioCommandState.collectAsStateWithLifecycle().value,
             toasterState = vm.toasterState.collectAsStateWithLifecycle().value,
             onNavigateToDetails = onNavigateToDetails,
