@@ -63,7 +63,7 @@ jobs:
           jacoco-csv-file: build/reports/jacoco.csv
 
       - name: "Build debug APK"
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleDebug
 
       - name: "Upload debug APK"
         uses: actions/upload-artifact@v4
