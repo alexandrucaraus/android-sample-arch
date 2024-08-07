@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.germanautolabs.acaraus.screens.components.RequestRecordAudioPermission
 
-data class AudioCommandState(
+data class AudioCommandButtonState(
     val hasSpeechRecognition: Boolean = false,
     val isListening: Boolean = false,
     val audioInputChangesDb: Float = 0f,
@@ -29,13 +29,15 @@ data class AudioCommandState(
 @Composable
 fun AudioCommandButton(
     modifier: Modifier = Modifier,
-    state: AudioCommandState,
+    state: AudioCommandButtonState,
 ) {
     if (state.hasSpeechRecognition.not()) return
     val context = LocalContext.current
     val iconTint = if (state.isListening) Color.Red else LocalContentColor.current
     var requestPermission by remember { mutableStateOf(false) }
-    FloatingActionButton(onClick = {
+    FloatingActionButton(
+        modifier = modifier,
+        onClick = {
         if (hasPermission(context)) {
             state.toggleListening()
         } else {

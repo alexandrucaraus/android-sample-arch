@@ -13,11 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilter
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterActionIcon
-import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterState
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleList
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleListState
+import com.germanautolabs.acaraus.screens.articles.list.components.ArticlesFilterEditorState
 import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandButton
-import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandState
+import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandButtonState
 import com.germanautolabs.acaraus.screens.components.Toaster
 import com.germanautolabs.acaraus.screens.components.ToasterState
 
@@ -26,30 +26,35 @@ import com.germanautolabs.acaraus.screens.components.ToasterState
 fun ArticleListScreen(
     modifier: Modifier = Modifier,
     articleListState: ArticleListState,
-    articleFilterState: ArticleFilterState,
-    audioCommandState: AudioCommandState,
+    articlesFilterEditorState: ArticlesFilterEditorState,
+    audioCommandButtonState: AudioCommandButtonState,
     toasterState: ToasterState,
     onNavigateToDetails: (article: Article) -> Unit,
-) = Scaffold(modifier = modifier, topBar = {
-    TopAppBar(
-        title = { Text("News") },
-        actions = { ArticleFilterActionIcon(filterState = articleFilterState) },
-    )
-}, floatingActionButton = {
-    AudioCommandButton(state = audioCommandState)
-}, content = { padding ->
-    Column {
-        ArticleList(
-            modifier = Modifier.padding(padding),
-            listState = articleListState,
-            onNavigateToDetails = onNavigateToDetails,
+) = Scaffold(
+    modifier = modifier,
+    topBar = {
+        TopAppBar(
+            title = { Text("News") },
+            actions = { ArticleFilterActionIcon(filterState = articlesFilterEditorState) },
         )
+    },
+    content = { padding ->
+        Column {
+            ArticleList(
+                modifier = Modifier.padding(padding),
+                listState = articleListState,
+                onNavigateToDetails = onNavigateToDetails,
+            )
 
-        ArticleFilter(filterState = articleFilterState)
+            ArticleFilter(filterState = articlesFilterEditorState)
 
-        Toaster(state = toasterState)
-    }
-})
+            Toaster(state = toasterState)
+        }
+    },
+    floatingActionButton = {
+        AudioCommandButton(state = audioCommandButtonState)
+    },
+)
 
 @Composable
 @Preview
@@ -57,9 +62,9 @@ fun ArticleListStateLoadingPreview() {
     ArticleListScreen(
         modifier = Modifier.fillMaxSize(),
         articleListState = ArticleListState(isLoading = true),
-        articleFilterState = ArticleFilterState(),
+        articlesFilterEditorState = ArticlesFilterEditorState(),
         toasterState = ToasterState(),
-        audioCommandState = AudioCommandState(),
+        audioCommandButtonState = AudioCommandButtonState(),
         onNavigateToDetails = {},
     )
 }
@@ -70,9 +75,9 @@ fun ArticleListStateErrorPreview() {
     ArticleListScreen(
         modifier = Modifier.fillMaxSize(),
         articleListState = ArticleListState(isError = true, errorMessage = "null"),
-        articleFilterState = ArticleFilterState(),
+        articlesFilterEditorState = ArticlesFilterEditorState(),
         toasterState = ToasterState(),
-        audioCommandState = AudioCommandState(),
+        audioCommandButtonState = AudioCommandButtonState(),
         onNavigateToDetails = {},
     )
 }

@@ -11,13 +11,9 @@ import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
-import com.germanautolabs.acaraus.screens.articles.list.ArticleFilterStateHolder
+import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesFilterStateHolder
 import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
-import com.germanautolabs.acaraus.usecase.GetArticlesLanguages
-import com.germanautolabs.acaraus.usecase.GetArticlesSources
-import com.germanautolabs.acaraus.usecase.GetLocale
-import com.germanautolabs.acaraus.usecase.SetLocale
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -25,6 +21,7 @@ import org.junit.Test
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
+import org.koin.core.parameter.parametersOf
 import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
@@ -38,27 +35,15 @@ class ArticlesFilterStateHolderTest : KoinTest {
     @get:Rule
     val coroutinesTestRule = CoroutinesTestRule()
 
-    private fun createSubject(coroutineScope: CoroutineScope): ArticleFilterStateHolder {
-        val getArticlesSources by inject<GetArticlesSources>()
-        val setLocale by inject<SetLocale>()
-        val getLocale by inject<GetLocale>()
-        val newsLanguage by inject<GetArticlesLanguages>()
-
-        return ArticleFilterStateHolder(
-            getArticlesSources = getArticlesSources,
-            setLocale = setLocale,
-            getLocale = getLocale,
-            newsLanguage = newsLanguage,
-            currentScope = coroutineScope,
-        )
-    }
+    private fun createSubject(coroutineScope: CoroutineScope): ArticlesFilterStateHolder =
+        inject<ArticlesFilterStateHolder> { parametersOf(coroutineScope) }.value
 
     @Test
     fun check_that_article_sources_are_loaded() = runTest {
-        val filterStateHolder = createSubject(this)
         turbineScope {
+            val filterStateHolder = createSubject(backgroundScope)
             filterStateHolder.articlesFilterUiState.test {
-                skipItems(1)
+                skipItems(2)
                 val filterEditorState = awaitItem()
                 assertEquals(
                     actual = filterEditorState.sourceOptions.count(),
@@ -70,8 +55,8 @@ class ArticlesFilterStateHolderTest : KoinTest {
 
     @Test
     fun select_Topics_SortBy_Language_Sources_And_Apply_Filter() = runTest {
-        val filterStateHolder = createSubject(this)
         turbineScope {
+            val filterStateHolder = createSubject(backgroundScope)
             filterStateHolder.articlesFilterUiState.test {
                 skipItems(2)
                 val state = awaitItem()
@@ -88,10 +73,10 @@ class ArticlesFilterStateHolderTest : KoinTest {
 
                 filterStateHolder.articlesFilterState.test {
                     val currentFilter = awaitItem()
-                    assert(currentFilter.query == "android")
-                    assert(currentFilter.language == "de")
-                    assert(currentFilter.sortedBy == SortBy.Relevancy)
-                    assert(currentFilter.sources.first().name == "Der Spiegel")
+                    assertEquals("android", currentFilter.query)
+                    assertEquals("de", currentFilter.language)
+                    assertEquals(SortBy.Relevancy, currentFilter.sortedBy)
+                    assertEquals("Der Spiegel", currentFilter.sources.first().name)
                 }
             }
         }
@@ -117,11 +102,8 @@ class NetworkApi : NewsApi {
         TODO("Not implemented")
     }
 
-    override suspend fun getSources(
-        language: String,
-        category: String,
-    ): Result<List<ArticlesSources>, Error> {
-        return Result.success(dummyArticlesSources)
+    override suspend fun getSources(): Result<List<ArticlesSources>, Error> {
+        return Result.Success(dummyArticlesSources)
     }
 
     override suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error> {

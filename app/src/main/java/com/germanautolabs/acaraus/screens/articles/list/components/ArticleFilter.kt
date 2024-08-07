@@ -30,7 +30,7 @@ import com.germanautolabs.acaraus.screens.components.Dropdown
 import com.germanautolabs.acaraus.screens.components.IntervalDatePickerScreen
 import java.time.LocalDate
 
-data class ArticleFilterState(
+data class ArticlesFilterEditorState(
 
     val isVisible: Boolean = false,
 
@@ -73,7 +73,7 @@ data class ArticleFilterState(
 @Composable
 fun ArticleFilter(
     modifier: Modifier = Modifier,
-    filterState: ArticleFilterState,
+    filterState: ArticlesFilterEditorState,
     // initialValue: SheetValue = SheetValue.Hidden,
 ) {
     if (filterState.isVisible.not()) return
@@ -156,9 +156,12 @@ fun ArticleFilter(
 @Composable
 fun ArticleFilterActionIcon(
     modifier: Modifier = Modifier,
-    filterState: ArticleFilterState,
+    filterState: ArticlesFilterEditorState,
 ) {
-    IconButton(onClick = filterState.show) {
+    IconButton(
+        modifier = modifier,
+        onClick = filterState.show
+    ) {
         Box {
             if (filterState.isSet) {
                 Box(

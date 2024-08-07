@@ -15,7 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.germanautolabs.acaraus.screens.articles.details.articleDetailNavNode
 import com.germanautolabs.acaraus.screens.articles.details.onNavigateToArticleDetail
 import com.germanautolabs.acaraus.screens.articles.list.ArticleListNode
-import com.germanautolabs.acaraus.screens.articles.list.articleListNavNode
+import com.germanautolabs.acaraus.screens.articles.list.articlesListNavNode
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.net.URLDecoder
@@ -31,7 +31,7 @@ fun MainNavHost(
     startDestination = ArticleListNode,
     modifier = modifier.padding(paddingValues = innerPadding),
 ) {
-    articleListNavNode(
+    articlesListNavNode(
         modifier = modifier,
         onNavigateToDetails = navController::onNavigateToArticleDetail,
     )

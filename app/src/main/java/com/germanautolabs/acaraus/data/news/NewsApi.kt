@@ -23,10 +23,7 @@ interface NewsApi {
         category: String = "general",
     ): Result<List<Article>, Error>
 
-    suspend fun getSources(
-        language: String = "de",
-        category: String = "general",
-    ): Result<List<ArticlesSources>, Error>
+    suspend fun getSources(): Result<List<ArticlesSources>, Error>
 
     suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error>
 }
@@ -49,29 +46,26 @@ class NewsApiImpl(
 
         when (response) {
             is NewsApiArticles -> response.articles.map(NewsApiArticle::toArticle)
-                .let { articles -> Result.success(articles) }
+                .let { articles -> Result.Success(articles) }
 
-            is NewsApiError -> Result.error(response.toError())
+            is NewsApiError -> Result.Error(response.toError())
 
-            else -> Result.error(Error("parserError", "No error message"))
+            else -> Result.Error(Error("parserError", "No error message"))
         }
     }
 
-    override suspend fun getSources(
-        language: String,
-        category: String,
-    ): Result<List<ArticlesSources>, Error> =
+    override suspend fun getSources(): Result<List<ArticlesSources>, Error> =
         withContext(dispatchers.io) {
             val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines/sources")) {
             }.body()
 
             when (response) {
                 is NewsApiSources -> response.sources.map(NewsApiSource::toArticleSource)
-                    .let { Result.success(it) }
+                    .let { Result.Success(it) }
 
-                is NewsApiError -> Result.error(response.toError())
+                is NewsApiError -> Result.Error(response.toError())
 
-                else -> Result.error(Error("parseError", "No error message"))
+                else -> Result.Error(Error("parseError", "No error message"))
             }
         }
 
@@ -93,11 +87,11 @@ class NewsApiImpl(
             }.body()
             when (response) {
                 is NewsApiArticles -> response.articles.map(NewsApiArticle::toArticle)
-                    .let { Result.success(it) }
+                    .let { Result.Success(it) }
 
-                is NewsApiError -> Result.error(response.toError())
+                is NewsApiError -> Result.Error(response.toError())
 
-                else -> Result.error(Error("parseError", "No error message"))
+                else -> Result.Error(Error("parseError", "No error message"))
             }
         }
 

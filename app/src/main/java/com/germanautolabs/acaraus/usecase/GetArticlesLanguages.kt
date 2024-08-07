@@ -25,7 +25,7 @@ class GetArticlesLanguages {
     fun options() = newsLanguages.values.toSet()
 
     fun getLanguageCodeByName(languageName: String): String =
-        newsLanguages.getKeyByValue(languageName) ?: "English"
+        newsLanguages.getKeyByValue(languageName) ?: "en"
 
     private fun <K, V> Map<K, V>.getKeyByValue(value: V): K? {
         return this.entries.firstOrNull { it.value == value }?.key

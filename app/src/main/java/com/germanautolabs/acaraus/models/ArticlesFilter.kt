@@ -14,7 +14,11 @@ data class ArticlesFilter(
 enum class SortBy {
     Relevancy,
     Popularity,
-    MostRecent,
+    MostRecent, ;
+
+    companion object {
+        fun toSet(): Set<String> = SortBy.entries.map { it.name }.toSet()
+    }
 }
 
 data class ArticlesSources(

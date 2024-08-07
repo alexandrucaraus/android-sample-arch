@@ -4,6 +4,7 @@ import com.germanautolabs.acaraus.data.news.NewsApi
 import com.germanautolabs.acaraus.main.DataDi
 import com.germanautolabs.acaraus.main.InfraDi
 import com.germanautolabs.acaraus.models.ArticlesFilter
+import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -23,16 +24,14 @@ class NewsApiTest : KoinTest {
     fun fetchNewsHeadlines() = runTest {
         val newsApi: NewsApi by inject<NewsApi>()
         val headlinesResult = newsApi.getHeadlines()
-        assert(headlinesResult.isSuccess)
-        assert(headlinesResult.success?.isNotEmpty() == true)
+        assert((headlinesResult as Result.Success).value.isNotEmpty())
     }
 
     @Test
     fun fetchSources() = runTest {
         val newsApi: NewsApi by inject<NewsApi>()
         val sourcesResult = newsApi.getSources()
-        assert(sourcesResult.isSuccess)
-        assert(sourcesResult.success?.isNotEmpty() == true)
+        assert((sourcesResult as Result.Success).value.isNotEmpty())
     }
 
     @Test
@@ -43,7 +42,6 @@ class NewsApiTest : KoinTest {
             language = "de",
         )
         val everythingResult = newsApi.getEverything(filter)
-        assert(everythingResult.isSuccess)
-        assert(everythingResult.success?.isNotEmpty() == true)
+        assert((everythingResult as Result.Success).value.isNotEmpty())
     }
 }
