@@ -160,7 +160,7 @@ fun ArticleFilterActionIcon(
 ) {
     IconButton(
         modifier = modifier,
-        onClick = filterState.show
+        onClick = filterState.show,
     ) {
         Box {
             if (filterState.isSet) {

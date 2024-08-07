@@ -38,12 +38,13 @@ fun AudioCommandButton(
     FloatingActionButton(
         modifier = modifier,
         onClick = {
-        if (hasPermission(context)) {
-            state.toggleListening()
-        } else {
-            requestPermission = true
-        }
-    }) {
+            if (hasPermission(context)) {
+                state.toggleListening()
+            } else {
+                requestPermission = true
+            }
+        },
+    ) {
         if (state.isListening) {
             val scaleDB = state.audioInputChangesDb.coerceIn(
                 minimumValue = 1f,

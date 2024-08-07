@@ -82,5 +82,4 @@ class SpeechRecognizerStateHolder(
     private fun resetToast() {
         toasterState.update { it.copy(showToast = false, message = "") }
     }
-
 }

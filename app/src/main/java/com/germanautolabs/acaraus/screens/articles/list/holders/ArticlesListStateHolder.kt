@@ -62,7 +62,10 @@ class ArticlesListStateHolder(
     private fun updateSuccess(articles: List<Article>) {
         listUiState.update {
             it.copy(
-                list = articles, isLoading = false, isError = false, errorMessage = null,
+                list = articles,
+                isLoading = false,
+                isError = false,
+                errorMessage = null,
             )
         }
     }
@@ -70,7 +73,10 @@ class ArticlesListStateHolder(
     private fun updateError(error: Error) {
         listUiState.update {
             it.copy(
-                list = emptyList(), isLoading = false, isError = true, errorMessage = error.message,
+                list = emptyList(),
+                isLoading = false,
+                isError = true,
+                errorMessage = error.message,
             )
         }
     }
