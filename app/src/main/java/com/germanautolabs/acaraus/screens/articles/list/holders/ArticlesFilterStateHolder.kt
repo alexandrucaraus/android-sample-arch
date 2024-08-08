@@ -26,8 +26,8 @@ import java.time.LocalDate
 class ArticlesFilterStateHolder(
     private val getArticlesSources: GetArticlesSources,
     private val getArticleLanguages: GetArticlesLanguages,
-    @InjectedParam currentScope: CoroutineScope,
-) {
+    @InjectedParam scope: CoroutineScope,
+) : CoroutineScope by scope {
 
     private val defaultArticlesFilterUiState = ArticlesFilterEditorState(
         show = ::show,
@@ -63,7 +63,7 @@ class ArticlesFilterStateHolder(
                         filterUiState.update { it.copy(sourceOptions = sources.asSourceOptions()) }
                     },
                 )
-            }.launchIn(currentScope)
+            }.launchIn(this)
 
         filterUiState
             .map { it.language }
@@ -72,7 +72,7 @@ class ArticlesFilterStateHolder(
             .onEach { sources ->
                 filterUiState.update { it.copy(sourceOptions = sources.asSourceOptions()) }
             }
-            .launchIn(currentScope)
+            .launchIn(this)
     }
 
     private fun show() {

@@ -1,6 +1,10 @@
 package com.germanautolabs.acaraus.infra
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+import org.koin.core.annotation.Factory
+import org.koin.core.annotation.Named
 import org.koin.core.annotation.Single
 import kotlinx.coroutines.Dispatchers as KotlinProvidedDispatchers
 
@@ -18,3 +22,8 @@ class DispatchersApp : Dispatchers {
     override val unconfined: CoroutineDispatcher get() = KotlinProvidedDispatchers.Unconfined
     override val ui: CoroutineDispatcher get() = KotlinProvidedDispatchers.Main.immediate
 }
+
+@Factory
+@Named("main")
+fun uiMainCoroutineScope(dispatchers: Dispatchers): CoroutineScope =
+    CoroutineScope(SupervisorJob() + dispatchers.ui)

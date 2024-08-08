@@ -6,11 +6,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.germanautolabs.acaraus.main.serializableType
+import com.germanautolabs.acaraus.lib.scopedKoinViewModel
+import com.germanautolabs.acaraus.lib.serializableType
 import com.germanautolabs.acaraus.models.Article
 import kotlinx.serialization.Serializable
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
 import kotlin.reflect.typeOf
 
 @Serializable
@@ -26,7 +25,7 @@ fun NavGraphBuilder.articleDetailNavNode(
         typeMap = mapOf(typeOf<Article>() to serializableType<Article>()),
     ) { backStack ->
         val article = backStack.toRoute<ArticleDetailNode>().article
-        val vm = koinViewModel<ArticleDetailViewModel> { parametersOf(article) }
+        val vm = scopedKoinViewModel<ArticleDetailViewModel>(listOf(article))
         ArticleDetailScreen(
             modifier = modifier,
             state = vm.state.collectAsStateWithLifecycle().value,

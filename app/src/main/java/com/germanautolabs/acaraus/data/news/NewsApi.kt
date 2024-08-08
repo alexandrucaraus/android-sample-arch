@@ -6,6 +6,7 @@ import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
+import com.germanautolabs.acaraus.models.Result.Success
 import com.germanautolabs.acaraus.models.SortBy
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -45,27 +46,28 @@ class NewsApiImpl(
         }.body()
 
         when (response) {
-            is NewsApiArticles -> response.articles.map(NewsApiArticle::toArticle)
-                .let { articles -> Result.Success(articles) }
+            is NewsApiArticles ->
+                response
+                    .articles
+                    .map(NewsApiArticle::toArticle)
+                    .let(::Success)
 
-            is NewsApiError -> Result.Error(response.toError())
-
-            else -> Result.Error(Error("parserError", "No error message"))
+            else -> Result.Error(response.toError())
         }
     }
 
     override suspend fun getSources(): Result<List<ArticlesSources>, Error> =
         withContext(dispatchers.io) {
-            val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines/sources")) {
-            }.body()
+            val response: NewsApiResponse = httpClient.get(path("/v2/top-headlines/sources")).body()
 
             when (response) {
-                is NewsApiSources -> response.sources.map(NewsApiSource::toArticleSource)
-                    .let { Result.Success(it) }
+                is NewsApiSources ->
+                    response
+                        .sources
+                        .map(NewsApiSource::toArticleSource)
+                        .let(::Success)
 
-                is NewsApiError -> Result.Error(response.toError())
-
-                else -> Result.Error(Error("parseError", "No error message"))
+                else -> Result.Error(response.toError())
             }
         }
 
@@ -86,12 +88,13 @@ class NewsApiImpl(
                 parameter(TO_DATE, filter.toDate.format(DateTimeFormatter.ISO_DATE))
             }.body()
             when (response) {
-                is NewsApiArticles -> response.articles.map(NewsApiArticle::toArticle)
-                    .let { Result.Success(it) }
+                is NewsApiArticles ->
+                    response
+                        .articles
+                        .map(NewsApiArticle::toArticle)
+                        .let(::Success)
 
-                is NewsApiError -> Result.Error(response.toError())
-
-                else -> Result.Error(Error("parseError", "No error message"))
+                else -> Result.Error(response.toError())
             }
         }
 
@@ -133,5 +136,9 @@ private fun NewsApiArticle.toArticle() = Article(
     contentUrl = url ?: "",
 )
 
-private fun NewsApiError.toError(): Error =
-    Error(code ?: "unKnownCode", message ?: "No error message")
+private fun NewsApiResponse.toError(): Error =
+    if (this is NewsApiError) {
+        Error(code ?: "unKnownCode", message ?: "Unknown error api error")
+    } else {
+        Error("unKnownCode", "Unknown api error")
+    }

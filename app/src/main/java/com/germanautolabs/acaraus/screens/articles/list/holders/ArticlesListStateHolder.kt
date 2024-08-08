@@ -11,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.mapLatest
@@ -23,7 +24,7 @@ import org.koin.core.annotation.InjectedParam
 @Factory
 class ArticlesListStateHolder(
     private val getArticles: GetArticles,
-    @InjectedParam private val scope: CoroutineScope,
+    @InjectedParam scope: CoroutineScope,
 ) : CoroutineScope by scope {
 
     private val defaultArticleListState = ArticleListState(
@@ -43,6 +44,9 @@ class ArticlesListStateHolder(
             .flatMapLatest(getArticles::invoke)
             .mapLatest { result ->
                 result.onEachSuccess(::updateSuccess).onEachError(::updateError)
+            }
+            .catch { exception ->
+                updateError(Error(code = "unknown", exception.message ?: "Failed to load articles"))
             }
             .launchIn(this)
     }
