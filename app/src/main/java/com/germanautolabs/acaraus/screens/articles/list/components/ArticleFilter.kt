@@ -24,10 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.germanautolabs.acaraus.screens.components.Dropdown
-import com.germanautolabs.acaraus.screens.components.IntervalDatePickerScreen
+import com.germanautolabs.acaraus.screens.components.RangeDatePickerDialog
 import java.time.LocalDate
 
 data class ArticlesFilterEditorState(
@@ -125,12 +126,14 @@ fun ArticleFilter(
                 options = filterState.languageOptions,
                 onSelect = filterState.setLanguage,
             )
-            IntervalDatePickerScreen(
+            RangeDatePickerDialog(
                 modifier = Modifier.padding(top = 16.dp),
-                from = filterState.fromOldestDate,
-                to = filterState.toNewestDate,
-                onFromChange = filterState.setFromDate,
-                onToChange = filterState.setToDate,
+                oldestDate = filterState.fromOldestDate,
+                newestDate = filterState.toNewestDate,
+                onRangeSelected = { old, new ->
+                    filterState.setFromDate(old)
+                    filterState.setToDate(new)
+                },
             )
             Row(
                 modifier = Modifier
@@ -159,7 +162,7 @@ fun ArticleFilterActionIcon(
     filterState: ArticlesFilterEditorState,
 ) {
     IconButton(
-        modifier = modifier,
+        modifier = modifier.testTag("ArticleFilter"),
         onClick = filterState.show,
     ) {
         Box {

@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.germanautolabs.acaraus.main.MainActivity
 import org.junit.Rule
@@ -11,7 +12,8 @@ import org.junit.Test
 
 class ArticleListScreenTest {
 
-    @get:Rule val composeTestRule = createAndroidComposeRule<MainActivity>()
+    @get:Rule
+    val composeTestRule = createAndroidComposeRule<MainActivity>()
 
     @Test
     fun testArticleListScreenToArticleDetailScreenNavigationAndBack() {
@@ -28,6 +30,17 @@ class ArticleListScreenTest {
         }
 
         composeTestRule.onNodeWithTag("ListItem0").assertIsDisplayed()
+    }
+
+    @Test
+    fun testArticleListOpenFilter() {
+        composeTestRule.waitUntil(TIMEOUT) {
+            composeTestRule.onNodeWithTag("ArticleFilter").isDisplayed()
+        }
+
+        composeTestRule.onNodeWithTag("ArticleFilter").performClick()
+
+        composeTestRule.onNodeWithText("Reset").performClick()
     }
 
     companion object {

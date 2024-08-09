@@ -4,6 +4,8 @@ import com.germanautolabs.acaraus.data.SpeechEvent
 import com.germanautolabs.acaraus.data.SpeechRecognizer
 import com.germanautolabs.acaraus.screens.articles.list.components.AudioCommandButtonState
 import com.germanautolabs.acaraus.screens.components.ToasterState
+import com.germanautolabs.acaraus.usecase.MatchVoiceCommands
+import com.germanautolabs.acaraus.usecase.VoiceCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,6 +19,7 @@ import org.koin.core.annotation.InjectedParam
 @Factory
 class SpeechRecognizerStateHolder(
     private val speechRecognizer: SpeechRecognizer,
+    private val matchVoiceCommands: MatchVoiceCommands,
     @InjectedParam scope: CoroutineScope,
 ) : CoroutineScope by scope {
 
@@ -36,6 +39,8 @@ class SpeechRecognizerStateHolder(
     val audioCommandButton = audioCommandButtonState.asStateFlow()
     val toaster = toasterState.asStateFlow()
 
+    val reloadCommand = MutableStateFlow(Unit)
+
     init {
 
         speechRecognizer.isListening.onEach { isListening ->
@@ -44,9 +49,16 @@ class SpeechRecognizerStateHolder(
 
         speechRecognizer.events().onEach { event ->
             when (event) {
-                is SpeechEvent.Result -> reloadVoiceCommand(event.matches)
+                is SpeechEvent.Result -> matchVoiceCommands(event.matches).let {
+                    when (it) {
+                        is VoiceCommand.Reload -> reloadCommand.emit(Unit)
+                        is VoiceCommand.Unknown -> showToast("Command not recognized")
+                    }
+                }
                 is SpeechEvent.Error -> showToast(event.errorMessage)
-                is SpeechEvent.RmsChanged -> audioCommandButtonState.update { it.copy(audioInputChangesDb = event.rmsdB) }
+                is SpeechEvent.RmsChanged -> audioCommandButtonState.update {
+                    it.copy(audioInputChangesDb = event.rmsdB)
+                }
                 else -> {
                     /* no op */
                 }
@@ -57,21 +69,8 @@ class SpeechRecognizerStateHolder(
     }
 
     private fun toggleListening() {
-        if (speechRecognizer.isListening.value) {
-            speechRecognizer.stopListening()
-        } else {
-            speechRecognizer.startListening()
-        }
-    }
-
-    //
-    private fun reloadVoiceCommand(spokenWords: List<String>) {
-        spokenWords.find { it.contains("Reload", ignoreCase = true) }?.let {
-            showToast("Received reloading command...")
-            // todo reload articles
-            // reloadArticles()
-        } ?: {
-            showToast("Command not recognized")
+        with(speechRecognizer) {
+            if (isListening.value) stopListening() else startListening()
         }
     }
 

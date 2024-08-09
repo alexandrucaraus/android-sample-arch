@@ -25,7 +25,7 @@ fun NavGraphBuilder.articleDetailNavNode(
         typeMap = mapOf(typeOf<Article>() to serializableType<Article>()),
     ) { backStack ->
         val article = backStack.toRoute<ArticleDetailNode>().article
-        val vm = scopedKoinViewModel<ArticleDetailViewModel>(listOf(article))
+        val vm = scopedKoinViewModel<ArticleDetailViewModel>(article)
         ArticleDetailScreen(
             modifier = modifier,
             state = vm.state.collectAsStateWithLifecycle().value,

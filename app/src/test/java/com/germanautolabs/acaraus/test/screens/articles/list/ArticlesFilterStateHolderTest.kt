@@ -25,12 +25,13 @@ import org.koin.core.parameter.parametersOf
 import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
 import org.koin.test.inject
+import java.time.LocalDate
 import kotlin.test.assertEquals
 
 class ArticlesFilterStateHolderTest : KoinTest {
 
     @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule(listOf(Test1Fakes().module))
+    val koinUnitTestRule = KoinUnitTestRule(listOf(ArticlesFilterStateHolderModule().module))
 
     @get:Rule
     val coroutinesTestRule = CoroutinesTestRule()
@@ -59,17 +60,29 @@ class ArticlesFilterStateHolderTest : KoinTest {
             val filterStateHolder = createSubject(backgroundScope)
             filterStateHolder.articlesFilterUiState.test {
                 skipItems(2)
-                val state = awaitItem()
-                assertEquals(state.sourceOptions.isNotEmpty(), true)
+                var state = awaitItem()
                 state.setQuery("android")
-                assert(awaitItem().query == "android")
+                state = awaitItem()
                 state.setSortBy(SortBy.Relevancy.name)
-                assert(awaitItem().sortBy == SortBy.Relevancy.name)
+                state = awaitItem()
                 state.setLanguage("German")
-                assert(awaitItem().language == "German")
+                state = awaitItem()
                 state.setSource("Der Spiegel")
-                assert(awaitItem().source == "Der Spiegel")
+                state = awaitItem()
+                state.setFromDate(LocalDate.of(2022, 1, 1))
+                state = awaitItem()
+                state.setToDate(LocalDate.of(2022, 12, 31))
+                state = awaitItem()
+
                 state.apply()
+
+                assertEquals(true, state.sourceOptions.isNotEmpty())
+                assertEquals("Relevancy", state.sortBy)
+                assertEquals("android", state.query)
+                assertEquals("German", state.language)
+                assertEquals("Der Spiegel", state.source)
+                assertEquals(LocalDate.of(2022, 1, 1), state.fromOldestDate)
+                assertEquals(LocalDate.of(2022, 12, 31), state.toNewestDate)
 
                 filterStateHolder.articlesFilterState.test {
                     val currentFilter = awaitItem()
@@ -81,34 +94,79 @@ class ArticlesFilterStateHolderTest : KoinTest {
             }
         }
     }
+
+    @Test
+    fun select_Topics_SortBy_Language_Sources_And_Reset_Filter() = runTest {
+        turbineScope {
+            val filterStateHolder = createSubject(backgroundScope)
+            filterStateHolder.articlesFilterUiState.test {
+                skipItems(2)
+                var state = awaitItem()
+                state.setQuery("android")
+                state = awaitItem()
+                state.setSortBy(SortBy.Relevancy.name)
+                state = awaitItem()
+                state.setLanguage("German")
+                state = awaitItem()
+                state.setSource("Der Spiegel")
+                state = awaitItem()
+                state.setFromDate(LocalDate.of(2022, 1, 1))
+                state = awaitItem()
+                state.setToDate(LocalDate.of(2022, 12, 31))
+                state = awaitItem()
+
+                assertEquals(true, state.sourceOptions.isNotEmpty())
+                assertEquals("Relevancy", state.sortBy)
+                assertEquals("android", state.query)
+                assertEquals("German", state.language)
+                assertEquals("Der Spiegel", state.source)
+                assertEquals(LocalDate.of(2022, 1, 1), state.fromOldestDate)
+                assertEquals(LocalDate.of(2022, 12, 31), state.toNewestDate)
+
+                state.reset()
+                state = awaitItem()
+
+                assertEquals(true, state.sourceOptions.isNotEmpty())
+                assertEquals("MostRecent", state.sortBy)
+                assertEquals("", state.query)
+                assertEquals("All", state.source)
+                assertEquals("German", state.language)
+
+                filterStateHolder.articlesFilterState.test {
+                    val currentFilter = awaitItem()
+                    assertEquals("", currentFilter.query)
+                    assertEquals("de", currentFilter.language)
+                    assertEquals(SortBy.MostRecent, currentFilter.sortedBy)
+                    assertEquals(emptyList(), currentFilter.sources)
+                }
+            }
+        }
+    }
 }
 
 @Module
-class Test1Fakes {
+class ArticlesFilterStateHolderModule {
 
     @Factory
-    fun newsApi(): NewsApi = NetworkApi()
+    fun newsApi(): NewsApi = object : NewsApi {
+        override suspend fun getHeadlines(
+            language: String,
+            category: String,
+        ): Result<List<Article>, Error> {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun getSources(): Result<List<ArticlesSources>, Error> {
+            return Result.Success(dummyArticlesSources)
+        }
+
+        override suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error> {
+            TODO("Not yet implemented")
+        }
+    }
 
     @Single
     fun localeStore(): LocaleStore = LocaleStoreImpl()
-}
-
-class NetworkApi : NewsApi {
-
-    override suspend fun getHeadlines(
-        language: String,
-        category: String,
-    ): Result<List<Article>, Error> {
-        TODO("Not implemented")
-    }
-
-    override suspend fun getSources(): Result<List<ArticlesSources>, Error> {
-        return Result.Success(dummyArticlesSources)
-    }
-
-    override suspend fun getEverything(filter: ArticlesFilter): Result<List<Article>, Error> {
-        TODO("Not implemented")
-    }
 }
 
 val dummyArticlesSources = listOf(

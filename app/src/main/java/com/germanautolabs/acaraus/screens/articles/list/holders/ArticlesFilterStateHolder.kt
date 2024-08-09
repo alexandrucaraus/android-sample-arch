@@ -108,8 +108,13 @@ class ArticlesFilterStateHolder(
     }
 
     private fun resetFilter() {
-        filterState.update { ArticlesFilter() }
-        filterUiState.update { defaultArticlesFilterUiState }
+        filterUiState.update {
+            defaultArticlesFilterUiState.copy(
+                sourceOptions = it.sourceOptions,
+                language = it.language,
+            )
+        }
+        filterState.update { filterUiState.value.toArticleFilter() }
     }
 
     private fun applyFilter() {

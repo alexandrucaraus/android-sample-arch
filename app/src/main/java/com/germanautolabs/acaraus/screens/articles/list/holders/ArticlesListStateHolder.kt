@@ -40,7 +40,9 @@ class ArticlesListStateHolder(
     init {
         @Suppress("OPT_IN_USAGE")
         reloadArticlesCommand
-            .onEach { updateLoading() }
+            .onEach {
+                updateLoading()
+            }
             .flatMapLatest(getArticles::invoke)
             .mapLatest { result ->
                 result.onEachSuccess(::updateSuccess).onEachError(::updateError)
@@ -52,7 +54,9 @@ class ArticlesListStateHolder(
     }
 
     fun reloadArticles(articlesFilter: ArticlesFilter = ArticlesFilter()) {
-        launch { reloadArticlesCommand.emit(articlesFilter) }
+        launch(coroutineContext) {
+            reloadArticlesCommand.emit(articlesFilter)
+        }
     }
 
     private fun updateLoading() {

@@ -7,6 +7,7 @@ import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListStat
 import com.germanautolabs.acaraus.screens.articles.list.holders.SpeechRecognizerStateHolder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
@@ -30,6 +31,12 @@ class ArticlesListViewModel(
     init {
         filterStateHolder
             .articlesFilterState
+            .onEach(articlesListStateStateHolder::reloadArticles)
+            .launchIn(viewModelScope)
+
+        speechRecognizerStateHolder
+            .reloadCommand
+            .map { filterStateHolder.articlesFilterState.value }
             .onEach(articlesListStateStateHolder::reloadArticles)
             .launchIn(viewModelScope)
     }
