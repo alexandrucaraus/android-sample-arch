@@ -43,7 +43,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
     fun check_that_article_sources_are_loaded() = runTest {
         turbineScope {
             val filterStateHolder = createSubject(backgroundScope)
-            filterStateHolder.articlesFilterUiState.test {
+            filterStateHolder.filtersUi.test {
                 skipItems(2)
                 val filterEditorState = awaitItem()
                 assertEquals(
@@ -58,7 +58,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
     fun select_Topics_SortBy_Language_Sources_And_Apply_Filter() = runTest {
         turbineScope {
             val filterStateHolder = createSubject(backgroundScope)
-            filterStateHolder.articlesFilterUiState.test {
+            filterStateHolder.filtersUi.test {
                 skipItems(2)
                 var state = awaitItem()
                 state.setQuery("android")
@@ -84,7 +84,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
                 assertEquals(LocalDate.of(2022, 1, 1), state.fromOldestDate)
                 assertEquals(LocalDate.of(2022, 12, 31), state.toNewestDate)
 
-                filterStateHolder.articlesFilterState.test {
+                filterStateHolder.activeFilter.test {
                     val currentFilter = awaitItem()
                     assertEquals("android", currentFilter.query)
                     assertEquals("de", currentFilter.language)
@@ -99,7 +99,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
     fun select_Topics_SortBy_Language_Sources_And_Reset_Filter() = runTest {
         turbineScope {
             val filterStateHolder = createSubject(backgroundScope)
-            filterStateHolder.articlesFilterUiState.test {
+            filterStateHolder.filtersUi.test {
                 skipItems(2)
                 var state = awaitItem()
                 state.setQuery("android")
@@ -132,7 +132,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
                 assertEquals("All", state.source)
                 assertEquals("German", state.language)
 
-                filterStateHolder.articlesFilterState.test {
+                filterStateHolder.activeFilter.test {
                     val currentFilter = awaitItem()
                     assertEquals("", currentFilter.query)
                     assertEquals("de", currentFilter.language)

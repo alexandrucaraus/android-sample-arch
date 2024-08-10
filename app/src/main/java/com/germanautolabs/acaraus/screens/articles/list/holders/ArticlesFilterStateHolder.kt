@@ -49,8 +49,8 @@ class ArticlesFilterStateHolder(
 
     private val reloadSourcesCommand = MutableSharedFlow<Unit>()
 
-    val articlesFilterUiState = filterUiState.asStateFlow()
-    val articlesFilterState = filterState.asStateFlow()
+    val filtersUi = filterUiState.asStateFlow()
+    val activeFilter = filterState.asStateFlow()
 
     // Todo handle get article sources failure
     init {

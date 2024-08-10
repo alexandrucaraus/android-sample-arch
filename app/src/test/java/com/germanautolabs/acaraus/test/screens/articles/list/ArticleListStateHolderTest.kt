@@ -48,7 +48,7 @@ class ArticleListStateHolderTest : KoinTest {
     fun check_that_headline_articles_are_loaded() = runTest {
         turbineScope {
             val sourcesStateHolder = createSubject(backgroundScope)
-            sourcesStateHolder.articleListState.test {
+            sourcesStateHolder.listUi.test {
                 var state = awaitItem()
                 delay(10)
                 state.reload()
@@ -67,7 +67,7 @@ class ArticleListStateHolderTest : KoinTest {
     fun check_that_filtered_articles_are_loaded() = runTest {
         turbineScope {
             val sourcesStateHolder = createSubject(backgroundScope)
-            sourcesStateHolder.articleListState.test {
+            sourcesStateHolder.listUi.test {
                 skipItems(1)
                 delay(10)
                 sourcesStateHolder.reloadArticles(
@@ -93,7 +93,7 @@ class ArticleListStateHolderTest : KoinTest {
         turbineScope {
             simulateApiError = true
             val sourcesStateHolder = createSubject(backgroundScope)
-            sourcesStateHolder.articleListState.test {
+            sourcesStateHolder.listUi.test {
                 skipItems(1)
                 delay(10)
                 sourcesStateHolder.reloadArticles(

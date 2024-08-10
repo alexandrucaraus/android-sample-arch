@@ -19,9 +19,9 @@ fun NavGraphBuilder.articlesListNavNode(
         val vm = scopedKoinViewModel<ArticlesListViewModel>()
         ArticleListScreen(
             modifier = modifier,
-            articleListState = vm.articlesListState.collectAsStateWithLifecycle().value,
+            articleListState = vm.articlesUiState.collectAsStateWithLifecycle().value,
             articlesFilterEditorState = vm.articlesFilterUiState.collectAsStateWithLifecycle().value,
-            audioCommandButtonState = vm.audioCommandButtonState.collectAsStateWithLifecycle().value,
+            audioCommandButtonState = vm.audioCommandButtonUiState.collectAsStateWithLifecycle().value,
             toasterState = vm.toasterState.collectAsStateWithLifecycle().value,
             onNavigateToDetails = onNavigateToDetails,
         )

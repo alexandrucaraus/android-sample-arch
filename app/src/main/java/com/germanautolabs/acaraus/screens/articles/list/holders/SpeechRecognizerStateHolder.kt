@@ -36,36 +36,37 @@ class SpeechRecognizerStateHolder(
         ),
     )
 
-    val audioCommandButton = audioCommandButtonState.asStateFlow()
-    val toaster = toasterState.asStateFlow()
+    val audioCommandButtonUi = audioCommandButtonState.asStateFlow()
+    val toasterUi = toasterState.asStateFlow()
 
     val reloadCommand = MutableStateFlow(Unit)
 
     init {
-
         speechRecognizer.isListening.onEach { isListening ->
             audioCommandButtonState.update { it.copy(isListening = isListening) }
         }.launchIn(this)
 
         speechRecognizer.events().onEach { event ->
             when (event) {
-                is SpeechEvent.Result -> matchVoiceCommands(event.matches).let {
-                    when (it) {
-                        is VoiceCommand.Reload -> reloadCommand.emit(Unit)
-                        is VoiceCommand.Unknown -> showToast("Command not recognized")
-                    }
-                }
+                is SpeechEvent.Result -> handleVoiceRecognition(event.matches)
                 is SpeechEvent.Error -> showToast(event.errorMessage)
-                is SpeechEvent.RmsChanged -> audioCommandButtonState.update {
-                    it.copy(audioInputChangesDb = event.rmsdB)
-                }
-                else -> {
-                    /* no op */
-                }
+                is SpeechEvent.RmsChanged -> updateAudioInputChangesDb(event.rmsdB)
+                else -> { /* no op */ }
             }
         }.launchIn(this)
 
         coroutineContext.job.invokeOnCompletion { speechRecognizer.destroy() }
+    }
+
+    private suspend fun handleVoiceRecognition(words: List<String>) {
+        when (matchVoiceCommands(words)) {
+            is VoiceCommand.Reload -> reloadCommand.emit(Unit)
+            is VoiceCommand.Unknown -> showToast("Command not recognized")
+        }
+    }
+
+    private fun updateAudioInputChangesDb(rmsdB: Float) {
+        audioCommandButtonState.update { it.copy(audioInputChangesDb = rmsdB) }
     }
 
     private fun toggleListening() {

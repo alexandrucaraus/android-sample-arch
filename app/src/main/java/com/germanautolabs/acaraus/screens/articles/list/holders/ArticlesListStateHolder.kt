@@ -27,13 +27,13 @@ class ArticlesListStateHolder(
     @InjectedParam scope: CoroutineScope,
 ) : CoroutineScope by scope {
 
-    private val defaultArticleListState = ArticleListState(
-        reload = ::reloadArticles,
+    private val listUiState = MutableStateFlow(
+        ArticleListState(
+            reload = ::reloadArticles,
+        ),
     )
 
-    private val listUiState = MutableStateFlow(defaultArticleListState)
-
-    val articleListState = listUiState.asStateFlow()
+    val listUi = listUiState.asStateFlow()
 
     private val reloadArticlesCommand = MutableSharedFlow<ArticlesFilter>()
 
