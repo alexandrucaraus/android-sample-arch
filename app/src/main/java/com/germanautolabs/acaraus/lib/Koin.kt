@@ -28,7 +28,7 @@ inline fun <reified T : ViewModel> scopedKoinViewModel(
 }
 
 inline fun <reified T : Any> KoinComponent.scopedKoinInject(
-    vararg params: Any
+    vararg params: Any,
 ): T {
     val koinScope = this.getKoin()
     val coroutineScope =

@@ -62,7 +62,6 @@ class ArticleListViewModelTest : KoinTest {
             }
         }
     }
-
 }
 
 private val speechEvent = MutableSharedFlow<SpeechEvent>()
@@ -77,7 +76,6 @@ class ArticleListViewModelTestModule {
             language: String,
             category: String,
         ): Result<List<Article>, Error> = Result.success(dummyArticles.take(3))
-
 
         override suspend fun getSources(): Result<List<ArticlesSources>, Error> {
             TODO("Not implemented")
