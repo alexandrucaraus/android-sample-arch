@@ -5,10 +5,10 @@ import java.time.LocalDate
 data class ArticlesFilter(
     val query: String = "",
     val sortedBy: SortBy = SortBy.MostRecent,
-    val language: String = "",
+    val language: String = "en",
     val sources: List<ArticlesSources> = emptyList(),
-    val fromDate: LocalDate = LocalDate.now(),
-    val toDate: LocalDate = LocalDate.now().minusMonths(1),
+    val fromDate: LocalDate = LocalDate.now().minusMonths(1),
+    val toDate: LocalDate = LocalDate.now(),
 )
 
 enum class SortBy {

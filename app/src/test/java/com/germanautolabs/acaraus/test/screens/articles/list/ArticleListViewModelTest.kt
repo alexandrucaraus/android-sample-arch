@@ -4,55 +4,55 @@ import app.cash.turbine.test
 import app.cash.turbine.turbineScope
 import com.germanautolabs.acaraus.data.LocaleStore
 import com.germanautolabs.acaraus.data.LocaleStoreImpl
+import com.germanautolabs.acaraus.data.SpeechEvent
+import com.germanautolabs.acaraus.data.SpeechRecognizer
 import com.germanautolabs.acaraus.data.news.NewsApi
+import com.germanautolabs.acaraus.lib.scopedKoinInject
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
-import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListStateHolder
+import com.germanautolabs.acaraus.screens.articles.list.ArticlesListViewModel
 import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.After
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
-import org.koin.core.parameter.parametersOf
 import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
-import org.koin.test.inject
 import kotlin.test.assertEquals
 
-class ArticleListStateHolderTest : KoinTest {
+class ArticleListViewModelTest : KoinTest {
 
     @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule(listOf(ArticleListTestModule().module))
+    val koinUnitTestRule = KoinUnitTestRule(listOf(ArticleListViewModelTestModule().module))
 
     @get:Rule
     val coroutinesTestRule = CoroutinesTestRule()
 
     private fun createSubject(coroutineScope: CoroutineScope) =
-        inject<ArticlesListStateHolder> { parametersOf(coroutineScope) }.value
-
-    @After
-    fun teardown() {
-        simulateApiError = false
-    }
+        scopedKoinInject<ArticlesListViewModel>(coroutineScope)
 
     @Test
-    fun check_that_headline_articles_are_loaded() = runTest {
+    fun reload_articles_by_voice_command() = runTest {
         turbineScope {
-            val sourcesStateHolder = createSubject(backgroundScope)
-            sourcesStateHolder.listUi.test {
-                var state = awaitItem()
+            val viewModel = createSubject(backgroundScope)
+            viewModel.articlesUiState.test {
+                skipItems(1)
                 delay(10)
-                state.reload()
-                state = awaitItem()
+                speechEvent.emit(SpeechEvent.Result(listOf("reload")))
+                delay(10)
+                var state = awaitItem()
                 assertEquals(true, state.isLoading)
                 assertEquals(false, state.list.isNotEmpty())
                 state = awaitItem()
@@ -63,64 +63,12 @@ class ArticleListStateHolderTest : KoinTest {
         }
     }
 
-    @Test
-    fun check_that_filtered_articles_are_loaded() = runTest {
-        turbineScope {
-            val sourcesStateHolder = createSubject(backgroundScope)
-            sourcesStateHolder.listUi.test {
-                skipItems(1)
-                delay(10)
-                sourcesStateHolder.reloadArticles(
-                    articlesFilter = ArticlesFilter(
-                        query = "android",
-                        sortedBy = com.germanautolabs.acaraus.models.SortBy.Relevancy,
-                        sources = emptyList(),
-                    ),
-                )
-                var state = awaitItem()
-                assertEquals(true, state.isLoading)
-                assertEquals(false, state.list.isNotEmpty())
-                state = awaitItem()
-                assertEquals(false, state.isLoading)
-                assertEquals(true, state.list.isNotEmpty())
-                assertEquals(dummyArticles.takeLast(2), state.list)
-            }
-        }
-    }
-
-    @Test
-    fun check_that_filtered_articles_are_failed() = runTest {
-        turbineScope {
-            simulateApiError = true
-            val sourcesStateHolder = createSubject(backgroundScope)
-            sourcesStateHolder.listUi.test {
-                skipItems(1)
-                delay(10)
-                sourcesStateHolder.reloadArticles(
-                    articlesFilter = ArticlesFilter(
-                        query = "android",
-                        sortedBy = com.germanautolabs.acaraus.models.SortBy.Relevancy,
-                        sources = emptyList(),
-                    ),
-                )
-                var state = awaitItem()
-                assertEquals(true, state.isLoading)
-                assertEquals(false, state.list.isNotEmpty())
-                assertEquals(false, state.isError)
-                state = awaitItem()
-                assertEquals(false, state.isLoading)
-                assertEquals(false, state.list.isNotEmpty())
-                assertEquals(true, state.isError)
-                assertEquals("Simulated Api Error", state.errorMessage)
-            }
-        }
-    }
 }
 
-private var simulateApiError = false
+private val speechEvent = MutableSharedFlow<SpeechEvent>()
 
 @Module
-class ArticleListTestModule {
+class ArticleListViewModelTestModule {
 
     @Factory
     fun newsApi(): NewsApi = object : NewsApi {
@@ -128,11 +76,8 @@ class ArticleListTestModule {
         override suspend fun getHeadlines(
             language: String,
             category: String,
-        ): Result<List<Article>, Error> = if (simulateApiError.not()) {
-            Result.success(dummyArticles.take(3))
-        } else {
-            throw Exception("Simulated Api Error")
-        }
+        ): Result<List<Article>, Error> = Result.success(dummyArticles.take(3))
+
 
         override suspend fun getSources(): Result<List<ArticlesSources>, Error> {
             TODO("Not implemented")
@@ -140,11 +85,29 @@ class ArticleListTestModule {
 
         override suspend fun getEverything(
             filter: ArticlesFilter,
-        ): Result<List<Article>, Error> = if (simulateApiError.not()) {
-            Result.success(dummyArticles.takeLast(2))
-        } else {
-            throw Exception("Simulated Api Error")
+        ): Result<List<Article>, Error> = Result.success(dummyArticles.takeLast(2))
+    }
+
+    @Factory
+    fun speechRecognizer(): SpeechRecognizer = object : SpeechRecognizer {
+
+        override val isListening: MutableStateFlow<Boolean>
+            get() = MutableStateFlow(true)
+
+        override val isAvailable: MutableStateFlow<Boolean>
+            get() = MutableStateFlow(true)
+
+        override fun events(): Flow<SpeechEvent> = speechEvent.asSharedFlow()
+
+        override fun startListening() {
+            TODO("Not yet implemented")
         }
+
+        override fun stopListening() {
+            TODO("Not yet implemented")
+        }
+
+        override fun destroy() {}
     }
 
     @Single

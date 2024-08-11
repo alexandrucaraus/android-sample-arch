@@ -25,7 +25,9 @@ class GetArticles(
     @OptIn(ExperimentalCoroutinesApi::class)
     operator fun invoke(filter: ArticlesFilter): Flow<Result<List<Article>, Error>> =
         flowOf(filter)
-            .flatMapLatest { if (filter == ArticlesFilter()) headlines() else everything(filter) }
+            .flatMapLatest {
+                if (filter == ArticlesFilter()) headlines() else everything(filter)
+            }
 
     private fun headlines(): Flow<Result<List<Article>, Error>> = flow {
         emit(

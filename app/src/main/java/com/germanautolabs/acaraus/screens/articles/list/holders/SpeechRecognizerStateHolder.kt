@@ -7,6 +7,7 @@ import com.germanautolabs.acaraus.screens.components.ToasterState
 import com.germanautolabs.acaraus.usecase.MatchVoiceCommands
 import com.germanautolabs.acaraus.usecase.VoiceCommand
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -39,7 +40,7 @@ class SpeechRecognizerStateHolder(
     val audioCommandButtonUi = audioCommandButtonState.asStateFlow()
     val toasterUi = toasterState.asStateFlow()
 
-    val reloadCommand = MutableStateFlow(Unit)
+    val reloadCommand = MutableSharedFlow<Unit>()
 
     init {
         speechRecognizer.isListening.onEach { isListening ->

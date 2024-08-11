@@ -75,15 +75,11 @@ class NewsApiImpl(
         withContext(dispatchers.io) {
             val response: NewsApiResponse = httpClient.get((path("/v2/everything"))) {
                 parameter(LANGUAGE, filter.language)
-                if (filter.query.isNotBlank()) {
-                    parameter(QUERY, filter.query)
-                }
-                if (filter.sources.isNotEmpty()) {
-                    parameter(SOURCES, filter.sources.joinToString(",") { it.id })
-                }
-                if (filter.sources.isNotEmpty()) {
-                    parameter(SORT_BY, filter.sortedBy.toNewsApiSortBy())
-                }
+                if (filter.query.isNotBlank()) parameter(QUERY, filter.query)
+                if (filter.sources.isNotEmpty()) parameter(
+                    SOURCES, filter.sources.joinToString(",") { it.id }
+                )
+                parameter(SORT_BY, filter.sortedBy.toNewsApiSortBy())
                 parameter(FROM_DATE, filter.fromDate.format(DateTimeFormatter.ISO_DATE))
                 parameter(TO_DATE, filter.toDate.format(DateTimeFormatter.ISO_DATE))
             }.body()

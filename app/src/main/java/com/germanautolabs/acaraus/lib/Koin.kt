@@ -28,10 +28,15 @@ inline fun <reified T : ViewModel> scopedKoinViewModel(
 }
 
 inline fun <reified T : Any> KoinComponent.scopedKoinInject(
-    vararg params: Any,
+    vararg params: Any
 ): T {
     val koinScope = this.getKoin()
-    val coroutineScope = koinScope.get<CoroutineScope>(qualifier = named("main"))
+    val coroutineScope =
+        if (params.any { it is CoroutineScope }) {
+            params.first { it is CoroutineScope }
+        } else {
+            koinScope.get<CoroutineScope>(qualifier = named("main"))
+        }
     val dependencies = getInjectedParamDependencies<T>()
         .filterNot { clazz -> params.any { provided -> provided::class == clazz } }
         .map { clazz -> koinScope.get<Any>(clazz) { parametersOf(coroutineScope) } }
