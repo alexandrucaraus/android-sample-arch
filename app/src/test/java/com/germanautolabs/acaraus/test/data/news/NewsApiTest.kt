@@ -21,21 +21,21 @@ class NewsApiTest : KoinTest {
     )
 
     @Test
-    fun fetchNewsHeadlines() = runTest {
+    fun fetch_news_headlines_successfully() = runTest {
         val newsApi: NewsApi by inject<NewsApi>()
         val headlinesResult = newsApi.getHeadlines()
         assert((headlinesResult as Result.Success).value.isNotEmpty())
     }
 
     @Test
-    fun fetchSources() = runTest {
+    fun fetch_news_sources_successfully() = runTest {
         val newsApi: NewsApi by inject<NewsApi>()
         val sourcesResult = newsApi.getSources()
         assert((sourcesResult as Result.Success).value.isNotEmpty())
     }
 
     @Test
-    fun fetchEverything() = runTest {
+    fun fetch_everything_news_successfully() = runTest {
         val newsApi: NewsApi by inject<NewsApi>()
         val filter = ArticlesFilter(
             query = "android",

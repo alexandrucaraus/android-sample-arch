@@ -37,9 +37,7 @@ class ArticlesListViewModel(
         @Suppress("OPT_IN_USAGE")
         speechRecognizerStateHolder
             .reloadCommand
-            .flatMapLatest {
-                filterStateHolder.activeFilter
-            }
+            .flatMapLatest { filterStateHolder.activeFilter }
             .onEach(articlesListStateHolder::reloadArticles)
             .launchIn(viewModelScope)
     }

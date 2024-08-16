@@ -1,18 +1,25 @@
 package com.germanautolabs.acaraus.screens.articles.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.germanautolabs.acaraus.lib.getState
 import com.germanautolabs.acaraus.models.Article
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.InjectedParam
 
 @KoinViewModel
 class ArticleDetailViewModel(
-    @InjectedParam val article: Article,
+    handle: SavedStateHandle,
+    @InjectedParam article: Article,
     @InjectedParam coroutineScope: CoroutineScope,
 ) : ViewModel(coroutineScope) {
-    val state = MutableStateFlow(article)
+
+    val state = handle.getState(ARTICLE_KEY, article)
+
+    companion object {
+        const val ARTICLE_KEY = "artk"
+    }
 }
 
 val dummyArticleDetails = Article(

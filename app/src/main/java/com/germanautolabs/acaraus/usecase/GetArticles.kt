@@ -30,22 +30,22 @@ class GetArticles(
             }
 
     private fun headlines(): Flow<Result<List<Article>, Error>> = flow {
-        emit(
-            newsApi.getHeadlines(
-                language = localeStore.getLanguageCode(),
-            ),
-        )
+        emit(newsApi.getHeadlines(language = localeStore.getLanguageCode()))
     }.catch { cause: Throwable ->
         emit(Result.Error(Error("networkError", cause.message ?: "Unknown error")))
     }.filterRemovedArticles()
 
     private fun everything(filter: ArticlesFilter): Flow<Result<List<Article>, Error>> = flow {
         emit(newsApi.getEverything(filter))
-    }.catch {
-        emit(Result.Error(Error("networkError", it.message ?: "Unknown error")))
+    }.catch { throwable ->
+        emit(Result.Error(Error("networkError", throwable.message ?: "Unknown error")))
     }.filterRemovedArticles()
 
     private fun Flow<Result<List<Article>, Error>>.filterRemovedArticles() = map { result ->
-        result.map { articles -> articles.filterNot { it.title.lowercase(Locale.getDefault()) == "removed" } }
+        result.map { articles ->
+            articles.filterNot { article ->
+                article.title.lowercase(Locale.getDefault()) == "removed"
+            }
+        }
     }
 }

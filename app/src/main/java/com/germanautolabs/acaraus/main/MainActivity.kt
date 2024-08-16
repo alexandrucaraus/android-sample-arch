@@ -4,10 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Modifier
-import com.germanautolabs.acaraus.ui.theme.NewsAppTheme
+import androidx.navigation.compose.rememberNavController
+import com.germanautolabs.acaraus.screens.articles.list.ArticleListNode
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,11 +18,11 @@ class MainActivity : ComponentActivity() {
     private fun render() {
         enableEdgeToEdge()
         setContent {
-            NewsAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainNavHost(innerPadding = innerPadding)
-                }
-            }
+            MainNavHost(
+                modifier = Modifier.navigationBarsPadding(),
+                navController = rememberNavController(),
+                startDestination = ArticleListNode,
+            )
         }
     }
 }

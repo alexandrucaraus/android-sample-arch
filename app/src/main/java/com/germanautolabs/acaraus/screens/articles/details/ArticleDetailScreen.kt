@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.germanautolabs.acaraus.main.launchBrowserCustomTab
+import com.germanautolabs.acaraus.lib.launchBrowserUrl
 import com.germanautolabs.acaraus.models.Article
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,6 +60,7 @@ fun ArticleDetailScreen(
     },
 ) { paddingValues ->
     val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -88,9 +89,7 @@ fun ArticleDetailScreen(
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 16.dp)
-                .clickable {
-                    launchBrowserCustomTab(context, state.contentUrl)
-                },
+                .clickable { context.launchBrowserUrl(state.contentUrl) },
             text = "See original article on ${state.source}",
             style = MaterialTheme.typography.titleMedium.copy(
                 color = Color.Blue,
