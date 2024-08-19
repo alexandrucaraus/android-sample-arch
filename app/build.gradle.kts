@@ -6,6 +6,7 @@ plugins {
     kotlin("plugin.parcelize")
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.dependency.graph.generator) apply true
 }
 
 dependencies {
