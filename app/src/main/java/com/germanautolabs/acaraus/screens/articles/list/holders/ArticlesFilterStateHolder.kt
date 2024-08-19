@@ -19,14 +19,15 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Scope
 import java.time.LocalDate
 
 @Factory
+@Scope(ArticlesListKoinScope::class)
 class ArticlesFilterStateHolder(
     private val getArticlesSources: GetArticlesSources,
     private val getArticleLanguages: GetArticlesLanguages,
-    @InjectedParam scope: CoroutineScope,
+    scope: CoroutineScope,
 ) : CoroutineScope by scope {
 
     private val defaultArticlesFilterUiState = ArticlesFilterEditorState(

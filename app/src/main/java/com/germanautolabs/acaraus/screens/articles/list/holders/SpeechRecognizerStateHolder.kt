@@ -15,13 +15,14 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.job
 import org.koin.core.annotation.Factory
-import org.koin.core.annotation.InjectedParam
+import org.koin.core.annotation.Scope
 
 @Factory
+@Scope(ArticlesListKoinScope::class)
 class SpeechRecognizerStateHolder(
     private val speechRecognizer: SpeechRecognizer,
     private val matchVoiceCommands: MatchVoiceCommands,
-    @InjectedParam scope: CoroutineScope,
+    scope: CoroutineScope,
 ) : CoroutineScope by scope {
 
     private val audioCommandButtonState = MutableStateFlow(

@@ -7,6 +7,7 @@ import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.map
+import com.germanautolabs.acaraus.models.toError
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -31,14 +32,14 @@ class GetArticles(
 
     private fun headlines(): Flow<Result<List<Article>, Error>> = flow {
         emit(newsApi.getHeadlines(language = localeStore.getLanguageCode()))
-    }.catch { cause: Throwable ->
-        emit(Result.Error(Error("networkError", cause.message ?: "Unknown error")))
+    }.catch { cause ->
+        emit(Result.Error(cause.toError()))
     }.filterRemovedArticles()
 
     private fun everything(filter: ArticlesFilter): Flow<Result<List<Article>, Error>> = flow {
         emit(newsApi.getEverything(filter))
-    }.catch { throwable ->
-        emit(Result.Error(Error("networkError", throwable.message ?: "Unknown error")))
+    }.catch { cause ->
+        emit(Result.Error(cause.toError()))
     }.filterRemovedArticles()
 
     private fun Flow<Result<List<Article>, Error>>.filterRemovedArticles() = map { result ->

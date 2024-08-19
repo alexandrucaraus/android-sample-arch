@@ -1,5 +1,6 @@
 package com.germanautolabs.acaraus.main
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,12 +16,14 @@ class MainActivity : ComponentActivity() {
         render()
     }
 
+    @SuppressLint("RestrictedApi")
     private fun render() {
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             MainNavHost(
                 modifier = Modifier.navigationBarsPadding(),
-                navController = rememberNavController(),
+                navController = navController,
                 startDestination = ArticleListNode,
             )
         }

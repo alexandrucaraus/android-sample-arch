@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.germanautolabs.acaraus.lib.scopedKoinViewModel
 import com.germanautolabs.acaraus.models.Article
+import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoinScope
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,7 +17,7 @@ fun NavGraphBuilder.articlesListNavNode(
     onNavigateToDetails: (article: Article) -> Unit,
 ) {
     composable<ArticleListNode> {
-        val vm = scopedKoinViewModel<ArticlesListViewModel>()
+        val vm = scopedKoinViewModel<ArticlesListViewModel, ArticlesListKoinScope>()
         ArticleListScreen(
             modifier = modifier,
             articleListState = vm.articlesUiState.collectAsStateWithLifecycle().value,
