@@ -7,13 +7,14 @@ import com.germanautolabs.acaraus.data.LocaleStoreImpl
 import com.germanautolabs.acaraus.data.SpeechEvent
 import com.germanautolabs.acaraus.data.SpeechRecognizer
 import com.germanautolabs.acaraus.data.news.NewsApi
-import com.germanautolabs.acaraus.lib.scopedKoinInject
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.ArticlesSources
 import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.ArticlesListViewModel
+import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoinScope
+import com.germanautolabs.acaraus.test.lib.scopedKoinViewModel
 import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +24,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.annotation.Factory
@@ -33,7 +33,6 @@ import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
 import kotlin.test.assertEquals
 
-@Ignore("This needs to be fixed")
 class ArticleListViewModelTest : KoinTest {
 
     @get:Rule
@@ -43,7 +42,7 @@ class ArticleListViewModelTest : KoinTest {
     val coroutinesTestRule = CoroutinesTestRule()
 
     private fun createSubject(coroutineScope: CoroutineScope) =
-        scopedKoinInject<ArticlesListViewModel>(coroutineScope)
+        scopedKoinViewModel<ArticlesListViewModel, ArticlesListKoinScope>(scope = coroutineScope)
 
     @Test
     fun reload_articles_by_voice_command() = runTest {
