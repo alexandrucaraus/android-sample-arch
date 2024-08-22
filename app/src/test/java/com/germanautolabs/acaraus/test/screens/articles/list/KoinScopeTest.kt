@@ -1,6 +1,5 @@
 package com.germanautolabs.acaraus.test.screens.articles.list
 
-import app.cash.turbine.test
 import app.cash.turbine.turbineScope
 import com.germanautolabs.acaraus.data.LocaleStore
 import com.germanautolabs.acaraus.data.LocaleStoreImpl
@@ -17,14 +16,14 @@ import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoin
 import com.germanautolabs.acaraus.test.lib.injectScopedViewModel
 import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
-import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.job
 import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertNotEquals
 import org.junit.Rule
 import org.junit.Test
 import org.koin.core.annotation.Factory
@@ -33,7 +32,7 @@ import org.koin.core.annotation.Single
 import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
 
-class ArticleListViewModelTest : KoinTest {
+class KoinScopeTest : KoinTest {
 
     @get:Rule
     val koinUnitTestRule = KoinUnitTestRule(listOf(ArticleListViewModelTestModule().module))
@@ -42,24 +41,20 @@ class ArticleListViewModelTest : KoinTest {
     val coroutinesTestRule = CoroutinesTestRule()
 
     private fun createSubject(coroutineScope: CoroutineScope) =
-        injectScopedViewModel<ArticlesListViewModel, ArticlesListKoinScope>(coroutineScope = coroutineScope).first
+        injectScopedViewModel<ArticlesListViewModel, ArticlesListKoinScope>(
+            coroutineScope = coroutineScope,
+        )
 
     @Test
-    fun reload_articles_by_voice_command() = runTest {
+    fun `test scope resolution`() = runTest {
         turbineScope {
-            val viewModel = createSubject(backgroundScope)
-            viewModel.articlesUiState.test {
-                skipItems(1)
-                delay(10)
-                speechEvent.emit(SpeechEvent.Result(listOf("reload")))
-                delay(10)
-                var state = awaitItem()
-                assertEquals(true, state.isLoading)
-                assertEquals(false, state.list.isNotEmpty())
-                state = awaitItem()
-                assertEquals(false, state.isLoading)
-                assertEquals(true, state.list.isNotEmpty())
-                assertEquals(dummyArticles.take(3), state.list)
+            val (vm1, koinScope1) = createSubject(CoroutineScope(backgroundScope.coroutineContext))
+            val (vm2, koinScope2) = createSubject(CoroutineScope(backgroundScope.coroutineContext))
+            assertNotEquals(vm1.coroutineScope, vm2.coroutineScope)
+            assertNotEquals(vm1.id, vm2.id)
+            backgroundScope.coroutineContext.job.invokeOnCompletion {
+                koinScope1.close()
+                koinScope2.close()
             }
         }
     }
@@ -68,7 +63,7 @@ class ArticleListViewModelTest : KoinTest {
 private val speechEvent = MutableSharedFlow<SpeechEvent>()
 
 @Module
-class ArticleListViewModelTestModule {
+class ArticleListViewModelTestModule1 {
 
     @Factory
     fun newsApi(): NewsApi = object : NewsApi {

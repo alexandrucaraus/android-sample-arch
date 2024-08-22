@@ -13,9 +13,10 @@ import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesFilterStateHolder
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoinScope
-import com.germanautolabs.acaraus.test.lib.testScopedInject
+import com.germanautolabs.acaraus.test.lib.injectScoped
 import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
 import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
@@ -37,7 +38,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
     val coroutinesTestRule = CoroutinesTestRule()
 
     private fun createSubject(coroutineScope: CoroutineScope): ArticlesFilterStateHolder =
-        testScopedInject<ArticlesFilterStateHolder, ArticlesListKoinScope>(scope = coroutineScope)
+        injectScoped<ArticlesFilterStateHolder, ArticlesListKoinScope>(coroutineScope = coroutineScope).first
 
     @Test
     fun check_that_article_sources_are_loaded() = runTest {
@@ -137,7 +138,7 @@ class ArticlesFilterStateHolderTest : KoinTest {
                     assertEquals("", currentFilter.query)
                     assertEquals("de", currentFilter.language)
                     assertEquals(SortBy.MostRecent, currentFilter.sortedBy)
-                    assertEquals(emptyList(), currentFilter.sources)
+                    assertEquals(emptyList<ArticlesSources>(), currentFilter.sources)
                 }
             }
         }

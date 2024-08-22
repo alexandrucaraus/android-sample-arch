@@ -24,6 +24,6 @@ class DispatchersApp : Dispatchers {
 }
 
 @Factory
-@Named("main")
+@Named("viewModelCoroutineScope")
 fun uiMainCoroutineScope(dispatchers: Dispatchers): CoroutineScope =
     CoroutineScope(SupervisorJob() + dispatchers.ui)

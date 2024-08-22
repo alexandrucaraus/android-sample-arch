@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.android.annotation.KoinViewModel
 import org.koin.core.annotation.Scope
+import java.util.UUID
 
 @KoinViewModel
 @Scope(ArticlesListKoinScope::class)
@@ -19,8 +20,10 @@ class ArticlesListViewModel(
     private val articlesListStateHolder: ArticlesListStateHolder,
     private val filterStateHolder: ArticlesFilterStateHolder,
     speechRecognizerStateHolder: SpeechRecognizerStateHolder,
-    coroutineScope: CoroutineScope,
+    val coroutineScope: CoroutineScope,
 ) : ViewModel(coroutineScope) {
+
+    val id = UUID.randomUUID()
 
     val articlesUiState = articlesListStateHolder.listUi
 

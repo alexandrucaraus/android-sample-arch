@@ -27,4 +27,7 @@ Employment test task
 8. Hide the API key in the Pipeline settings, so far I need to create two because it has a limit of request per day :).
 9. A few bugs.
 
-TODO: add https://github.com/vanniktech/gradle-dependency-graph-generator-plugin
+TODO fixes:
+
+1. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation
+2. Fix dummy data for previews.
