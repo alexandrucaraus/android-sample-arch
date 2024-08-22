@@ -23,10 +23,9 @@ class ArticleDetailViewModel(
 
     val state = MutableStateFlow(
         handle.toRoute<ArticleDetailNode>(
-            typeMap = mapOf(typeOf<Article>() to serializableNavType<Article>())
-        ).article
+            typeMap = mapOf(typeOf<Article>() to serializableNavType<Article>()),
+        ).article,
     )
-
 }
 
 val dummyArticleDetails = Article(
