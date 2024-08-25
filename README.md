@@ -7,7 +7,7 @@ Employment test task
 [screens] - contain composable navigation and screen per directory
 [infra] - contains some common infrastructure
 [data] - contains interfaces and implementations to external systems
-[usecase] - contains business behaviour
+[use case] - contains business behaviour
 
 ### Additionally there are:
 [ktlint] - for code quality check
@@ -29,5 +29,9 @@ Employment test task
 
 TODO fixes:
 
-1. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation
-2. Fix dummy data for previews.
+1. Rename folders to kotlin.
+2. ktlint test naming convention.
+3. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation
+4. Add paparazzi.
+5. Fix audio permissions.
+6. Split into features.

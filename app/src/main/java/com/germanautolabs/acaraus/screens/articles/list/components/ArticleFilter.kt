@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterList
@@ -18,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -25,7 +28,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.germanautolabs.acaraus.screens.components.Dropdown
 import com.germanautolabs.acaraus.screens.components.RangeDatePickerDialog
@@ -75,20 +77,21 @@ data class ArticlesFilterEditorState(
 fun ArticleFilter(
     modifier: Modifier = Modifier,
     filterState: ArticlesFilterEditorState,
-    // initialValue: SheetValue = SheetValue.Hidden,
+    sheetState: SheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    ),
 ) {
     if (filterState.isVisible.not()) return
-
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
 
     ModalBottomSheet(
         modifier = modifier,
         sheetState = sheetState,
         onDismissRequest = filterState.hide,
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        val verticalScrollState = rememberScrollState()
+        Column(modifier = Modifier
+            .padding(16.dp)
+            .verticalScroll(verticalScrollState)) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = filterState.query,
@@ -168,7 +171,8 @@ fun ArticleFilterActionIcon(
         Box {
             if (filterState.isSet) {
                 Box(
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
                         .background(Color.Red, shape = CircleShape)
                         .size(8.dp),
                 )
@@ -179,10 +183,4 @@ fun ArticleFilterActionIcon(
             )
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun ArticleFilterPreview() {
-    // ArticleFilter(filterState = ArticleFilterState().copy(isVisible = true), initialValue = SheetValue.Expanded)
 }

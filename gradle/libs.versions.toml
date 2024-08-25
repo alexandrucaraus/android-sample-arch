@@ -10,16 +10,18 @@ kotlin-serialization-json = "1.7.1"
 # Android
 appPackageId = "com.germanautolabs.acaraus"
 compileSdk = "35"
+
 minSdk = "26"
 targetSdk = "34"
 
 # Libs
+kotlinStdlib = "2.0.0"
 coreKtx = "1.13.1"
 lifecycleRuntimeKtx = "2.8.4"
 activityCompose = "1.9.1"
-composeBom = "2024.06.00" # TODO should use 1.7
-compose = "1.7.0-beta07"
-compose-nav = "2.8.0-beta07"
+composeBom = "2024.08.00"
+compose = "1.7.0-rc01"
+compose-nav = "2.8.0-rc01"
 
 koin-bom = "4.0.0-RC1"
 koin-ksp = "1.4.0-RC3"
@@ -53,6 +55,7 @@ turbine = "1.1.0"
 ###################################
 
 # Kotlin
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlinStdlib" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlin-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlin-coroutines" }
 kotlinx-serialisation-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref="kotlin-serialization-json" }

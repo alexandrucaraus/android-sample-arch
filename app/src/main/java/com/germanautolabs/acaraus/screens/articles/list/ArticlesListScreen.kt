@@ -1,7 +1,6 @@
 package com.germanautolabs.acaraus.screens.articles.list
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -9,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.germanautolabs.acaraus.models.Article
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilter
 import com.germanautolabs.acaraus.screens.articles.list.components.ArticleFilterActionIcon
@@ -35,7 +33,11 @@ fun ArticleListScreen(
     topBar = {
         TopAppBar(
             title = { Text("News") },
-            actions = { ArticleFilterActionIcon(filterState = articlesFilterEditorState) },
+            actions = {
+                ArticleFilterActionIcon(
+                    filterState = articlesFilterEditorState,
+                )
+            },
         )
     },
     content = { padding ->
@@ -55,29 +57,3 @@ fun ArticleListScreen(
         AudioCommandButton(state = audioCommandButtonState)
     },
 )
-
-@Composable
-@Preview
-fun ArticleListStateLoadingPreview() {
-    ArticleListScreen(
-        modifier = Modifier.fillMaxSize(),
-        articleListState = ArticleListState(isLoading = true),
-        articlesFilterEditorState = ArticlesFilterEditorState(),
-        toasterState = ToasterState(),
-        audioCommandButtonState = AudioCommandButtonState(),
-        onNavigateToDetails = {},
-    )
-}
-
-@Composable
-@Preview
-fun ArticleListStateErrorPreview() {
-    ArticleListScreen(
-        modifier = Modifier.fillMaxSize(),
-        articleListState = ArticleListState(isError = true, errorMessage = "null"),
-        articlesFilterEditorState = ArticlesFilterEditorState(),
-        toasterState = ToasterState(),
-        audioCommandButtonState = AudioCommandButtonState(),
-        onNavigateToDetails = {},
-    )
-}

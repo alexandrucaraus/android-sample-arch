@@ -48,7 +48,7 @@ fun AudioCommandButton(
         if (state.isListening) {
             val scaleDB = state.audioInputChangesDb.coerceIn(
                 minimumValue = 1f,
-                maximumValue = 2f,
+                maximumValue = 3f,
             )
             val iconSizeDp = (scaleDB * 20).coerceIn(
                 minimumValue = 10f,

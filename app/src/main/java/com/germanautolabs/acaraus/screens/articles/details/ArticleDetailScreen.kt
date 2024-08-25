@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.germanautolabs.acaraus.lib.launchBrowserUrl
@@ -60,7 +59,6 @@ fun ArticleDetailScreen(
     },
 ) { paddingValues ->
     val scrollState = rememberScrollState()
-
     Column(
         modifier = Modifier
             .padding(paddingValues)
@@ -103,13 +101,4 @@ fun ArticleDetailScreen(
             style = MaterialTheme.typography.bodyMedium,
         )
     }
-}
-
-@Composable
-@Preview
-fun ArticleDetailScreenPreview() {
-    ArticleDetailScreen(
-        state = dummyArticleDetails,
-        onNavigateBack = {},
-    )
 }

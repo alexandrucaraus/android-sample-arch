@@ -46,9 +46,4 @@ class ArticlesListViewModel(
             .onEach(articlesListStateHolder::reloadArticles)
             .launchIn(viewModelScope)
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        println("Articles list cleared")
-    }
 }
