@@ -29,9 +29,8 @@ Employment test task
 
 TODO fixes:
 
-1. Rename folders to kotlin.
-2. ktlint test naming convention.
-3. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation
-4. Add paparazzi.
-5. Fix audio permissions.
-6. Split into features.
+1. ktlint test naming convention.
+2. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation
+3. Add paparazzi.
+4. Fix audio permissions.
+5. Split into features.
