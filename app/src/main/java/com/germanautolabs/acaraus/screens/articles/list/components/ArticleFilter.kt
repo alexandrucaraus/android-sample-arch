@@ -89,9 +89,11 @@ fun ArticleFilter(
         onDismissRequest = filterState.hide,
     ) {
         val verticalScrollState = rememberScrollState()
-        Column(modifier = Modifier
-            .padding(16.dp)
-            .verticalScroll(verticalScrollState)) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .verticalScroll(verticalScrollState),
+        ) {
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 value = filterState.query,
