@@ -7,6 +7,17 @@ plugins {
     alias(libs.plugins.dependency.graph.generator) apply true
 }
 
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("app.cash.paparazzi:paparazzi-gradle-plugin:1.3.4")
+    }
+}
+
 rootCoverage {
     generateCsv = true
 }

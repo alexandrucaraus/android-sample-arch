@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.dependency.graph.generator) apply true
+    id("app.cash.paparazzi") apply true
 }
 
 dependencies {
@@ -64,6 +65,7 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.koin.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.classgraph)
 
     testFixturesImplementation(libs.kotlin.stdlib)
     testFixturesImplementation(platform(libs.androidx.compose.bom))
@@ -73,6 +75,7 @@ dependencies {
 android {
     namespace = libs.versions.appPackageId.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdkVersion = "android-35"
 
     defaultConfig {
         applicationId = libs.versions.appPackageId.get()

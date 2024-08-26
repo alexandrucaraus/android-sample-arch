@@ -6,7 +6,7 @@ import com.germanautolabs.acaraus.models.Article
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
-fun ArticleListSuccessPreview() {
+fun ArticleDetailPreview() {
     ArticleDetailScreen(
         state = article,
         onNavigateBack = {},
