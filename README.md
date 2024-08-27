@@ -1,23 +1,27 @@
 # germanautolabs
 Employment test task
 
-
-The directory structure is the following
+### The directory structure is the following
 [main] - contain the main entry point, di setup
 [models] - represent domain objects
 [screens] - contain composable navigation and screen per directory
 [infra] - contains some common infrastructure
 [data] - contains interfaces and implementations to external systems
-[usecase] - contains business behaviour
+[use case] - contains business behaviour
 
-Additionally there are:
+### Additionally there are:
 [ktlint] - for code quality check
 [integration tests] - for simple navigation testing
 [unit test] - for behaviour test, not enough though :(
 [github workflows] - to run the pipeline on each commit to main (kept it simple)
 [test coverage report] - each pipeline run displays the test coverage
 
-What I would do more if I had more time:
+### Paparazzi snapshot testing
+
+1. https://cashapp.github.io/paparazzi/
+   Needs git lfs for initial setup of the repo.
+
+### What I would do more if I had more time:
 1. Custom material theme object, sizes object, font styles object.
 2. Translations (localisations).
 3. Compose 1.7.
@@ -27,3 +31,11 @@ What I would do more if I had more time:
 7. Refactor the ArticlesListViewModel, do better separation of concerns, and add tests :).
 8. Hide the API key in the Pipeline settings, so far I need to create two because it has a limit of request per day :).
 9. A few bugs.
+
+TODO fixes:
+
+1. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation.
+   (https://github.com/vanniktech/gradle-dependency-graph-generator-plugin/issues/194)
+2. Fix audio permissions.
+3. Rename package name.
+4. Split into features.

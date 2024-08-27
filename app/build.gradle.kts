@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -6,6 +8,8 @@ plugins {
     kotlin("plugin.parcelize")
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.dependency.graph.generator) apply true
+    alias(libs.plugins.paparazzi) apply true
 }
 
 dependencies {
@@ -14,6 +18,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialisation.json)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlin.stdlib)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -54,6 +59,7 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
 
+    debugImplementation(libs.leakcanary.android)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -61,11 +67,17 @@ dependencies {
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.koin.test)
     testImplementation(libs.turbine)
+    testImplementation(libs.classgraph)
+
+    testFixturesImplementation(libs.kotlin.stdlib)
+    testFixturesImplementation(platform(libs.androidx.compose.bom))
+    testFixturesImplementation(libs.androidx.compose.ui)
 }
 
 android {
     namespace = libs.versions.appPackageId.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdkVersion = "android-${libs.versions.compileSdk.get()}"
 
     defaultConfig {
         applicationId = libs.versions.appPackageId.get()
@@ -119,6 +131,10 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,INDEX.LIST}"
         }
+    }
+
+    testFixtures {
+        enable = true
     }
 }
 
