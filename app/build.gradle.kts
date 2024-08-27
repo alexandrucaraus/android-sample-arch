@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -7,7 +9,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.dependency.graph.generator) apply true
-    id("app.cash.paparazzi") apply true
+    alias(libs.plugins.paparazzi) apply true
 }
 
 dependencies {
@@ -75,7 +77,7 @@ dependencies {
 android {
     namespace = libs.versions.appPackageId.get()
     compileSdk = libs.versions.compileSdk.get().toInt()
-    compileSdkVersion = "android-35"
+    compileSdkVersion = "android-${libs.versions.compileSdk.get()}"
 
     defaultConfig {
         applicationId = libs.versions.appPackageId.get()

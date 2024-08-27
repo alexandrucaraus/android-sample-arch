@@ -1,4 +1,4 @@
-package com.germanautolabs.acaraus.test.main.rules
+package com.germanautolabs.acaraus.test.common.rules
 
 import com.germanautolabs.acaraus.infra.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,7 +12,7 @@ import kotlinx.coroutines.Dispatchers as KotlinDispatchers
 
 class CoroutinesTestRule : TestWatcher(), KoinTest {
 
-    val testDispatcher by inject<Dispatchers>()
+    private val testDispatcher by inject<Dispatchers>()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun starting(description: Description) {

@@ -12,9 +12,9 @@ import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoinScope
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListStateHolder
-import com.germanautolabs.acaraus.test.lib.injectScoped
-import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
-import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
+import com.germanautolabs.acaraus.test.common.UnitTest
+import com.germanautolabs.acaraus.test.common.di.injectScoped
+import com.germanautolabs.acaraus.test.common.rules.KoinUnitTestRule
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -26,18 +26,18 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import org.koin.ksp.generated.module
-import org.koin.test.KoinTest
 
-class ArticleListStateHolderTest : KoinTest {
-
-    @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule(listOf(ArticleListTestModule().module))
+class ArticleListStateHolderTest : UnitTest {
 
     @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
+    override val koinUnitTestRule = KoinUnitTestRule(
+        ArticleListTestModule().module,
+    )
 
     private fun createSubject(coroutineScope: CoroutineScope) =
-        injectScoped<ArticlesListStateHolder, ArticlesListKoinScope>(coroutineScope = coroutineScope).first
+        injectScoped<ArticlesListStateHolder, ArticlesListKoinScope>(
+            coroutineScope = coroutineScope,
+        ).first
 
     @After
     fun teardown() {

@@ -1,4 +1,4 @@
-package com.germanautolabs.acaraus.test.lib
+package com.germanautolabs.acaraus.test.common.mocks
 
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner

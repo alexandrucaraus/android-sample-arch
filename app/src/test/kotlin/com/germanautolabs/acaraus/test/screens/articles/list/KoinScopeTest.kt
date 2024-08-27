@@ -13,9 +13,9 @@ import com.germanautolabs.acaraus.models.Error
 import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.screens.articles.list.ArticlesListViewModel
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoinScope
-import com.germanautolabs.acaraus.test.lib.injectScopedViewModel
-import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
-import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
+import com.germanautolabs.acaraus.test.common.UnitTest
+import com.germanautolabs.acaraus.test.common.di.injectScopedViewModel
+import com.germanautolabs.acaraus.test.common.rules.KoinUnitTestRule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -30,15 +30,13 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import org.koin.ksp.generated.module
-import org.koin.test.KoinTest
 
-class KoinScopeTest : KoinTest {
-
-    @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule(listOf(ArticleListViewModelTestModule().module))
+class KoinScopeTest : UnitTest {
 
     @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
+    override val koinUnitTestRule = KoinUnitTestRule(
+        ArticleListViewModelTestModule().module,
+    )
 
     private fun createSubject(coroutineScope: CoroutineScope) =
         injectScopedViewModel<ArticlesListViewModel, ArticlesListKoinScope>(
@@ -46,12 +44,11 @@ class KoinScopeTest : KoinTest {
         )
 
     @Test
-    fun `test scope resolution`() = runTest {
+    fun test_view_model_scope_resolution() = runTest {
         turbineScope {
             val (vm1, koinScope1) = createSubject(CoroutineScope(backgroundScope.coroutineContext))
             val (vm2, koinScope2) = createSubject(CoroutineScope(backgroundScope.coroutineContext))
             assertNotEquals(vm1.coroutineScope, vm2.coroutineScope)
-            assertNotEquals(vm1.id, vm2.id)
             backgroundScope.coroutineContext.job.invokeOnCompletion {
                 koinScope1.close()
                 koinScope2.close()

@@ -5,19 +5,20 @@ import com.germanautolabs.acaraus.main.DataDi
 import com.germanautolabs.acaraus.main.InfraDi
 import com.germanautolabs.acaraus.models.ArticlesFilter
 import com.germanautolabs.acaraus.models.Result
-import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
+import com.germanautolabs.acaraus.test.common.UnitTest
+import com.germanautolabs.acaraus.test.common.rules.KoinUnitTestRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
 import org.koin.ksp.generated.module
-import org.koin.test.KoinTest
 import org.koin.test.inject
 
-class NewsApiTest : KoinTest {
+class NewsApiTest : UnitTest {
 
     @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule(
-        listOf(InfraDi().module, DataDi().module),
+    override val koinUnitTestRule = KoinUnitTestRule(
+        InfraDi().module,
+        DataDi().module,
     )
 
     @Test

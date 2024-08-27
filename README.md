@@ -16,6 +16,11 @@ Employment test task
 [github workflows] - to run the pipeline on each commit to main (kept it simple)
 [test coverage report] - each pipeline run displays the test coverage
 
+### Paparazzi snapshot testing
+
+1. https://cashapp.github.io/paparazzi/
+   Needs git lfs for initial setup of the repo.
+
 ### What I would do more if I had more time:
 1. Custom material theme object, sizes object, font styles object.
 2. Translations (localisations).
@@ -31,7 +36,6 @@ TODO fixes:
 
 1. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation.
    (https://github.com/vanniktech/gradle-dependency-graph-generator-plugin/issues/194)
-2. Add paparazzi.
-3. Fix audio permissions.
-4. Rename package name.
-5. Split into features.
+2. Fix audio permissions.
+3. Rename package name.
+4. Split into features.

@@ -13,9 +13,9 @@ import com.germanautolabs.acaraus.models.Result
 import com.germanautolabs.acaraus.models.SortBy
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesFilterStateHolder
 import com.germanautolabs.acaraus.screens.articles.list.holders.ArticlesListKoinScope
-import com.germanautolabs.acaraus.test.lib.injectScoped
-import com.germanautolabs.acaraus.test.main.rules.CoroutinesTestRule
-import com.germanautolabs.acaraus.test.main.rules.KoinUnitTestRule
+import com.germanautolabs.acaraus.test.common.UnitTest
+import com.germanautolabs.acaraus.test.common.di.injectScoped
+import com.germanautolabs.acaraus.test.common.rules.KoinUnitTestRule
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.runTest
@@ -25,20 +25,18 @@ import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import org.koin.ksp.generated.module
-import org.koin.test.KoinTest
 import java.time.LocalDate
 import kotlin.test.assertEquals
 
-class ArticlesFilterStateHolderTest : KoinTest {
+class ArticlesFilterStateHolderTest : UnitTest {
 
     @get:Rule
-    val koinUnitTestRule = KoinUnitTestRule(listOf(ArticlesFilterStateHolderModule().module))
-
-    @get:Rule
-    val coroutinesTestRule = CoroutinesTestRule()
+    override val koinUnitTestRule = KoinUnitTestRule(ArticlesFilterStateHolderModule().module)
 
     private fun createSubject(coroutineScope: CoroutineScope): ArticlesFilterStateHolder =
-        injectScoped<ArticlesFilterStateHolder, ArticlesListKoinScope>(coroutineScope = coroutineScope).first
+        injectScoped<ArticlesFilterStateHolder, ArticlesListKoinScope>(
+            coroutineScope = coroutineScope,
+        ).first
 
     @Test
     fun check_that_article_sources_are_loaded() = runTest {

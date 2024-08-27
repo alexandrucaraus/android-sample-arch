@@ -11,9 +11,7 @@ kotlin-serialization-json = "1.7.1"
 # Android
 appPackageId = "com.germanautolabs.acaraus"
 compileSdk = "35"
-
 minSdk = "26"
-paparazziGradlePlugin = "1.3.4"
 targetSdk = "34"
 
 # Libs
@@ -52,6 +50,8 @@ ktlint = "12.1.1"
 dependency-graph-generator = "0.8.0"
 test-coverage-plugin = "1.8.0"
 turbine = "1.1.0"
+paparazzi = "1.3.4"
+
 
 ###################################
 [libraries]
@@ -118,7 +118,6 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 # Unit tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakcanaryAndroid" }
-
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 
 
@@ -136,4 +135,5 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 test-coverage = { id = "nl.neotech.plugin.rootcoverage", version.ref = "test-coverage-plugin" }
 
 dependency-graph-generator = { id = "com.vanniktech.dependency.graph.generator", version.ref = "dependency-graph-generator" }
+paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
 

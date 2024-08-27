@@ -1,7 +1,8 @@
-package com.germanautolabs.acaraus.test.lib
+package com.germanautolabs.acaraus.test.common.di
 
 import androidx.lifecycle.ViewModel
 import com.germanautolabs.acaraus.lib.scopedKoinViewModel
+import com.germanautolabs.acaraus.test.common.mocks.testViewModelStoreOwner
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.scope.Scope
 import org.koin.test.KoinTest

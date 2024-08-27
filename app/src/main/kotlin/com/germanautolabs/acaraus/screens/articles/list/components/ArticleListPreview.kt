@@ -8,7 +8,7 @@ import com.germanautolabs.acaraus.models.Article
 @Preview(showBackground = true, showSystemUi = true)
 fun ArticleListSuccessPreview() {
     ArticleList(
-        listState = ArticleListState(list = articles),
+        listState = ArticleListState(list = articles()),
         onNavigateToDetails = {},
     )
 }
@@ -18,7 +18,7 @@ fun ArticleListSuccessPreview() {
 fun ArticleListLoadingPreview() {
     ArticleList(
         listState = ArticleListState(
-            list = articles,
+            list = articles(),
             isLoading = true,
         ),
         onNavigateToDetails = {},
@@ -30,7 +30,7 @@ fun ArticleListLoadingPreview() {
 fun ArticleListErrorPreview() {
     ArticleList(
         listState = ArticleListState(
-            list = articles,
+            list = articles(),
             isLoading = false,
             isError = true,
             errorMessage = "Something went wrong",
@@ -39,7 +39,7 @@ fun ArticleListErrorPreview() {
     )
 }
 
-private val articles = listOf(
+private fun articles() = listOf(
     Article(
         id = "1",
         imageURL = "https://picsum.photos/200",
