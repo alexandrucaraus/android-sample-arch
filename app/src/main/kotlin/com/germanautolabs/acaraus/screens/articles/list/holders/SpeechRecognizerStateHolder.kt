@@ -29,6 +29,7 @@ class SpeechRecognizerStateHolder(
         AudioCommandButtonState(
             hasSpeechRecognition = speechRecognizer.isAvailable.value,
             toggleListening = ::toggleListening,
+            setHasRecordAudioPermission = ::setHasRecordAudioPermission,
         ),
     )
 
@@ -75,6 +76,10 @@ class SpeechRecognizerStateHolder(
         with(speechRecognizer) {
             if (isListening.value) stopListening() else startListening()
         }
+    }
+
+    private fun setHasRecordAudioPermission(hasPermission: Boolean) {
+        audioCommandButtonState.update { it.copy(hasRecordAudioPermission = hasPermission) }
     }
 
     private fun showToast(message: String) {
