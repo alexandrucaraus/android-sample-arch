@@ -115,13 +115,14 @@ fun RationaleDialog(
             },
             text = {
                 Text("This permission is needed for this feature to work. Please allow it.")
-            }
+            },
         )
     }
 }
 
 private fun Activity.openAppSettings() =
-    startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-        data = Uri.fromParts("package", packageName, null)
-    })
-
+    startActivity(
+        Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.fromParts("package", packageName, null)
+        },
+    )

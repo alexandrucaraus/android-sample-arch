@@ -42,7 +42,7 @@ fun AudioCommandButton(
             } else {
                 requestPermission = true
             }
-        }
+        },
     )
 
     if (requestPermission) {
@@ -50,7 +50,7 @@ fun AudioCommandButton(
             onPermissionGranted = { granted ->
                 state.setHasRecordAudioPermission(granted)
                 requestPermission = granted
-            }
+            },
         )
     }
 }
