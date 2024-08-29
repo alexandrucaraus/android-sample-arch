@@ -23,7 +23,8 @@ fun ArticleListStateSuccessPreview() {
         ),
         toasterState = ToasterState(),
         audioCommandButtonState = AudioCommandButtonState(
-            hasSpeechRecognition = true,
+            isEnabled = true,
+            changePermissionState = {},
         ),
         onNavigateToDetails = {},
     )

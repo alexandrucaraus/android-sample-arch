@@ -9,31 +9,31 @@ import androidx.compose.ui.tooling.preview.Preview
 fun AudioCommandButtonPreview() = Column {
     AudioCommandButton(
         state = AudioCommandButtonState(
-            hasSpeechRecognition = true,
+            isEnabled = true,
             isListening = false,
         ),
     )
 
     AudioCommandButton(
         state = AudioCommandButtonState(
-            hasSpeechRecognition = true,
+            isEnabled = true,
             isListening = true,
         ),
     )
 
     AudioCommandButton(
         state = AudioCommandButtonState(
-            hasSpeechRecognition = true,
+            isEnabled = true,
             isListening = true,
-            audioInputChangesDb = 300f,
+            audioInputLevel = 300f,
         ),
     )
 
     AudioCommandButton(
         state = AudioCommandButtonState(
-            hasSpeechRecognition = true,
+            isEnabled = true,
             isListening = true,
-            audioInputChangesDb = 0f,
+            audioInputLevel = 0f,
         ),
     )
 }

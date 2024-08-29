@@ -34,8 +34,5 @@ Employment test task
 
 TODO fixes:
 
-1. Fix https://github.com/vanniktech/gradle-dependency-graph-generator-plugin graph generation.
-   (https://github.com/vanniktech/gradle-dependency-graph-generator-plugin/issues/194)
-2. Fix audio permissions.
-3. Rename package name.
-4. Split into features.
+1. Rename package name.
+2. Split into features.

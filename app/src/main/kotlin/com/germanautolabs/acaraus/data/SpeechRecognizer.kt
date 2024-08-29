@@ -13,9 +13,6 @@ import org.koin.core.annotation.Factory
 import android.speech.SpeechRecognizer as AndroidSpeechRecognizer
 
 sealed class SpeechEvent {
-    data object ReadyForSpeech : SpeechEvent()
-    data object BeginOfSpeech : SpeechEvent()
-    data object EndOfSpeech : SpeechEvent()
     data class RmsChanged(val rmsdB: Float) : SpeechEvent()
     data class Error(val errorMessage: String) : SpeechEvent()
     data class Result(val matches: List<String>) : SpeechEvent()
@@ -27,6 +24,7 @@ interface SpeechRecognizer {
     fun events(): Flow<SpeechEvent>
     fun startListening()
     fun stopListening()
+    fun toggleListening()
     fun destroy()
 }
 
@@ -52,6 +50,10 @@ class SpeechRecognizerImpl(
         androidRecognizer.stopListening()
     }
 
+    override fun toggleListening() {
+        if (isListening.value) stopListening() else startListening()
+    }
+
     override fun destroy() {
         androidRecognizer.destroy()
     }
@@ -60,17 +62,14 @@ class SpeechRecognizerImpl(
         androidRecognizer.setRecognitionListener(object : RecognitionListener {
             override fun onReadyForSpeech(params: Bundle?) {
                 isListening.value = true
-                trySend(SpeechEvent.ReadyForSpeech)
             }
 
             override fun onBeginningOfSpeech() {
                 isListening.value = true
-                trySend(SpeechEvent.BeginOfSpeech)
             }
 
             override fun onEndOfSpeech() {
                 isListening.value = false
-                trySend(SpeechEvent.EndOfSpeech)
             }
 
             override fun onResults(results: Bundle?) {

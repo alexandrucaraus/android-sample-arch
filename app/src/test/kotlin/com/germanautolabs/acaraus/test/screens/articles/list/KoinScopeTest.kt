@@ -98,6 +98,10 @@ class ArticleListViewModelTestModule1 {
             TODO("Not yet implemented")
         }
 
+        override fun toggleListening() {
+            TODO("Not yet implemented")
+        }
+
         override fun destroy() {}
     }
 

@@ -1,6 +1,5 @@
 package com.germanautolabs.acaraus.screens.articles.list.components
 
-import android.content.Context
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
@@ -8,21 +7,18 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import com.germanautolabs.acaraus.screens.components.RequestRecordAudioPermission
+import com.germanautolabs.acaraus.screens.components.PermissionState
+import com.germanautolabs.acaraus.screens.components.RequestPermission
 
 data class AudioCommandButtonState(
-    val hasSpeechRecognition: Boolean = false,
+    val isEnabled: Boolean = false,
     val isListening: Boolean = false,
-    val audioInputChangesDb: Float = 0f,
+    val audioInputLevel: Float = 0f,
+    val permissionState: PermissionState = PermissionState.ConfirmationNeeded,
+    val changePermissionState: (PermissionState) -> Unit = {},
     val toggleListening: () -> Unit = {},
 )
 
@@ -31,22 +27,34 @@ fun AudioCommandButton(
     modifier: Modifier = Modifier,
     state: AudioCommandButtonState,
 ) {
-    if (state.hasSpeechRecognition.not()) return
-    val context = LocalContext.current
+    if (state.isEnabled.not()) return
+
+    AudioButton(
+        modifier = modifier,
+        state = state,
+        onClick = state.toggleListening,
+    )
+
+    RequestPermission(
+        state = state.permissionState,
+        changeState = state.changePermissionState,
+        requestedPermission = android.Manifest.permission.RECORD_AUDIO,
+    )
+}
+
+@Composable
+private fun AudioButton(
+    modifier: Modifier = Modifier,
+    state: AudioCommandButtonState,
+    onClick: () -> Unit,
+) {
     val iconTint = if (state.isListening) Color.Red else LocalContentColor.current
-    var requestPermission by remember { mutableStateOf(false) }
     FloatingActionButton(
         modifier = modifier,
-        onClick = {
-            if (hasPermission(context)) {
-                state.toggleListening()
-            } else {
-                requestPermission = true
-            }
-        },
+        onClick = onClick,
     ) {
         if (state.isListening) {
-            val scaleDB = state.audioInputChangesDb.coerceIn(
+            val scaleDB = state.audioInputLevel.coerceIn(
                 minimumValue = 1f,
                 maximumValue = 3f,
             )
@@ -64,12 +72,4 @@ fun AudioCommandButton(
             Icon(Icons.Default.Mic, contentDescription = "Listen commands")
         }
     }
-
-    if (requestPermission) {
-        RequestRecordAudioPermission()
-    }
 }
-
-private fun hasPermission(context: Context) = ContextCompat.checkSelfPermission(
-    context, android.Manifest.permission.RECORD_AUDIO,
-) == android.content.pm.PackageManager.PERMISSION_GRANTED
