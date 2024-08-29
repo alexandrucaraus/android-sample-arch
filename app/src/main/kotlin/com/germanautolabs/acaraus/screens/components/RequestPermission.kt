@@ -11,66 +11,53 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
+sealed class PermissionState {
+    data object ConfirmationNeeded : PermissionState()
+    data object ConfirmationRequested : PermissionState()
+    data object Granted : PermissionState()
+    data object Denied : PermissionState()
+    data object NotGranted : PermissionState()
+
+    fun isEqualTo(state: PermissionState) = this == state
+}
+
 @Composable
 fun RequestPermission(
-    requestedPermission: String = android.Manifest.permission.RECORD_AUDIO,
-    onPermissionGranted: (Boolean) -> Unit = {},
+    state: PermissionState = PermissionState.ConfirmationNeeded,
+    changeState: (PermissionState) -> Unit,
+    requestedPermission: String,
 ) {
+    if (state.isEqualTo(PermissionState.ConfirmationNeeded)) return
+
     val activity = LocalContext.current as? Activity ?: return
 
     val permissionsRequester = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
-        onResult = { granted ->
-            println("Permission granted $granted")
-            onPermissionGranted(granted)
-        },
+        onResult = { _ -> changeState(activity.checkPermissionState(requestedPermission)) },
     )
 
-    var launchRequest by remember { mutableStateOf(false) }
-    var showRationale by remember { mutableStateOf(false) }
-
-    when (activity.checkPermissionState(requestedPermission)) {
-        PermissionState.Granted -> onPermissionGranted(true)
-        PermissionState.DeniedPermanently -> {
-            showRationale = true
-        }
-
-        else -> {
-            launchRequest = true
-        }
-    }
-
-    RationaleDialog(show = showRationale, hide = {
-        onPermissionGranted(false)
-        showRationale = false
-    })
-
-    LaunchedEffect(key1 = launchRequest) {
-        if (launchRequest) {
+    LaunchedEffect(key1 = state) {
+        if (state is PermissionState.ConfirmationRequested) {
             permissionsRequester.launch(requestedPermission)
         }
     }
-}
 
-private sealed class PermissionState {
-    data object Granted : PermissionState()
-    data object Denied : PermissionState()
-    data object DeniedPermanently : PermissionState()
+    RationaleDialog(
+        show = state == PermissionState.NotGranted,
+        openSettings = activity::openAppSettings,
+        dismiss = { changeState(PermissionState.ConfirmationNeeded) },
+    )
 }
 
 private fun Activity.checkPermissionState(permission: String): PermissionState {
     return when {
         hasPermissionGranted(permission) -> PermissionState.Granted
-        hasPermissionDenied(permission) -> PermissionState.DeniedPermanently
-        else -> PermissionState.Denied
+        hasPermissionDenied(permission) -> PermissionState.Denied
+        else -> PermissionState.NotGranted
     }
 }
 
@@ -84,29 +71,22 @@ private fun Activity.hasPermissionDenied(permission: String) =
 @Composable
 fun RationaleDialog(
     show: Boolean,
-    hide: () -> Unit,
+    openSettings: () -> Unit,
+    dismiss: () -> Unit,
 ) {
-    val activity = LocalContext.current as Activity
     if (show) {
         AlertDialog(
-            onDismissRequest = {
-                // Called when the user tries to dismiss the dialog by clicking outside or pressing the back button
-                hide()
-            },
+            onDismissRequest = dismiss,
             confirmButton = {
                 TextButton(onClick = {
-                    // Confirm button action
-                    activity.openAppSettings()
-                    hide()
+                    openSettings()
+                    dismiss()
                 }) {
                     Text("Change in settings")
                 }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    // Dismiss button action
-                    hide()
-                }) {
+                TextButton(onClick = dismiss) {
                     Text("Cancel")
                 }
             },

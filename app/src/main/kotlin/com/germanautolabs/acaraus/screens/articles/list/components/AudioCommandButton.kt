@@ -7,21 +7,18 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.germanautolabs.acaraus.screens.components.PermissionState
 import com.germanautolabs.acaraus.screens.components.RequestPermission
 
 data class AudioCommandButtonState(
-    val hasSpeechRecognition: Boolean = false,
-    val hasRecordAudioPermission: Boolean = false,
+    val isEnabled: Boolean = false,
     val isListening: Boolean = false,
-    val audioInputChangesDb: Float = 0f,
-    val setHasRecordAudioPermission: (Boolean) -> Unit = {},
+    val audioInputLevel: Float = 0f,
+    val permissionState: PermissionState = PermissionState.ConfirmationNeeded,
+    val changePermissionState: (PermissionState) -> Unit = {},
     val toggleListening: () -> Unit = {},
 )
 
@@ -30,29 +27,19 @@ fun AudioCommandButton(
     modifier: Modifier = Modifier,
     state: AudioCommandButtonState,
 ) {
-    if (state.hasSpeechRecognition.not()) return
-    var requestPermission by remember { mutableStateOf(false) }
+    if (state.isEnabled.not()) return
 
     AudioButton(
         modifier = modifier,
         state = state,
-        onClick = {
-            if (state.hasRecordAudioPermission) {
-                state.toggleListening()
-            } else {
-                requestPermission = true
-            }
-        },
+        onClick = state.toggleListening,
     )
 
-    if (requestPermission) {
-        RequestPermission(
-            onPermissionGranted = { granted ->
-                state.setHasRecordAudioPermission(granted)
-                requestPermission = granted
-            },
-        )
-    }
+    RequestPermission(
+        state = state.permissionState,
+        changeState = state.changePermissionState,
+        requestedPermission = android.Manifest.permission.RECORD_AUDIO,
+    )
 }
 
 @Composable
@@ -67,7 +54,7 @@ private fun AudioButton(
         onClick = onClick,
     ) {
         if (state.isListening) {
-            val scaleDB = state.audioInputChangesDb.coerceIn(
+            val scaleDB = state.audioInputLevel.coerceIn(
                 minimumValue = 1f,
                 maximumValue = 3f,
             )
