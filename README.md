@@ -31,8 +31,11 @@ Employment test task
 7. Refactor the ArticlesListViewModel, do better separation of concerns, and add tests :).
 8. Hide the API key in the Pipeline settings, so far I need to create two because it has a limit of request per day :).
 9. A few bugs.
+10. Pipelines should generate debug and release version should pass R8 and upload to the store.
 
 TODO fixes:
 
-1. Rename package name.
-2. Split into features.
+1. Move lib from module to a separate common module.
+2. Rename main app to sample arch or something similar.
+3. Remove any reference of germanautolabs including folder name.
+4.

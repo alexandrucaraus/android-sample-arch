@@ -14,10 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsApp"
-        android:name=".main.MainApplication"
+        android:name="eu.acaraus.news.Application"
         tools:targetApi="31">
         <activity
-            android:name=".main.MainActivity"
+            android:name="eu.acaraus.news.Activity"
             android:exported="true"
             android:theme="@style/Theme.NewsApp">
             <intent-filter>

@@ -1,20 +1,17 @@
 @file:Suppress("UnstableApiUsage")
 
 plugins {
-    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
     kotlin("plugin.parcelize")
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.dependency.graph.generator) apply true
     alias(libs.plugins.paparazzi) apply true
 }
 
 dependencies {
-
-    implementation(project(":features:news"))
 
     implementation(kotlin("reflect"))
     implementation(libs.kotlinx.coroutines.core)
@@ -76,19 +73,17 @@ dependencies {
     testFixturesImplementation(libs.androidx.compose.ui)
 }
 
+
 android {
-    namespace = libs.versions.appPackageId.get()
+    namespace = "eu.acaraus.news"
     compileSdk = libs.versions.compileSdk.get().toInt()
     compileSdkVersion = "android-${libs.versions.compileSdk.get()}"
 
     defaultConfig {
-        applicationId = libs.versions.appPackageId.get()
         minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -102,16 +97,6 @@ android {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             isMinifyEnabled = false
-            signingConfig = signingConfigs.getByName("debug")
-        }
-    }
-
-    signingConfigs {
-        getByName("debug") {
-            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
-            storePassword = "password"
-            keyAlias = "androiddebugkey"
-            keyPassword = "password"
         }
     }
 
@@ -139,6 +124,4 @@ android {
     }
 }
 
-ksp {
-    arg("KOIN_CONFIG_CHECK", "true")
-}
+

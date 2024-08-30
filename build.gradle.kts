@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.test.coverage) apply true
     alias(libs.plugins.dependency.graph.generator) apply true
+    alias(libs.plugins.android.library) apply false
 }
 
 rootCoverage {
