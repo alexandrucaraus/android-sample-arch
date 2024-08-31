@@ -1,13 +1,13 @@
 package eu.acaraus.news.domain.usecases
 
 import eu.acaraus.news.domain.entities.ArticlesSources
-import eu.acaraus.news.domain.entities.Either
 import eu.acaraus.news.domain.entities.NewsError
-import eu.acaraus.news.domain.entities.map
-import eu.acaraus.news.domain.entities.onEachSuccess
 import eu.acaraus.news.domain.entities.toNewsError
 import eu.acaraus.news.domain.repositories.LocaleStore
 import eu.acaraus.news.domain.repositories.NewsApi
+import eu.acaraus.shared.lib.Either
+import eu.acaraus.shared.lib.map
+import eu.acaraus.shared.lib.onEachSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow

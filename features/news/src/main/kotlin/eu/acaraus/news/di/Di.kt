@@ -9,12 +9,7 @@ val newsDiModules: List<KoinDiModule> = listOf(
     DataDi().module,
     DomainDi().module,
     PresentationDi().module,
-    LibDi().module
 )
-
-@Module
-@ComponentScan(value = "eu.acaraus.news.lib")
-class LibDi // todo should not be here
 
 @Module
 @ComponentScan(value = "eu.acaraus.news.data")

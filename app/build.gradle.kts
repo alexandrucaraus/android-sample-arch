@@ -14,6 +14,7 @@ plugins {
 
 dependencies {
 
+    implementation(project(":shared_lib"))
     implementation(project(":features:news"))
 
     implementation(kotlin("reflect"))

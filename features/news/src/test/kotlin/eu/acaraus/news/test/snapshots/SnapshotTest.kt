@@ -18,7 +18,7 @@ class SnapshotTest : UnitTest {
 
     @Test
     fun generateSnapshot() {
-        "com.germanautolabs.acaraus.screens"
+        "eu.acaraus.news.presentation"
             .getAListOfAllComposablePreviewMethods()
             .forEach { method -> paparazzi.snapshot { method.invoke(null, currentComposer, 0) } }
     }

@@ -13,6 +13,9 @@ plugins {
 
 dependencies {
 
+    implementation(project(":shared_lib"))
+    implementation(project(":uicomponents"))
+
     implementation(kotlin("reflect"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialisation.json)

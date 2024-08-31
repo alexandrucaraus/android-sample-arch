@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         google {
@@ -22,3 +24,5 @@ dependencyResolutionManagement {
 rootProject.name = "NewsApp"
 include(":app")
 include(":features:news")
+include(":shared_lib")
+include(":uicomponents")

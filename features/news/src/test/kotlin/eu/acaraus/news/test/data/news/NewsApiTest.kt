@@ -1,12 +1,11 @@
 package eu.acaraus.news.test.data.news
 
 import eu.acaraus.news.di.DataDi
-import eu.acaraus.news.di.LibDi
 import eu.acaraus.news.domain.entities.ArticlesFilter
-import eu.acaraus.news.domain.entities.Either
 import eu.acaraus.news.domain.repositories.NewsApi
 import eu.acaraus.news.test.common.UnitTest
 import eu.acaraus.news.test.common.rules.KoinUnitTestRule
+import eu.acaraus.shared.lib.Either
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test
@@ -18,7 +17,6 @@ class NewsApiTest : UnitTest {
     @get:Rule
     override val koinUnitTestRule = KoinUnitTestRule(
         DataDi().module,
-        LibDi().module,
     )
 
     @Test

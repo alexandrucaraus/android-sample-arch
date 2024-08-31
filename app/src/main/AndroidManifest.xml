@@ -2,9 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,10 +11,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsApp"
-        android:name="eu.acaraus.news.Application"
+        android:name="eu.acaraus.sample.arch.Application"
         tools:targetApi="31">
+
         <activity
-            android:name="eu.acaraus.news.Activity"
+            android:name="eu.acaraus.sample.arch.Activity"
             android:exported="true"
             android:theme="@style/Theme.NewsApp">
             <intent-filter>
@@ -26,13 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
-    <queries>
-        <intent>
-            <action
-                android:name="android.speech.RecognitionService" />
-        </intent>
-    </queries>
+    </application>
 
 </manifest>

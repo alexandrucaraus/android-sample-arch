@@ -1,6 +1,6 @@
 package eu.acaraus.news.test.common.rules
 
-import eu.acaraus.news.lib.DispatcherProvider
+import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain

@@ -2,7 +2,8 @@
 
 package eu.acaraus.news.test.common.coroutines
 
-import eu.acaraus.news.lib.DispatcherProvider
+
+import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScheduler

@@ -3,8 +3,8 @@ package eu.acaraus.news.domain.repositories
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
-import eu.acaraus.news.domain.entities.Either
 import eu.acaraus.news.domain.entities.NewsError
+import eu.acaraus.shared.lib.Either
 
 interface NewsApi {
 
