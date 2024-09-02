@@ -1,4 +1,4 @@
-package eu.acaraus.news.test.common.rules
+package eu.acaraus.shared.test.lib.rules
 
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi

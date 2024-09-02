@@ -1,4 +1,4 @@
-package eu.acaraus.news.test.common.mocks
+package eu.acaraus.shared.test.lib.mocks
 
 import androidx.lifecycle.ViewModelStore
 import androidx.lifecycle.ViewModelStoreOwner

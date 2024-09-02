@@ -13,10 +13,9 @@ import eu.acaraus.news.domain.repositories.SpeechEvent
 import eu.acaraus.news.domain.repositories.SpeechRecognizer
 import eu.acaraus.news.presentation.list.ArticlesListViewModel
 import eu.acaraus.news.presentation.list.holders.ArticlesListKoinScope
-import eu.acaraus.news.test.common.UnitTest
-import eu.acaraus.news.test.common.di.injectScopedViewModel
-import eu.acaraus.news.test.common.rules.KoinUnitTestRule
+import eu.acaraus.news.test.rules.UTest
 import eu.acaraus.shared.lib.Either
+import eu.acaraus.shared.test.lib.di.injectScopedViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -25,17 +24,15 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.test.runTest
-import org.junit.Rule
 import org.junit.Test
 import org.koin.core.annotation.Factory
 import org.koin.core.annotation.Module
 import org.koin.core.annotation.Single
 import org.koin.ksp.generated.module
 
-class ArticleListViewModelTest : UnitTest {
+class ArticleListViewModelTest : UTest {
 
-    @get:Rule
-    override val koinUnitTestRule = KoinUnitTestRule(ArticleListViewModelTestModule().module)
+    override fun testModules() = arrayOf(ArticleListViewModelTestModule().module)
 
     private fun createSubject(coroutineScope: CoroutineScope) =
         injectScopedViewModel<ArticlesListViewModel, ArticlesListKoinScope>(

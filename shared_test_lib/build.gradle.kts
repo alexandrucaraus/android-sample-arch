@@ -8,13 +8,11 @@ plugins {
     kotlin("plugin.parcelize")
     alias(libs.plugins.ksp)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.paparazzi) apply true
 }
 
 dependencies {
 
     implementation(project(":shared_lib"))
-    implementation(project(":uicomponents"))
 
     implementation(kotlin("reflect"))
     implementation(libs.kotlinx.coroutines.core)
@@ -65,11 +63,11 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    testImplementation(project(":shared_test_lib"))
-    testImplementation(libs.junit)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.koin.test)
-    testImplementation(libs.turbine)
+    implementation(libs.junit)
+    implementation(libs.kotlinx.coroutines.test)
+    implementation(libs.koin.test)
+    implementation(libs.turbine)
+    implementation(libs.classgraph)
 
     testFixturesImplementation(libs.kotlin.stdlib)
     testFixturesImplementation(platform(libs.androidx.compose.bom))
@@ -78,7 +76,7 @@ dependencies {
 
 
 android {
-    namespace = "eu.acaraus.news"
+    namespace = "eu.acaraus.shared.test.lib"
     compileSdk = libs.versions.compileSdk.get().toInt()
     compileSdkVersion = "android-${libs.versions.compileSdk.get()}"
 
@@ -126,5 +124,3 @@ android {
         enable = true
     }
 }
-
-

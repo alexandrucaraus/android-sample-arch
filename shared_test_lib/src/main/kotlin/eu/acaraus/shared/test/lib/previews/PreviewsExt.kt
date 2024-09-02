@@ -1,4 +1,4 @@
-package eu.acaraus.news.test.common.previews
+package eu.acaraus.shared.test.lib.previews
 
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.classgraph.ClassGraph

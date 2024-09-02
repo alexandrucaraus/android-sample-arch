@@ -1,8 +1,8 @@
-package eu.acaraus.news.test.common.di
+package eu.acaraus.shared.test.lib.di
 
 import androidx.lifecycle.ViewModel
-import eu.acaraus.news.test.common.mocks.testViewModelStoreOwner
 import eu.acaraus.shared.lib.koin.scopedKoinViewModel
+import eu.acaraus.shared.test.lib.mocks.testViewModelStoreOwner
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.scope.Scope
 import org.koin.test.KoinTest

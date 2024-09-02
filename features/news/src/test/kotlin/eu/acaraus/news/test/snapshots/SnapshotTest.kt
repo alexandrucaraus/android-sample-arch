@@ -3,12 +3,12 @@ package eu.acaraus.news.test.snapshots
 import androidx.compose.runtime.currentComposer
 import app.cash.paparazzi.DeviceConfig
 import app.cash.paparazzi.Paparazzi
-import eu.acaraus.news.test.common.UnitTest
-import eu.acaraus.news.test.common.previews.getAListOfAllComposablePreviewMethods
+import eu.acaraus.news.test.rules.UTest
+import eu.acaraus.shared.test.lib.previews.getAListOfAllComposablePreviewMethods
 import org.junit.Rule
 import org.junit.Test
 
-class SnapshotTest : UnitTest {
+class SnapshotTest : UTest {
 
     @get:Rule
     val paparazzi = Paparazzi(

@@ -25,7 +25,6 @@ containing most common configurations a project would need.
 
 ### Todos:
 1. Split in modules, problems:
-   - Move common test into separate module.
    - Viewmodel coroutine scope.
    - Ktor network client configuration.
 2. Custom material theme object, sizes object, font styles object.

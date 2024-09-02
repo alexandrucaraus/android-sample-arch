@@ -3,9 +3,9 @@ package eu.acaraus.news.test.data.news
 import eu.acaraus.news.di.DataDi
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.repositories.NewsApi
-import eu.acaraus.news.test.common.UnitTest
-import eu.acaraus.news.test.common.rules.KoinUnitTestRule
 import eu.acaraus.shared.lib.Either
+import eu.acaraus.shared.test.lib.UnitTest
+import eu.acaraus.shared.test.lib.rules.KoinUnitTestRule
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import org.junit.Test

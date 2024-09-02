@@ -1,6 +1,6 @@
-package eu.acaraus.news.test.common.rules
+package eu.acaraus.shared.test.lib.rules
 
-import eu.acaraus.news.test.common.di.setupUnitTestDi
+import eu.acaraus.shared.test.lib.di.setupUnitTestDi
 import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 import org.koin.core.context.GlobalContext.stopKoin

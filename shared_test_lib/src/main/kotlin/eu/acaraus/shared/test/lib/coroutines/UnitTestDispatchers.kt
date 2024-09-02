@@ -1,6 +1,6 @@
 @file:Suppress("All")
 
-package eu.acaraus.news.test.common.coroutines
+package eu.acaraus.shared.test.lib.coroutines
 
 
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
