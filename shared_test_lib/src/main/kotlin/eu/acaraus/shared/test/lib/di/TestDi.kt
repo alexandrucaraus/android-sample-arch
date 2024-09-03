@@ -8,9 +8,7 @@ import org.koin.dsl.module
 
 fun setupUnitTestDi(mockModules: List<org.koin.core.module.Module> = emptyList()) {
     val allModules =
-        mockModules + listOf(module {
-            single<DispatcherProvider> { DispatcherProviderApp() }
-        })
+        mockModules + module { single<DispatcherProvider> { DispatcherProviderApp() } }
     GlobalContext.startKoin {
         modules(allModules)
     }

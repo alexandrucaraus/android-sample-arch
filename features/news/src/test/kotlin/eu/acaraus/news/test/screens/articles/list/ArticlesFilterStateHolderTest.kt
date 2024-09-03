@@ -29,7 +29,7 @@ import kotlin.test.assertEquals
 class ArticlesFilterStateHolderTest : UTest {
 
 
-    override fun testModules() = arrayOf(ArticlesFilterStateHolderModule().module)
+    override fun perTestModules() = arrayOf(ArticlesFilterStateHolderModule().module)
 
     private fun createSubject(coroutineScope: CoroutineScope): ArticlesFilterStateHolder =
         injectScoped<ArticlesFilterStateHolder, ArticlesListKoinScope>(

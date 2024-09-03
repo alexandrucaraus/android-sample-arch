@@ -29,10 +29,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)
-
-    testFixturesImplementation(libs.kotlin.stdlib)
-    testFixturesImplementation(platform(libs.androidx.compose.bom))
-    testFixturesImplementation(libs.androidx.compose.ui)
 }
 
 

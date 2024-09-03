@@ -9,13 +9,13 @@ import org.koin.test.KoinTest
 
 interface UnitTest : KoinTest {
 
-    val modules: Array<Module> get() = emptyArray<Module>()
+    val perFeatureModules: Array<Module> get() = emptyArray<Module>()
+    fun perTestModules(): Array<Module> = emptyArray()
 
     @get:Rule
-    val koinUnitTestRule get() = KoinUnitTestRule(*modules, *testModules())
+    val koinUnitTestRule get() = KoinUnitTestRule(*perFeatureModules, *perTestModules())
 
     @get:Rule
     val coroutinesTestRule get() = CoroutinesTestRule()
 
-    fun testModules(): Array<Module> = emptyArray()
 }

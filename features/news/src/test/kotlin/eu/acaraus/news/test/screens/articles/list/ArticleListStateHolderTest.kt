@@ -28,7 +28,7 @@ import org.koin.ksp.generated.module
 
 class ArticleListStateHolderTest : UTest {
 
-    override fun testModules() = arrayOf(ArticleListTestModule().module)
+    override fun perTestModules() = arrayOf(ArticleListTestModule().module)
 
     private fun createSubject(coroutineScope: CoroutineScope) =
         injectScoped<ArticlesListStateHolder, ArticlesListKoinScope>(

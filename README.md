@@ -3,6 +3,9 @@
 The purpose of this repository is to provide a starting point for an app,
 containing most common configurations a project would need.
 
+### Project structure
+![Project module dependencies structure](structure/project-dependency-graph.svg)
+
 ### The directory structure is the following
 [main] - contain the main entry point, di setup
 [models] - represent domain objects
@@ -25,7 +28,6 @@ containing most common configurations a project would need.
 
 ### Todos:
 1. Split in modules, problems:
-   - Viewmodel coroutine scope.
    - Ktor network client configuration.
 2. Custom material theme object, sizes object, font styles object.
 3. Translations (localisations).

@@ -31,7 +31,7 @@ import org.koin.ksp.generated.module
 
 class KoinScopeTest : UTest {
 
-    override fun testModules() = arrayOf(ArticleListViewModelTestModule().module)
+    override fun perTestModules() = arrayOf(ArticleListViewModelTestModule().module)
 
     private fun createSubject(coroutineScope: CoroutineScope) =
         injectScopedViewModel<ArticlesListViewModel, ArticlesListKoinScope>(

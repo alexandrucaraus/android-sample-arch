@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -41,25 +39,6 @@ dependencies {
     implementation(libs.koin.annotations)
     ksp(libs.koin.ksp)
 
-    implementation(libs.coil)
-
-    implementation(libs.androidx.browser)
-
-    implementation(libs.ktor)
-    implementation(libs.ktor.cio)
-    implementation(libs.ktor.logging)
-    implementation(libs.ktor.content.negotiation)
-    implementation(libs.ktor.serialization.json)
-    implementation(libs.ktor.encoding)
-    implementation(libs.ktor.okhttp)
-    implementation(libs.ktor.logback)
-
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-
-    debugImplementation(libs.leakcanary.android)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
@@ -69,9 +48,6 @@ dependencies {
     implementation(libs.turbine)
     implementation(libs.classgraph)
 
-    testFixturesImplementation(libs.kotlin.stdlib)
-    testFixturesImplementation(platform(libs.androidx.compose.bom))
-    testFixturesImplementation(libs.androidx.compose.ui)
 }
 
 
@@ -95,8 +71,6 @@ android {
             )
         }
         debug {
-            enableUnitTestCoverage = true
-            enableAndroidTestCoverage = true
             isMinifyEnabled = false
         }
     }
@@ -118,9 +92,5 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,INDEX.LIST}"
         }
-    }
-
-    testFixtures {
-        enable = true
     }
 }
