@@ -14,6 +14,9 @@ plugins {
 
 dependencies {
 
+    implementation(project(":shared_lib"))
+    implementation(project(":features:news"))
+
     implementation(kotlin("reflect"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialisation.json)
@@ -91,7 +94,6 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
