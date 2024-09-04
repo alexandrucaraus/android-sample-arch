@@ -8,6 +8,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import eu.acaraus.design.components.Toaster
+import eu.acaraus.design.components.ToasterState
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.presentation.list.components.ArticleFilter
 import eu.acaraus.news.presentation.list.components.ArticleFilterActionIcon
@@ -16,8 +18,6 @@ import eu.acaraus.news.presentation.list.components.ArticleListState
 import eu.acaraus.news.presentation.list.components.ArticlesFilterEditorState
 import eu.acaraus.news.presentation.list.components.AudioCommandButton
 import eu.acaraus.news.presentation.list.components.AudioCommandButtonState
-import eu.acaraus.design.components.Toaster
-import eu.acaraus.design.components.ToasterState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

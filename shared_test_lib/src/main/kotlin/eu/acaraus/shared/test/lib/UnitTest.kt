@@ -1,6 +1,5 @@
 package eu.acaraus.shared.test.lib
 
-
 import eu.acaraus.shared.test.lib.rules.CoroutinesTestRule
 import eu.acaraus.shared.test.lib.rules.KoinUnitTestRule
 import org.junit.Rule
@@ -17,5 +16,4 @@ interface UnitTest : KoinTest {
 
     @get:Rule
     val coroutinesTestRule get() = CoroutinesTestRule()
-
 }

@@ -1,6 +1,6 @@
 package eu.acaraus.news.domain.repositories
 
-interface LocaleStore {
+interface LocaleRepository {
     fun setLanguageCode(code: String)
     fun getLanguageCode(): String
     fun setCountryCode(code: String)

@@ -2,14 +2,14 @@ package eu.acaraus.news.test.screens.articles.list
 
 import app.cash.turbine.test
 import app.cash.turbine.turbineScope
-import eu.acaraus.news.data.LocaleStoreImpl
+import eu.acaraus.news.data.Locale
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.entities.SortBy
-import eu.acaraus.news.domain.repositories.LocaleStore
-import eu.acaraus.news.domain.repositories.NewsApi
+import eu.acaraus.news.domain.repositories.LocaleRepository
+import eu.acaraus.news.domain.repositories.NewsRepository
 import eu.acaraus.news.presentation.list.holders.ArticlesListKoinScope
 import eu.acaraus.news.presentation.list.holders.ArticlesListStateHolder
 import eu.acaraus.news.test.rules.UTest
@@ -119,7 +119,7 @@ private var simulateApiError = false
 class ArticleListTestModule {
 
     @Factory
-    fun newsApi(): NewsApi = object : NewsApi {
+    fun newsApi(): NewsRepository = object : NewsRepository {
 
         override suspend fun getHeadlines(
             language: String,
@@ -144,7 +144,7 @@ class ArticleListTestModule {
     }
 
     @Single
-    fun localeStore(): LocaleStore = LocaleStoreImpl()
+    fun localeStore(): LocaleRepository = Locale()
 }
 
 private val dummyArticles = listOf(

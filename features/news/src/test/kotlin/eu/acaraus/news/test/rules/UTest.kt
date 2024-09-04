@@ -14,6 +14,6 @@ interface UTest : SharedUnitTest {
         get() = arrayOf(
             DomainDi().module,
             PresentationDi().module,
-            module { single<DispatcherProvider>{ DispatcherProviderApp() } }
+            module { single<DispatcherProvider> { DispatcherProviderApp() } },
         )
 }

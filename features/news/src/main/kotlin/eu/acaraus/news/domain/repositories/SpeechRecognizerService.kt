@@ -9,7 +9,7 @@ sealed class SpeechEvent {
     data class Result(val matches: List<String>) : SpeechEvent()
 }
 
-interface SpeechRecognizer {
+interface SpeechRecognizerService {
     val isListening: MutableStateFlow<Boolean>
     val isAvailable: MutableStateFlow<Boolean>
     fun events(): Flow<SpeechEvent>

@@ -1,6 +1,5 @@
 package eu.acaraus.shared.test.lib.di
 
-
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import eu.acaraus.shared.lib.coroutines.DispatcherProviderApp
 import org.koin.core.context.GlobalContext

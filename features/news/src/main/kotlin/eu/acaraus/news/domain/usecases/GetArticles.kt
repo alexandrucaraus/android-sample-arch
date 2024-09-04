@@ -4,8 +4,8 @@ import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.entities.toNewsError
-import eu.acaraus.news.domain.repositories.LocaleStore
-import eu.acaraus.news.domain.repositories.NewsApi
+import eu.acaraus.news.domain.repositories.LocaleRepository
+import eu.acaraus.news.domain.repositories.NewsRepository
 import eu.acaraus.shared.lib.Either
 import eu.acaraus.shared.lib.map
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,8 +20,8 @@ import java.util.Locale
 
 @Factory
 class GetArticles(
-    private val newsApi: NewsApi,
-    private val localeStore: LocaleStore,
+    private val newsRepository: NewsRepository,
+    private val localeRepository: LocaleRepository,
 ) {
 
     operator fun invoke(filter: ArticlesFilter): Flow<Either<List<Article>, NewsError>> =
@@ -38,11 +38,11 @@ class GetArticles(
     private fun ArticlesFilter.isDefault() = this == ArticlesFilter()
 
     private fun fetchHeadlines(): Flow<Either<List<Article>, NewsError>> = flow {
-        emit(newsApi.getHeadlines(language = localeStore.getLanguageCode()))
+        emit(newsRepository.getHeadlines(language = localeRepository.getLanguageCode()))
     }
 
     private fun fetchEverything(filter: ArticlesFilter): Flow<Either<List<Article>, NewsError>> = flow {
-        emit(newsApi.getEverything(filter))
+        emit(newsRepository.getEverything(filter))
     }
 
     private fun Flow<Either<List<Article>, NewsError>>.filterRemovedArticles() = map { result ->

@@ -31,7 +31,6 @@ dependencies {
     testImplementation(libs.junit)
 }
 
-
 android {
     namespace = "eu.acaraus.design.components"
     compileSdk = libs.versions.compileSdk.get().toInt()

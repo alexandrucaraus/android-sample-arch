@@ -47,9 +47,7 @@ dependencies {
     implementation(libs.koin.test)
     implementation(libs.turbine)
     implementation(libs.classgraph)
-
 }
-
 
 android {
     namespace = "eu.acaraus.shared.test.lib"

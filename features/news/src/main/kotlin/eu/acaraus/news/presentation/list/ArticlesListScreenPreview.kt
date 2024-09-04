@@ -4,11 +4,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import eu.acaraus.design.components.ToasterState
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.presentation.list.components.ArticleListState
 import eu.acaraus.news.presentation.list.components.ArticlesFilterEditorState
 import eu.acaraus.news.presentation.list.components.AudioCommandButtonState
-import eu.acaraus.design.components.ToasterState
 
 @Composable
 @Preview(showBackground = true, showSystemUi = true)
