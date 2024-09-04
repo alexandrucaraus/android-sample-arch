@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.koin.core.annotation.Single
 
 @Single(binds = [DispatcherProvider::class])
-class UnitTestDispatchers : DispatcherProvider {
+class DispatcherProviderTest : DispatcherProvider {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val dispatcher: TestDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())

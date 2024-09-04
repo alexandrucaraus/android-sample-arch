@@ -12,10 +12,9 @@ import kotlinx.coroutines.Dispatchers as KotlinDispatchers
 
 class CoroutinesTestRule : TestWatcher(), KoinTest {
 
-    private val testDispatcher by inject<DispatcherProvider>()
-
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun starting(description: Description) {
+        val testDispatcher by inject<DispatcherProvider>()
         KotlinDispatchers.setMain(testDispatcher.ui)
     }
 

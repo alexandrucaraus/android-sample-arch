@@ -13,7 +13,8 @@ class KoinUnitTestRule(private vararg val mockModules: Module) : TestWatcher() {
     override fun starting(description: Description) {
         try {
             setupUnitTestDi(mockModules.toList())
-        } catch (ignore: Exception) {
+        } catch (koinSetupError: Exception) {
+            println(koinSetupError.message)
         }
     }
 
