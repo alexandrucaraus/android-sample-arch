@@ -19,7 +19,7 @@ import org.koin.core.annotation.Single
 @Single
 fun client(
     json: Json,
-    httpClientConfig: HttpClientConfig
+    httpClientConfig: HttpClientConfig,
 ): HttpClient =
     HttpClient(OkHttp) {
         install(DefaultRequest) {

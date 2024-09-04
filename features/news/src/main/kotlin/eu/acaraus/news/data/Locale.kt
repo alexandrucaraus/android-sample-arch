@@ -1,12 +1,11 @@
 package eu.acaraus.news.data
 
-import eu.acaraus.news.domain.repositories.LocaleStore
+import eu.acaraus.news.domain.repositories.LocaleRepository
 import org.koin.core.annotation.Single
 import java.util.Locale
 
-
-@Single(binds = [LocaleStore::class])
-class LocaleStoreImpl : LocaleStore {
+@Single(binds = [LocaleRepository::class])
+class Locale : LocaleRepository {
 
     private var languageCode = Locale.getDefault().language
     private var countryCode = Locale.getDefault().country

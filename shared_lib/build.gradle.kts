@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -42,7 +40,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
-
 
 android {
     namespace = "eu.acaraus.shared.lib"
@@ -87,9 +84,5 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1,INDEX.LIST}"
         }
-    }
-
-    testFixtures {
-        enable = true
     }
 }

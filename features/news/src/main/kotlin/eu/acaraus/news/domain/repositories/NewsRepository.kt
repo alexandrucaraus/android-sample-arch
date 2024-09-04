@@ -6,7 +6,7 @@ import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.shared.lib.Either
 
-interface NewsApi {
+interface NewsRepository {
 
     suspend fun getHeadlines(
         language: String = "de",

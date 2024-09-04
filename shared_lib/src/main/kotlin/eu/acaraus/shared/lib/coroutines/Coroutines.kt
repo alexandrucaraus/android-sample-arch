@@ -16,5 +16,3 @@ class DispatcherProviderApp : DispatcherProvider {
     override val unconfined: CoroutineDispatcher get() = KotlinProvidedDispatchers.Unconfined
     override val ui: CoroutineDispatcher get() = KotlinProvidedDispatchers.Main.immediate
 }
-
-

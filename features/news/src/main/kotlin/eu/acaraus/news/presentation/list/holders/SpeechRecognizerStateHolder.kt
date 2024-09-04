@@ -1,12 +1,12 @@
 package eu.acaraus.news.presentation.list.holders
 
+import eu.acaraus.design.components.PermissionState
+import eu.acaraus.design.components.ToasterState
 import eu.acaraus.news.domain.repositories.SpeechEvent
-import eu.acaraus.news.domain.repositories.SpeechRecognizer
+import eu.acaraus.news.domain.repositories.SpeechRecognizerService
 import eu.acaraus.news.domain.usecases.MatchVoiceCommands
 import eu.acaraus.news.domain.usecases.VoiceCommand
 import eu.acaraus.news.presentation.list.components.AudioCommandButtonState
-import eu.acaraus.design.components.PermissionState
-import eu.acaraus.design.components.ToasterState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +21,14 @@ import org.koin.core.annotation.Scope
 @Factory
 @Scope(ArticlesListKoinScope::class)
 class SpeechRecognizerStateHolder(
-    private val speechRecognizer: SpeechRecognizer,
+    private val speechRecognizerService: SpeechRecognizerService,
     private val matchVoiceCommands: MatchVoiceCommands,
     scope: CoroutineScope,
 ) : CoroutineScope by scope {
 
     private val audioCommandButtonState = MutableStateFlow(
         AudioCommandButtonState(
-            isEnabled = speechRecognizer.isAvailable.value,
+            isEnabled = speechRecognizerService.isAvailable.value,
             toggleListening = ::toggleListening,
             changePermissionState = ::changePermissionsState,
         ),
@@ -44,9 +44,9 @@ class SpeechRecognizerStateHolder(
     val reloadCommand = MutableSharedFlow<Unit>()
 
     init {
-        speechRecognizer.isListening.onEach(::updateListeningState).launchIn(this)
+        speechRecognizerService.isListening.onEach(::updateListeningState).launchIn(this)
 
-        speechRecognizer.events().onEach { event ->
+        speechRecognizerService.events().onEach { event ->
             when (event) {
                 is SpeechEvent.Result -> executeVoiceCommands(event.matches)
                 is SpeechEvent.Error -> showToast(event.errorMessage)
@@ -54,7 +54,7 @@ class SpeechRecognizerStateHolder(
             }
         }.launchIn(this)
 
-        coroutineContext.job.invokeOnCompletion { speechRecognizer.destroy() }
+        coroutineContext.job.invokeOnCompletion { speechRecognizerService.destroy() }
     }
 
     private suspend fun executeVoiceCommands(words: List<String>) {
@@ -70,7 +70,7 @@ class SpeechRecognizerStateHolder(
 
     private fun changePermissionsState(newPermissionState: PermissionState) {
         if (newPermissionState.isEqualTo(PermissionState.Granted)) {
-            speechRecognizer.toggleListening()
+            speechRecognizerService.toggleListening()
             updatePermissionStateTo(PermissionState.ConfirmationNeeded)
         } else {
             updatePermissionStateTo(newPermissionState)

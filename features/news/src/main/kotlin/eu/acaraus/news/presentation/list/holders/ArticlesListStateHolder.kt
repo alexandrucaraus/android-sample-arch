@@ -52,8 +52,8 @@ class ArticlesListStateHolder(
                 updateError(
                     NewsError(
                         code = "unknown",
-                        exception.message ?: "Failed to load articles"
-                    )
+                        exception.message ?: "Failed to load articles",
+                    ),
                 )
             }
             .launchIn(this)

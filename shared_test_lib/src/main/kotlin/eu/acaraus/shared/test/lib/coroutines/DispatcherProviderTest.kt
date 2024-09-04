@@ -2,7 +2,6 @@
 
 package eu.acaraus.shared.test.lib.coroutines
 
-
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,7 +11,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import org.koin.core.annotation.Single
 
 @Single(binds = [DispatcherProvider::class])
-class UnitTestDispatchers : DispatcherProvider {
+class DispatcherProviderTest : DispatcherProvider {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val dispatcher: TestDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())

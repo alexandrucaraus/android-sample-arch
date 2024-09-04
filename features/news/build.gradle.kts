@@ -76,7 +76,6 @@ dependencies {
     testFixturesImplementation(libs.androidx.compose.ui)
 }
 
-
 android {
     namespace = "eu.acaraus.news"
     compileSdk = libs.versions.compileSdk.get().toInt()
@@ -126,5 +125,3 @@ android {
         enable = true
     }
 }
-
-

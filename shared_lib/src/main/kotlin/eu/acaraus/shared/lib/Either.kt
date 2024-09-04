@@ -2,7 +2,6 @@ package eu.acaraus.shared.lib
 
 import eu.acaraus.shared.lib.Either.Companion.success
 
-
 sealed class Either<out S, out E> {
 
     val isSuccess get() = this is Success

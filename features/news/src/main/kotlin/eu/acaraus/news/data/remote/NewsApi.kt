@@ -6,7 +6,7 @@ import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.entities.SortBy
-import eu.acaraus.news.domain.repositories.NewsApi
+import eu.acaraus.news.domain.repositories.NewsRepository
 import eu.acaraus.shared.lib.Either
 import eu.acaraus.shared.lib.Either.Success
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
@@ -19,19 +19,18 @@ import kotlinx.coroutines.withContext
 import org.koin.core.annotation.Factory
 import java.time.format.DateTimeFormatter
 
-@Factory(binds = [NewsApi::class])
-class NewsApiImpl(
+@Factory(binds = [NewsRepository::class])
+class NewsApi(
     private val httpClient: HttpClient,
     private val httpClientConfig: HttpClientConfig,
     private val dispatchers: DispatcherProvider,
-) : NewsApi {
+) : NewsRepository {
 
     override suspend fun getHeadlines(
         language: String,
         category: String,
     ): Either<List<Article>, NewsError> = withContext(dispatchers.io) {
         kotlin.runCatching {
-
             val response = httpClient.get(path("/v2/top-headlines")) {
                 parameter(LANGUAGE, language)
                 parameter(CATEGORY, category)
@@ -43,7 +42,6 @@ class NewsApiImpl(
 
                 else -> Either.Error(response.toError())
             }
-
         }.getOrElse { failure -> Either.error(failure.toError()) }
     }
 
@@ -62,20 +60,18 @@ class NewsApiImpl(
 
                     else -> Either.Error(response.toError())
                 }
-
             }.getOrElse { failure -> Either.error(failure.toError()) }
         }
 
     override suspend fun getEverything(filter: ArticlesFilter): Either<List<Article>, NewsError> =
         withContext(dispatchers.io) {
             kotlin.runCatching {
-
                 val response: NewsApiResponse = httpClient.get((path("/v2/everything"))) {
                     parameter(LANGUAGE, filter.language)
                     parameter(
                         filter.query.isNotBlank(),
                         QUERY,
-                        filter.query
+                        filter.query,
                     )
                     parameter(
                         filter.sources.isNotEmpty(),
@@ -93,9 +89,7 @@ class NewsApiImpl(
 
                     else -> Either.Error(response.toError())
                 }
-
             }.getOrElse { failure -> Either.error(failure.toError()) }
-
         }
 
     private fun path(path: String) = httpClientConfig.baseUrl + path
@@ -103,7 +97,7 @@ class NewsApiImpl(
     private fun HttpRequestBuilder.parameter(
         condition: Boolean,
         key: String,
-        value: Any?
+        value: Any?,
     ) {
         if (condition) parameter(key, value)
     }
