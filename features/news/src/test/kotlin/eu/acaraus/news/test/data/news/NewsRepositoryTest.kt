@@ -1,37 +1,32 @@
 package eu.acaraus.news.test.data.news
 
+import eu.acaraus.core.Either
+import eu.acaraus.core.onEachError
+import eu.acaraus.core.onEachSuccess
 import eu.acaraus.news.di.DataDi
-import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
-import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.repositories.NewsRepository
-import eu.acaraus.shared.lib.Either
-import eu.acaraus.shared.lib.coroutines.DispatcherProvider
-import eu.acaraus.shared.lib.coroutines.DispatcherProviderApp
-import eu.acaraus.shared.lib.onEachError
-import eu.acaraus.shared.lib.onEachSuccess
-import eu.acaraus.shared.test.lib.UnitTest
-import eu.acaraus.shared.test.lib.rules.KoinUnitTestRule
+import eu.acaraus.news.test.rules.UTest
+import eu.acaraus.shared.lib.http.httpClient
 import kotlinx.coroutines.test.runTest
-import org.junit.Rule
 import org.junit.Test
+import org.koin.core.module.Module
 import org.koin.dsl.module
 import org.koin.ksp.generated.module
 import org.koin.test.inject
 import java.time.LocalDate
 
-class NewsRepositoryTest : UnitTest {
+class NewsRepositoryTest : UTest {
 
-    @get:Rule
-    override val koinUnitTestRule = KoinUnitTestRule(
+    override fun perTestModules(): Array<Module> = arrayOf(
         DataDi().module,
-        module { single<DispatcherProvider> { DispatcherProviderApp() } },
+        module { single { httpClient() } },
     )
 
     @Test
     fun fetch_news_headlines_successfully() = runTest {
         val newsRepository: NewsRepository by inject<NewsRepository>()
-        val headlinesResult: Either<List<Article>, NewsError> = newsRepository.getHeadlines()
+        val headlinesResult = newsRepository.getHeadlines()
         assert(headlinesResult.isSuccess)
     }
 

@@ -2,19 +2,19 @@ package eu.acaraus.news.test.screens.articles.list
 
 import app.cash.turbine.test
 import app.cash.turbine.turbineScope
-import eu.acaraus.news.data.Locale
+import eu.acaraus.news.data.LocaleRepositoryImpl
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.repositories.LocaleRepository
 import eu.acaraus.news.domain.repositories.NewsRepository
-import eu.acaraus.news.domain.repositories.SpeechEvent
-import eu.acaraus.news.domain.repositories.SpeechRecognizerService
+import eu.acaraus.news.domain.services.SpeechEvent
+import eu.acaraus.news.domain.services.SpeechRecognitionService
 import eu.acaraus.news.presentation.list.ArticlesListViewModel
 import eu.acaraus.news.presentation.list.holders.ArticlesListKoinScope
 import eu.acaraus.news.test.rules.UTest
-import eu.acaraus.shared.lib.Either
+import eu.acaraus.core.Either
 import eu.acaraus.shared.test.lib.di.injectScopedViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
@@ -71,19 +71,19 @@ class ArticleListViewModelTestModule {
         override suspend fun getHeadlines(
             language: String,
             category: String,
-        ): Either<List<Article>, NewsError> = Either.success(dummyArticles.take(3))
+        ): Either<NewsError, List<Article>> = Either.success(dummyArticles.take(3))
 
-        override suspend fun getSources(): Either<List<ArticlesSources>, NewsError> {
+        override suspend fun getSources(): Either<NewsError, List<ArticlesSources>> {
             TODO("Not implemented")
         }
 
         override suspend fun getEverything(
             filter: ArticlesFilter,
-        ): Either<List<Article>, NewsError> = Either.success(dummyArticles.takeLast(2))
+        ): Either<NewsError, List<Article>> = Either.success(dummyArticles.takeLast(2))
     }
 
     @Factory
-    fun speechRecognizer(): SpeechRecognizerService = object : SpeechRecognizerService {
+    fun speechRecognizer(): SpeechRecognitionService = object : SpeechRecognitionService {
 
         override val isListening: MutableStateFlow<Boolean>
             get() = MutableStateFlow(true)
@@ -109,7 +109,7 @@ class ArticleListViewModelTestModule {
     }
 
     @Single
-    fun localeStore(): LocaleRepository = Locale()
+    fun localeStore(): LocaleRepository = LocaleRepositoryImpl()
 }
 
 private val dummyArticles = listOf(

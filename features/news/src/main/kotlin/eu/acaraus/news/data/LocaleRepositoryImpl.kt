@@ -5,7 +5,7 @@ import org.koin.core.annotation.Single
 import java.util.Locale
 
 @Single(binds = [LocaleRepository::class])
-class Locale : LocaleRepository {
+class LocaleRepositoryImpl : LocaleRepository {
 
     private var languageCode = Locale.getDefault().language
     private var countryCode = Locale.getDefault().country

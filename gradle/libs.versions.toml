@@ -17,11 +17,11 @@ targetSdk = "34"
 # Libs
 kotlinStdlib = "2.0.20"
 coreKtx = "1.13.1"
-lifecycleRuntimeKtx = "2.8.4"
-activityCompose = "1.9.1"
-composeBom = "2024.08.00"
-compose = "1.7.0-rc01"
-compose-nav = "2.8.0-rc01"
+lifecycleRuntimeKtx = "2.8.5"
+activityCompose = "1.9.2"
+composeBom = "2024.09.00"
+compose = "1.7.0"
+compose-nav = "2.8.0"
 
 koin-bom = "4.0.0-RC2"
 koin-ksp = "1.4.0-RC3"
@@ -52,6 +52,7 @@ dependency-graph-generator = "0.7.0" # https://github.com/vanniktech/gradle-depe
 test-coverage-plugin = "1.8.0"
 turbine = "1.1.0"
 paparazzi = "1.3.4"
+jetbrainsKotlinJvm = "2.0.0"
 #appcompat = "1.7.0"
 #material = "1.12.0"
 
@@ -142,4 +143,5 @@ test-coverage = { id = "nl.neotech.plugin.rootcoverage", version.ref = "test-cov
 dependency-graph-generator = { id = "com.vanniktech.dependency.graph.generator", version.ref = "dependency-graph-generator" }
 paparazzi = { id = "app.cash.paparazzi", version.ref = "paparazzi" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 

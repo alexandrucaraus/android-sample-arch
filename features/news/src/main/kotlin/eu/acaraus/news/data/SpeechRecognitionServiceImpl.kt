@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
-import eu.acaraus.news.domain.repositories.SpeechEvent
-import eu.acaraus.news.domain.repositories.SpeechRecognizerService
+import eu.acaraus.news.domain.services.SpeechEvent
+import eu.acaraus.news.domain.services.SpeechRecognitionService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +14,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import org.koin.core.annotation.Factory
 import android.speech.SpeechRecognizer as AndroidSpeechRecognizer
 
-@Factory(binds = [SpeechRecognizerService::class])
-class SpeechRecognizer(
+@Factory(binds = [SpeechRecognitionService::class])
+class SpeechRecognitionServiceImpl(
     context: Context,
-) : SpeechRecognizerService {
+) : SpeechRecognitionService {
 
     override val isAvailable = MutableStateFlow(
         AndroidSpeechRecognizer.isRecognitionAvailable(context),

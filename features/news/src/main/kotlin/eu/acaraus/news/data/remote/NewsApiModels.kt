@@ -78,12 +78,12 @@ object NewsApiResponseSerializer :
         element.jsonObject.containsKey("sources") -> NewsApiSources.serializer()
         else -> throw SerializationException("Unknown status for NewsApiResponse")
     }
-}
 
-val newsApiSerializationModule = SerializersModule {
-    polymorphic(NewsApiResponse::class) {
-        subclass(NewsApiArticles::class)
-        subclass(NewsApiSources::class)
-        subclass(NewsApiError::class)
+    val module = SerializersModule {
+        polymorphic(NewsApiResponse::class) {
+            subclass(NewsApiArticles::class)
+            subclass(NewsApiSources::class)
+            subclass(NewsApiError::class)
+        }
     }
 }

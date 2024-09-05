@@ -13,6 +13,8 @@ plugins {
 
 dependencies {
 
+    implementation(project(":core"))
+
     implementation(project(":shared_lib"))
     implementation(project(":uicomponents"))
 
@@ -86,6 +88,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(type = "String", name = "NEWS_BASE_URL", value = "\"https://newsapi.org/\"")
+        buildConfigField(type = "String", name = "NEWS_API_KEY", value = "\"a6d3cd2d5932471db7c7d8e68628bc5e\"")
     }
 
     buildTypes {
@@ -113,6 +118,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {

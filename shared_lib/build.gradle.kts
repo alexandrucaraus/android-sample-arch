@@ -29,6 +29,15 @@ dependencies {
     implementation(libs.androidx.compose.navigation.common)
     implementation(libs.androidx.compose.navigation.common.ktx)
 
+    implementation(libs.ktor)
+    implementation(libs.ktor.cio)
+    implementation(libs.ktor.logging)
+    implementation(libs.ktor.content.negotiation)
+    implementation(libs.ktor.serialization.json)
+    implementation(libs.ktor.encoding)
+    implementation(libs.ktor.okhttp)
+    implementation(libs.ktor.logback)
+
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)

@@ -4,6 +4,7 @@ import android.content.Context
 import eu.acaraus.news.di.newsDiModules
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import eu.acaraus.shared.lib.coroutines.DispatcherProviderApp
+import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
@@ -33,4 +34,7 @@ class AppDi {
     @Named("viewModelCoroutineScope")
     fun uiMainCoroutineScope(dispatcherProvider: DispatcherProvider): CoroutineScope =
         CoroutineScope(SupervisorJob() + dispatcherProvider.ui)
+
+    @Single
+    fun httpClient(): HttpClient = eu.acaraus.shared.lib.http.httpClient()
 }

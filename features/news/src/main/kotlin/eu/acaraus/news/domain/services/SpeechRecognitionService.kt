@@ -1,4 +1,4 @@
-package eu.acaraus.news.domain.repositories
+package eu.acaraus.news.domain.services
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,7 +9,7 @@ sealed class SpeechEvent {
     data class Result(val matches: List<String>) : SpeechEvent()
 }
 
-interface SpeechRecognizerService {
+interface SpeechRecognitionService {
     val isListening: MutableStateFlow<Boolean>
     val isAvailable: MutableStateFlow<Boolean>
     fun events(): Flow<SpeechEvent>

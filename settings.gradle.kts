@@ -1,8 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-include(":shared_test_lib")
-
-
 pluginManagement {
     repositories {
         google {
@@ -29,3 +26,5 @@ include(":app")
 include(":features:news")
 include(":shared_lib")
 include(":uicomponents")
+include(":core")
+include(":shared_test_lib")
