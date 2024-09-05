@@ -1,6 +1,5 @@
 package eu.acaraus.news.data.remote
 
-
 import eu.acaraus.news.BuildConfig
 import org.koin.core.annotation.Single
 

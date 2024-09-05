@@ -2,6 +2,7 @@ package eu.acaraus.news.test.screens.articles.list
 
 import app.cash.turbine.test
 import app.cash.turbine.turbineScope
+import eu.acaraus.core.Either
 import eu.acaraus.news.data.LocaleRepositoryImpl
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
@@ -14,7 +15,6 @@ import eu.acaraus.news.domain.services.SpeechRecognitionService
 import eu.acaraus.news.presentation.list.ArticlesListViewModel
 import eu.acaraus.news.presentation.list.holders.ArticlesListKoinScope
 import eu.acaraus.news.test.rules.UTest
-import eu.acaraus.core.Either
 import eu.acaraus.shared.test.lib.di.injectScopedViewModel
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope

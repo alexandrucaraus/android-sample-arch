@@ -1,20 +1,20 @@
-<svg width="424pt" height="310pt"
- viewBox="0.00 0.00 424.13 310.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="502pt" height="310pt"
+ viewBox="0.00 0.00 502.13 310.00" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 306)">
 <title>%0</title>
-<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-306 420.1285,-306 420.1285,4 -4,4"/>
-<text text-anchor="middle" x="208.0643" y="-266.5" font-family="Times,serif" font-size="35.00" fill="#000000">NewsApp</text>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-306 498.1285,-306 498.1285,4 -4,4"/>
+<text text-anchor="middle" x="247.0643" y="-266.5" font-family="Times,serif" font-size="35.00" fill="#000000">NewsApp</text>
 <!-- :app -->
 <g id="node1" class="node">
 <title>:app</title>
-<ellipse fill="#81c784" stroke="#000000" cx="62.9452" cy="-234" rx="27.8286" ry="18"/>
-<text text-anchor="middle" x="62.9452" y="-229.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:app</text>
+<ellipse fill="#81c784" stroke="#000000" cx="63.9452" cy="-234" rx="27.8286" ry="18"/>
+<text text-anchor="middle" x="63.9452" y="-229.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:app</text>
 </g>
 <!-- :app&#45;&gt;:app -->
 <g id="edge1" class="edge">
 <title>:app&#45;&gt;:app</title>
-<path fill="none" stroke="#000000" d="M83.1337,-246.4321C96.1154,-249.6753 108.609,-245.5313 108.609,-234 108.609,-225.5317 101.8711,-221.0474 93.1502,-220.5471"/>
-<polygon fill="#000000" stroke="#000000" points="92.7273,-217.072 83.1337,-221.5679 93.4371,-224.0359 92.7273,-217.072"/>
+<path fill="none" stroke="#000000" d="M84.1337,-246.4321C97.1154,-249.6753 109.609,-245.5313 109.609,-234 109.609,-225.5317 102.8711,-221.0474 94.1502,-220.5471"/>
+<polygon fill="#000000" stroke="#000000" points="93.7273,-217.072 84.1337,-221.5679 94.4371,-224.0359 93.7273,-217.072"/>
 </g>
 <!-- :shared_lib -->
 <g id="node2" class="node">
@@ -25,20 +25,20 @@
 <!-- :app&#45;&gt;:shared_lib -->
 <g id="edge2" class="edge">
 <title>:app&#45;&gt;:shared_lib</title>
-<path fill="none" stroke="#000000" d="M59.1978,-216.0931C57.1986,-205.6241 54.9486,-192.1241 53.9452,-180 50.0687,-133.1606 51.2531,-78.4422 52.543,-46.0899"/>
-<polygon fill="#000000" stroke="#000000" points="56.0431,-46.1609 52.9774,-36.0194 49.0496,-45.8592 56.0431,-46.1609"/>
+<path fill="none" stroke="#000000" d="M52.6369,-217.3258C46.3672,-207.0544 39.1975,-193.3377 35.9452,-180 24.6937,-133.8577 35.9322,-78.5866 45.0075,-45.9896"/>
+<polygon fill="#000000" stroke="#000000" points="48.4102,-46.8231 47.8468,-36.2433 41.6895,-44.8652 48.4102,-46.8231"/>
 </g>
 <!-- :features:news -->
 <g id="node3" class="node">
 <title>:features:news</title>
-<ellipse fill="#81c784" stroke="#000000" cx="129.9452" cy="-162" rx="66.6074" ry="18"/>
-<text text-anchor="middle" x="129.9452" y="-157.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:features:news</text>
+<ellipse fill="#81c784" stroke="#000000" cx="111.9452" cy="-162" rx="66.6074" ry="18"/>
+<text text-anchor="middle" x="111.9452" y="-157.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:features:news</text>
 </g>
 <!-- :app&#45;&gt;:features:news -->
 <g id="edge3" class="edge">
 <title>:app&#45;&gt;:features:news</title>
-<path fill="none" stroke="#000000" d="M77.4832,-218.3771C85.9479,-209.2807 96.8209,-197.5962 106.4713,-187.2257"/>
-<polygon fill="#000000" stroke="#000000" points="109.3024,-189.3211 113.5525,-179.6161 104.1779,-184.5525 109.3024,-189.3211"/>
+<path fill="none" stroke="#000000" d="M75.078,-217.3008C80.803,-208.7133 87.9149,-198.0454 94.3606,-188.377"/>
+<polygon fill="#000000" stroke="#000000" points="97.3989,-190.1291 100.0338,-179.8671 91.5746,-186.2462 97.3989,-190.1291"/>
 </g>
 <!-- :shared_lib&#45;&gt;:shared_lib -->
 <g id="edge4" class="edge">
@@ -47,58 +47,70 @@
 <polygon fill="#000000" stroke="#000000" points="100.8281,-1.0363 90.9625,-4.8988 101.0835,-8.0316 100.8281,-1.0363"/>
 </g>
 <!-- :features:news&#45;&gt;:shared_lib -->
-<g id="edge6" class="edge">
+<g id="edge7" class="edge">
 <title>:features:news&#45;&gt;:shared_lib</title>
-<path fill="none" stroke="#000000" d="M106.1188,-145.0314C94.3934,-135.4565 81.0673,-122.5122 72.9452,-108 62.3182,-89.012 57.6211,-64.7402 55.5521,-46.1886"/>
-<polygon fill="#000000" stroke="#000000" points="59.017,-45.6458 54.6126,-36.0098 52.0466,-46.2892 59.017,-45.6458"/>
+<path fill="none" stroke="#000000" d="M96.1615,-144.1933C88.0817,-134.1915 78.7501,-121.1124 72.9452,-108 64.2448,-88.3472 59.4411,-64.4834 56.8416,-46.2682"/>
+<polygon fill="#000000" stroke="#000000" points="60.3027,-45.741 55.5529,-36.2705 53.3601,-46.6359 60.3027,-45.741"/>
 </g>
 <!-- :features:news&#45;&gt;:features:news -->
 <g id="edge5" class="edge">
 <title>:features:news&#45;&gt;:features:news</title>
-<path fill="none" stroke="#000000" d="M175.3138,-175.233C196.3601,-176.6766 214.7486,-172.2656 214.7486,-162 214.7486,-153.4186 201.8989,-148.9283 185.3884,-148.5292"/>
-<polygon fill="#000000" stroke="#000000" points="185.2284,-145.0319 175.3138,-148.767 185.3936,-152.03 185.2284,-145.0319"/>
+<path fill="none" stroke="#000000" d="M157.3138,-175.233C178.3601,-176.6766 196.7486,-172.2656 196.7486,-162 196.7486,-153.4186 183.8989,-148.9283 167.3884,-148.5292"/>
+<polygon fill="#000000" stroke="#000000" points="167.2284,-145.0319 157.3138,-148.767 167.3936,-152.03 167.2284,-145.0319"/>
+</g>
+<!-- :core -->
+<g id="node4" class="node">
+<title>:core</title>
+<ellipse fill="#ffb74d" stroke="#000000" cx="111.9452" cy="-90" rx="30.1746" ry="18"/>
+<text text-anchor="middle" x="111.9452" y="-85.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:core</text>
+</g>
+<!-- :features:news&#45;&gt;:core -->
+<g id="edge6" class="edge">
+<title>:features:news&#45;&gt;:core</title>
+<path fill="none" stroke="#000000" d="M111.9452,-143.8314C111.9452,-136.131 111.9452,-126.9743 111.9452,-118.4166"/>
+<polygon fill="#000000" stroke="#000000" points="115.4453,-118.4132 111.9452,-108.4133 108.4453,-118.4133 115.4453,-118.4132"/>
 </g>
 <!-- :uicomponents -->
-<g id="node4" class="node">
+<g id="node5" class="node">
 <title>:uicomponents</title>
-<ellipse fill="#81c784" stroke="#000000" cx="149.9452" cy="-90" rx="67.7991" ry="18"/>
-<text text-anchor="middle" x="149.9452" y="-85.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:uicomponents</text>
+<ellipse fill="#81c784" stroke="#000000" cx="227.9452" cy="-90" rx="67.7991" ry="18"/>
+<text text-anchor="middle" x="227.9452" y="-85.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:uicomponents</text>
 </g>
 <!-- :features:news&#45;&gt;:uicomponents -->
-<g id="edge7" class="edge">
+<g id="edge8" class="edge">
 <title>:features:news&#45;&gt;:uicomponents</title>
-<path fill="none" stroke="#000000" d="M134.9921,-143.8314C137.1546,-136.0463 139.7305,-126.7729 142.13,-118.1347"/>
-<polygon fill="#000000" stroke="#000000" points="145.5262,-118.9852 144.8304,-108.4133 138.7816,-117.1117 145.5262,-118.9852"/>
+<path fill="none" stroke="#000000" d="M138.558,-145.4817C154.5068,-135.5825 174.9868,-122.8707 192.3187,-112.113"/>
+<polygon fill="#000000" stroke="#000000" points="194.404,-114.9381 201.0546,-106.6907 190.7124,-108.9907 194.404,-114.9381"/>
 </g>
 <!-- :shared_test_lib -->
-<g id="node5" class="node">
+<g id="node6" class="node">
 <title>:shared_test_lib</title>
-<ellipse fill="#81c784" stroke="#000000" cx="325.9452" cy="-90" rx="72.3671" ry="18"/>
-<text text-anchor="middle" x="325.9452" y="-85.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:shared_test_lib</text>
+<ellipse fill="#81c784" stroke="#000000" cx="403.9452" cy="-90" rx="72.3671" ry="18"/>
+<text text-anchor="middle" x="403.9452" y="-85.8" font-family="Times New Roman" font-size="14.00" fill="#000000">:shared_test_lib</text>
 </g>
 <!-- :features:news&#45;&gt;:shared_test_lib -->
-<g id="edge8" class="edge">
+<g id="edge9" class="edge">
 <title>:features:news&#45;&gt;:shared_test_lib</title>
-<path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M169.6087,-147.4297C200.2533,-136.1725 242.8632,-120.5199 275.8603,-108.3985"/>
-<polygon fill="#000000" stroke="#000000" points="277.1503,-111.6534 285.3302,-104.9198 274.7366,-105.0827 277.1503,-111.6534"/>
+<path fill="none" stroke="#000000" stroke-dasharray="1,5" d="M161.479,-149.7862C211.4153,-137.4731 288.6034,-118.4404 342.4315,-105.1678"/>
+<polygon fill="#000000" stroke="#000000" points="343.3274,-108.5518 352.1987,-102.7594 341.6515,-101.7553 343.3274,-108.5518"/>
 </g>
 <!-- :uicomponents&#45;&gt;:uicomponents -->
-<g id="edge9" class="edge">
+<g id="edge10" class="edge">
 <title>:uicomponents&#45;&gt;:uicomponents</title>
-<path fill="none" stroke="#000000" d="M196.3378,-103.2619C217.4727,-104.6159 235.8447,-100.1953 235.8447,-90 235.8447,-81.4774 223.0065,-76.99 206.4481,-76.538"/>
-<polygon fill="#000000" stroke="#000000" points="206.2666,-73.0408 196.3378,-76.7381 206.4052,-80.0394 206.2666,-73.0408"/>
+<path fill="none" stroke="#000000" d="M274.3378,-103.2619C295.4727,-104.6159 313.8447,-100.1953 313.8447,-90 313.8447,-81.4774 301.0065,-76.99 284.4481,-76.538"/>
+<polygon fill="#000000" stroke="#000000" points="284.2666,-73.0408 274.3378,-76.7381 284.4052,-80.0394 284.2666,-73.0408"/>
 </g>
 <!-- :shared_test_lib&#45;&gt;:shared_lib -->
-<g id="edge11" class="edge">
+<g id="edge12" class="edge">
 <title>:shared_test_lib&#45;&gt;:shared_lib</title>
-<path fill="none" stroke="#000000" d="M276.3725,-76.8778C228.2054,-64.1277 155.3417,-44.8402 106.2624,-31.8487"/>
-<polygon fill="#000000" stroke="#000000" points="107.0359,-28.4329 96.4732,-29.2574 105.2446,-35.1999 107.0359,-28.4329"/>
+<path fill="none" stroke="#000000" d="M349.9516,-77.8394C340.9401,-75.8563 331.6834,-73.8478 322.9452,-72 249.8311,-56.5393 165.3012,-39.7473 110.808,-29.0625"/>
+<polygon fill="#000000" stroke="#000000" points="111.1436,-25.5618 100.6573,-27.0748 109.7983,-32.4314 111.1436,-25.5618"/>
 </g>
 <!-- :shared_test_lib&#45;&gt;:shared_test_lib -->
-<g id="edge10" class="edge">
+<g id="edge11" class="edge">
 <title>:shared_test_lib&#45;&gt;:shared_test_lib</title>
-<path fill="none" stroke="#000000" d="M375.1101,-103.2891C397.1055,-104.5547 416.1285,-100.125 416.1285,-90 416.1285,-81.457 402.5858,-76.9686 385.1415,-76.5348"/>
-<polygon fill="#000000" stroke="#000000" points="385.0471,-73.0358 375.1101,-76.7109 385.17,-80.0348 385.0471,-73.0358"/>
+<path fill="none" stroke="#000000" d="M453.1101,-103.2891C475.1055,-104.5547 494.1285,-100.125 494.1285,-90 494.1285,-81.457 480.5858,-76.9686 463.1415,-76.5348"/>
+<polygon fill="#000000" stroke="#000000" points="463.0471,-73.0358 453.1101,-76.7109 463.17,-80.0348 463.0471,-73.0358"/>
 </g>
 </g>
 </svg>

@@ -20,10 +20,12 @@ fun httpClient(): HttpClient =
             }
         }
         install(ContentNegotiation) {
-            json(Json {
-                isLenient = true
-                ignoreUnknownKeys = true
-            })
+            json(
+                Json {
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                },
+            )
         }
         install(ContentEncoding) {
             deflate()

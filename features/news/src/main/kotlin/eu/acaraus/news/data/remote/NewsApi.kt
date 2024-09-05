@@ -1,14 +1,14 @@
 package eu.acaraus.news.data.remote
 
+import eu.acaraus.core.Either
+import eu.acaraus.core.Either.Error
+import eu.acaraus.core.Either.Success
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.entities.SortBy
 import eu.acaraus.news.domain.repositories.NewsRepository
-import eu.acaraus.core.Either
-import eu.acaraus.core.Either.Error
-import eu.acaraus.core.Either.Success
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -38,11 +38,13 @@ class NewsApi(
                 header(HttpHeaders.Authorization, newsApiConfig.apiKey)
             }
             install(ContentNegotiation) {
-                json(Json {
-                    serializersModule = NewsApiResponseSerializer.module
-                    isLenient = true
-                    ignoreUnknownKeys = true
-                })
+                json(
+                    Json {
+                        serializersModule = NewsApiResponseSerializer.module
+                        isLenient = true
+                        ignoreUnknownKeys = true
+                    },
+                )
             }
         }
     }

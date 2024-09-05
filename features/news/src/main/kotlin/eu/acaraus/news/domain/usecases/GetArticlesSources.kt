@@ -1,13 +1,13 @@
 package eu.acaraus.news.domain.usecases
 
+import eu.acaraus.core.Either
+import eu.acaraus.core.map
+import eu.acaraus.core.onEachSuccess
 import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.entities.toNewsError
 import eu.acaraus.news.domain.repositories.LocaleRepository
 import eu.acaraus.news.domain.repositories.NewsRepository
-import eu.acaraus.core.Either
-import eu.acaraus.core.map
-import eu.acaraus.core.onEachSuccess
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
@@ -24,13 +24,13 @@ class GetArticlesSources(
     // Todo remove cache from usecase
     private val atomicArticleSources = AtomicReference<List<ArticlesSources>>(emptyList())
 
-    operator fun invoke(): Flow<Either< NewsError,List<ArticlesSources>>> = flow {
+    operator fun invoke(): Flow<Either<NewsError, List<ArticlesSources>>> = flow {
         if (atomicArticleSources.get().isEmpty()) {
             newsRepository
                 .getSources()
                 .onEachSuccess { atomicArticleSources.set(it) }
         }
-        emit(Either.success<NewsError,List<ArticlesSources>>(atomicArticleSources.get()))
+        emit(Either.success<NewsError, List<ArticlesSources>>(atomicArticleSources.get()))
     }.map { sourcesResult ->
         sourcesResult.map { sources -> sources.filter { it.language == localeRepository.getLanguageCode() } }
     }.catch { cause ->

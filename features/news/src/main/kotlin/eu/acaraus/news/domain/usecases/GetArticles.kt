@@ -24,7 +24,7 @@ class GetArticles(
     private val localeRepository: LocaleRepository,
 ) {
 
-    operator fun invoke(filter: ArticlesFilter): Flow<Either<NewsError,List<Article>>> =
+    operator fun invoke(filter: ArticlesFilter): Flow<Either<NewsError, List<Article>>> =
         flowOf(filter)
             .chooseArticlesEndpoint()
             .filterRemovedArticles()
@@ -37,16 +37,16 @@ class GetArticles(
 
     private fun ArticlesFilter.isDefault() = this == ArticlesFilter()
 
-    private fun fetchHeadlines(): Flow<Either<NewsError,List<Article>>> = flow {
+    private fun fetchHeadlines(): Flow<Either<NewsError, List<Article>>> = flow {
         emit(newsRepository.getHeadlines(language = localeRepository.getLanguageCode()))
     }
 
-    private fun fetchEverything(filter: ArticlesFilter): Flow<Either<NewsError,List<Article>>> =
+    private fun fetchEverything(filter: ArticlesFilter): Flow<Either<NewsError, List<Article>>> =
         flow {
             emit(newsRepository.getEverything(filter))
         }
 
-    private fun Flow<Either<NewsError,List<Article>>>.filterRemovedArticles() =
+    private fun Flow<Either<NewsError, List<Article>>>.filterRemovedArticles() =
         map { result ->
             result.map { articles ->
                 articles.filterNot { article ->
