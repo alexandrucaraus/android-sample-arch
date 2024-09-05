@@ -26,7 +26,7 @@ import org.koin.core.annotation.Factory
 import java.time.format.DateTimeFormatter
 
 @Factory(binds = [NewsRepository::class])
-class NewsApi(
+internal class NewsApi(
     httpClientInstance: HttpClient,
     private val newsApiConfig: NewsApiConfig,
     private val dispatchers: DispatcherProvider,

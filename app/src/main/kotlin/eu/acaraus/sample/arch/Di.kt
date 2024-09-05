@@ -1,6 +1,7 @@
 package eu.acaraus.sample.arch
 
 import android.content.Context
+import eu.acaraus.news.data.remote.NewsApiConfig
 import eu.acaraus.news.di.newsDiModules
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import eu.acaraus.shared.lib.coroutines.DispatcherProviderApp
@@ -37,4 +38,10 @@ class AppDi {
 
     @Single
     fun httpClient(): HttpClient = eu.acaraus.shared.lib.http.httpClient()
+
+    @Single
+    fun newsApiConfig() = NewsApiConfig(
+        baseUrl = BuildConfig.NEWS_BASE_URL,
+        apiKey = BuildConfig.NEWS_API_KEY,
+        )
 }
