@@ -1,4 +1,4 @@
-package eu.acaraus.design.components
+package eu.acaraus.design.components.test
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry

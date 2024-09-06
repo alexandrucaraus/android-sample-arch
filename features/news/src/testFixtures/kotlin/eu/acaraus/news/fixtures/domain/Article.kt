@@ -1,4 +1,6 @@
-package eu.acaraus.domain
+@file:Suppress("unused")
+
+package eu.acaraus.news.fixtures.domain
 
 import eu.acaraus.news.domain.entities.Article
 

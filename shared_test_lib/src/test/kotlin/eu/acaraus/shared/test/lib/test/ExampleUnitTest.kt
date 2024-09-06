@@ -1,4 +1,4 @@
-package eu.acaraus.design.components
+package eu.acaraus.shared.test.lib.test
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

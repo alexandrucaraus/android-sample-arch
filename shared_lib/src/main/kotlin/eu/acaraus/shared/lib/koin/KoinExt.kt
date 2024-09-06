@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package eu.acaraus.shared.lib.koin
 
 import android.app.Activity
@@ -11,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.LocalKoinScope
@@ -33,13 +36,12 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.primaryConstructor
 
 // ### start @InjectedParam based injection
-
 @Composable
 inline fun <reified T : ViewModel> scopedKoinViewModel(
     vararg params: Any,
 ): T {
     val koinScope = currentKoinScope()
-    val coroutineScope = koinInject<CoroutineScope>(qualifier = named("main"))
+    val coroutineScope = koinInject<CoroutineScope>(qualifier = named(DispatcherProvider.VM_COROUTINE_SCOPE))
     val dependencies = getInjectedParamDependencies<T>()
         .filterNot { clazz -> params.any { provided -> provided::class == clazz } }
         .map { clazz -> koinScope.get<Any>(clazz) { parametersOf(coroutineScope) } }
@@ -55,7 +57,7 @@ inline fun <reified T : Any> KoinComponent.scopedKoinInject(
         if (params.any { it is CoroutineScope }) {
             params.first { it is CoroutineScope }
         } else {
-            koinScope.get<CoroutineScope>(qualifier = named("main"))
+            koinScope.get<CoroutineScope>(qualifier = named(DispatcherProvider.VM_COROUTINE_SCOPE))
         }
     val dependencies = getInjectedParamDependencies<T>()
         .filterNot { clazz -> params.any { provided -> provided::class == clazz } }
@@ -79,7 +81,7 @@ inline fun <reified T : Any> getInjectedParamDependencies(
 @OptIn(KoinInternalApi::class)
 inline fun <reified VM : ViewModel, reified KS : Any> Koin.scopedKoinViewModel(
     scopeId: String = UUID.randomUUID().toString(),
-    viewModelCoroutineScope: CoroutineScope = get<CoroutineScope>(qualifier = named("viewModelCoroutineScope")),
+    viewModelCoroutineScope: CoroutineScope = get<CoroutineScope>(qualifier = named(DispatcherProvider.VM_COROUTINE_SCOPE)),
     viewModelStoreOwner: ViewModelStoreOwner,
     key: String? = null,
     extras: CreationExtras = defaultExtras(viewModelStoreOwner),

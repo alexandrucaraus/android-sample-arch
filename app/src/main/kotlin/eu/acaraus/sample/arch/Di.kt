@@ -5,9 +5,9 @@ import eu.acaraus.news.data.remote.NewsApiConfig
 import eu.acaraus.news.di.newsDiModules
 import eu.acaraus.shared.lib.coroutines.DispatcherProvider
 import eu.acaraus.shared.lib.coroutines.DispatcherProviderApp
+import eu.acaraus.shared.lib.http.httpClient
 import io.ktor.client.HttpClient
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.annotation.Factory
@@ -28,20 +28,20 @@ fun setupMainDi(applicationContext: Context) = startKoin {
 class AppDi {
 
     @Single
-    fun dispatchers(): DispatcherProvider =
-        DispatcherProviderApp()
+    fun provideDispatcherProvider(): DispatcherProvider = DispatcherProviderApp()
 
     @Factory
-    @Named("viewModelCoroutineScope")
-    fun uiMainCoroutineScope(dispatcherProvider: DispatcherProvider): CoroutineScope =
-        CoroutineScope(SupervisorJob() + dispatcherProvider.ui)
+    @Named(DispatcherProvider.VM_COROUTINE_SCOPE)
+    fun provideViewModelCoroutineScope(
+        dispatcherProvider: DispatcherProvider,
+    ): CoroutineScope = dispatcherProvider.vmCoroutineScope()
 
     @Single
-    fun httpClient(): HttpClient = eu.acaraus.shared.lib.http.httpClient()
+    fun provideHttpClient(): HttpClient = httpClient()
 
     @Single
-    fun newsApiConfig() = NewsApiConfig(
+    fun provideNewsApiConfig() = NewsApiConfig(
         baseUrl = BuildConfig.NEWS_BASE_URL,
         apiKey = BuildConfig.NEWS_API_KEY,
-        )
+    )
 }

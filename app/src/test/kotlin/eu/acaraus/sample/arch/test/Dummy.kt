@@ -1,4 +1,4 @@
-package eu.acaraus.news.test
+package eu.acaraus.sample.arch.test
 
 import org.junit.Test
 import kotlin.test.assertEquals

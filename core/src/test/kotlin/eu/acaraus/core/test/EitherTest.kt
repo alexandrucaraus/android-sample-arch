@@ -1,5 +1,8 @@
-package eu.acaraus.core
+package eu.acaraus.core.test
 
+import eu.acaraus.core.Either
+import eu.acaraus.core.onEachError
+import eu.acaraus.core.onEachSuccess
 import org.junit.Test
 
 import org.junit.Assert.*

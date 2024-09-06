@@ -1,4 +1,4 @@
-package eu.acaraus.news.screens.articles.list
+package eu.acaraus.sample.arch.test.news.presentation.articles.list
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed

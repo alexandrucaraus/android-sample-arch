@@ -22,10 +22,14 @@ class NewsRepositoryTest : UTest {
     override fun perTestModules(): Array<Module> = arrayOf(
         DataDi().module,
         module { single { httpClient() } },
-        module { single { NewsApiConfig(
-            baseUrl = "https://newsapi.org/",
-            apiKey = "a6d3cd2d5932471db7c7d8e68628bc5e"
-        ) } }
+        module {
+            single {
+                NewsApiConfig(
+                    baseUrl = "https://newsapi.org/",
+                    apiKey = "a6d3cd2d5932471db7c7d8e68628bc5e",
+                )
+            }
+        },
     )
 
     @Test

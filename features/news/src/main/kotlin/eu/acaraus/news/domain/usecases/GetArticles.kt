@@ -50,7 +50,7 @@ class GetArticles(
         map { result ->
             result.map { articles ->
                 articles.filterNot { article ->
-                    article.title.lowercase(Locale.getDefault()) == "removed"
+                    article.title.lowercase(Locale.getDefault()).contains("removed")
                 }
             }
         }
