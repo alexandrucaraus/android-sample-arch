@@ -91,8 +91,8 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField(type = "String", name = "NEWS_BASE_URL", value = "\"https://newsapi.org/\"")
-        buildConfigField(type = "String", name = "NEWS_API_KEY", value = "\"a6d3cd2d5932471db7c7d8e68628bc5e\"")
+        buildConfigField(type = "String", name = "NEWS_BASE_URL", value = quoted(value = "https://newsapi.org/"))
+        buildConfigField(type = "String", name = "NEWS_API_KEY", value = pipelineVar(name = "NEWS_API_KEY", defaultValue = "a6d3cd2d5932471db7c7d8e68628bc5e"))
     }
 
     buildTypes {
@@ -147,3 +147,9 @@ android {
 ksp {
     arg("KOIN_CONFIG_CHECK", "true")
 }
+
+fun quoted(value: String): String = "\"$value\""
+
+fun pipelineVar(name: String, defaultValue: String): String =
+    quoted(System.getenv(name) ?: defaultValue)
+

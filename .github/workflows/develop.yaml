@@ -12,6 +12,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    env:
+      NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+
     steps:
 
       - name: "Check out develop"
@@ -70,7 +74,3 @@ jobs:
         with:
           name: news-app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: "Generate dependency graph"
-        run: |
-          ./gradlew projectDependencyGraph
