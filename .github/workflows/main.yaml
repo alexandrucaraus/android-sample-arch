@@ -5,13 +5,21 @@ on:
     branches:
       - main
 
-#  pull_request:
-#    branches:
-#      - develop
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    env:
+      NEWS_API_KEY: ${{ secrets.NEWS_API_KEY }}
+      RELEASE_KEY_STORE_FILE: ./keystore.jks
+      RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
+      RELEASE_KEY_STORE_PASS: ${{ secrets.RELEASE_KEY_STORE_PASS }}
+      RELEASE_KEY_PASS: $${{ secrets.RELEASE_KEY_PASS }}
+
     steps:
 
       - name: "Check out main"
@@ -53,11 +61,29 @@ jobs:
         with:
           name: "Test Coverage Artifact"
           path: |
-              build/reports/jacoco/*.html
-              build/reports/jacoco/**/*.html
+            build/reports/jacoco/*.html
+            build/reports/jacoco/**/*.html
 
       - name: "Generate JaCoCo Badge"
         uses: cicirello/jacoco-badge-generator@v2.11.0
         with:
           generate-branches-badge: true
           jacoco-csv-file: build/reports/jacoco.csv
+
+      - name: "Download keystore"
+        run: echo "${{ secrets.RELEASE_KEY_STORE_FILE_BASE64 }}" | base64 --decode > ./keystore.jks
+
+      - name: "Build release APK"
+        run: ./gradlew assembleRelease
+
+      - name: "Upload debug APK"
+        uses: actions/upload-artifact@v4
+        with:
+          name: news-app-release
+          path: app/build/outputs/apk/release/app-debug.apk
+
+      - name: "Upload R8 Mapping File"
+        uses: actions/upload-artifact@v3
+        with:
+          name: r8_mapping.txt
+          path: app/build/outputs/mapping/release/mapping.txt

@@ -1,5 +1,8 @@
 @file:Suppress("UnstableApiUsage")
 
+import java.util.Properties
+
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -10,6 +13,9 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.dependency.graph.generator) apply true
     alias(libs.plugins.paparazzi) apply true
+}
+val localProperties = Properties().apply {
+    file("../local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
 
 dependencies {
@@ -55,7 +61,7 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.okhttp)
-    implementation(libs.ktor.logback)
+   // implementation(libs.ktor.logback)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -91,16 +97,58 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField(type = "String", name = "NEWS_BASE_URL", value = quoted(value = "https://newsapi.org/"))
-        buildConfigField(type = "String", name = "NEWS_API_KEY", value = pipelineVar(name = "NEWS_API_KEY", defaultValue = "a6d3cd2d5932471db7c7d8e68628bc5e"))
+
+
+        buildConfigField(
+            type = "String",
+            name = "NEWS_BASE_URL",
+            value = quoted(value = "https://newsapi.org/"),
+        )
+        buildConfigField(
+            type = "String",
+            name = "NEWS_API_KEY",
+            value = buildConfigPipelineVar(
+                name = "NEWS_API_KEY",
+                defaultValue = localProperties.getProperty("NEWS_API_KEY")?: "none",
+            )
+        )
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = pipelineFile(
+                name = "RELEASE_KEY_STORE_FILE",
+                defaultPath = localProperties.getProperty("RELEASE_KEY_STORE_FILE") ?: "none",
+            )
+            storePassword = pipelineVar(
+                name = "RELEASE_KEY_STORE_PASS",
+                defaultValue = localProperties.getProperty("RELEASE_KEY_STORE_PASS") ?: "none"
+            )
+            keyAlias = pipelineVar(
+                name = "RELEASE_KEY_ALIAS",
+                defaultValue = localProperties.getProperty("RELEASE_KEY_ALIAS") ?: "none"
+            )
+            keyPassword = pipelineVar(
+                name = "RELEASE_KEY_PASS",
+                defaultValue = localProperties.getProperty("RELEASE_KEY_PASS")?: "none"
+            )
+        }
+        getByName("debug") {
+            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
+            storePassword = "password"
+            keyAlias = "androiddebugkey"
+            keyPassword = "password"
+        }
     }
 
     buildTypes {
         release {
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             enableUnitTestCoverage = true
@@ -110,14 +158,7 @@ android {
         }
     }
 
-    signingConfigs {
-        getByName("debug") {
-            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
-            storePassword = "password"
-            keyAlias = "androiddebugkey"
-            keyPassword = "password"
-        }
-    }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -150,6 +191,21 @@ ksp {
 
 fun quoted(value: String): String = "\"$value\""
 
-fun pipelineVar(name: String, defaultValue: String): String =
+fun buildConfigPipelineVar(name: String, defaultValue: String): String =
     quoted(System.getenv(name) ?: defaultValue)
 
+fun pipelineVar(name: String, defaultValue: String = "none"): String =
+    System.getenv(name) ?: defaultValue
+
+fun pipelineFile(name: String, defaultPath: String = "none"): File =
+    file(System.getenv(name) ?: defaultPath)
+
+
+
+fun localPropertyVar(name: String, defaultValue: String = "none"): String =
+    Properties().apply {
+        file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
+    }
+    .onEach { prop ->
+        println("${prop.key} - ${prop.value}")
+    }.getProperty(name, defaultValue)

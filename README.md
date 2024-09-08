@@ -21,6 +21,10 @@ containing most common configurations a project would need.
 ### Todos:
 
 1. Pipeline generate debug and release with R8.
+   - needs signing config - done
+   - needs r8 unwind file - done
+   - needs versioning id - in progress
+   - needs an automated test for the whole process
 2. Pipeline publish app to some store.
 3. Pipeline rename github repository.
 
