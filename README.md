@@ -17,11 +17,12 @@ containing a selection of libraries and configurations a project would need.
 
 ### Todos:
 1. Pipeline publish app to F-Droid.
+2. Use open source analytics like Matomo
 
-2. Custom material theme object, sizes object, font styles object.
+3. Custom material theme object, sizes object, font styles object.
 
-3. Translations (localisations).
+4. Translations (localisations).
 
-4. Multiple news sources filter selection.
-5. Multiple languages in filter selection.
+5. Multiple news sources filter selection.
+6. Multiple languages in filter selection.
 
