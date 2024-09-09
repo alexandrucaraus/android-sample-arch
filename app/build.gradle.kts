@@ -2,7 +2,6 @@
 
 import java.util.Properties
 
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -13,9 +12,6 @@ plugins {
     alias(libs.plugins.ktlint)
     alias(libs.plugins.dependency.graph.generator) apply true
     alias(libs.plugins.paparazzi) apply true
-}
-val localProperties = Properties().apply {
-    file("../local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
 
 dependencies {
@@ -61,7 +57,6 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.okhttp)
-   // implementation(libs.ktor.logback)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -92,12 +87,12 @@ android {
         applicationId = libs.versions.appPackageId.get()
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+
+        val (code, name) = versionCodeAndName()
+        versionCode = code
+        versionName = name
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-
 
         buildConfigField(
             type = "String",
@@ -109,7 +104,7 @@ android {
             name = "NEWS_API_KEY",
             value = buildConfigPipelineVar(
                 name = "NEWS_API_KEY",
-                defaultValue = localProperties.getProperty("NEWS_API_KEY")?: "none",
+                defaultValue = localPropertyVar("NEWS_API_KEY"),
             )
         )
     }
@@ -118,19 +113,19 @@ android {
         create("release") {
             storeFile = pipelineFile(
                 name = "RELEASE_KEY_STORE_FILE",
-                defaultPath = localProperties.getProperty("RELEASE_KEY_STORE_FILE") ?: "none",
+                defaultPath = localPropertyVar("RELEASE_KEY_STORE_FILE"),
             )
             storePassword = pipelineVar(
                 name = "RELEASE_KEY_STORE_PASS",
-                defaultValue = localProperties.getProperty("RELEASE_KEY_STORE_PASS") ?: "none"
+                defaultValue = localPropertyVar("RELEASE_KEY_STORE_PASS"),
             )
             keyAlias = pipelineVar(
                 name = "RELEASE_KEY_ALIAS",
-                defaultValue = localProperties.getProperty("RELEASE_KEY_ALIAS") ?: "none"
+                defaultValue = localPropertyVar("RELEASE_KEY_ALIAS"),
             )
             keyPassword = pipelineVar(
                 name = "RELEASE_KEY_PASS",
-                defaultValue = localProperties.getProperty("RELEASE_KEY_PASS")?: "none"
+                defaultValue = localPropertyVar("RELEASE_KEY_PASS"),
             )
         }
         getByName("debug") {
@@ -157,8 +152,6 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -200,12 +193,12 @@ fun pipelineVar(name: String, defaultValue: String = "none"): String =
 fun pipelineFile(name: String, defaultPath: String = "none"): File =
     file(System.getenv(name) ?: defaultPath)
 
-
-
 fun localPropertyVar(name: String, defaultValue: String = "none"): String =
     Properties().apply {
-        file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
-    }
-    .onEach { prop ->
-        println("${prop.key} - ${prop.value}")
-    }.getProperty(name, defaultValue)
+        file("$rootDir/local.properties").inputStream().use { load(it) }
+    }.getProperty(name) ?: defaultValue
+
+fun versionCodeAndName(): Pair<Int, String> {
+    val timestamp = (System.currentTimeMillis() / 1000).toInt()
+    return timestamp to "$timestamp"
+}
