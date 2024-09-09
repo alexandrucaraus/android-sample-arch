@@ -36,7 +36,7 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.okhttp)
-   // implementation(libs.ktor.logback)
+    // implementation(libs.ktor.logback)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)

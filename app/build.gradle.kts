@@ -105,7 +105,7 @@ android {
             value = buildConfigPipelineVar(
                 name = "NEWS_API_KEY",
                 defaultValue = localPropertyVar("NEWS_API_KEY"),
-            )
+            ),
         )
     }
 
@@ -195,10 +195,8 @@ fun pipelineFile(name: String, defaultPath: String = "none"): File =
 
 fun localPropertyVar(name: String, defaultValue: String = "none"): String {
     val properties = Properties()
-        file("$rootDir/local.properties")
-            .takeIf { it.exists() }
-            ?.inputStream()
-            ?.use { stream -> properties.load(stream) }
+    file("$rootDir/local.properties").takeIf { it.exists() }?.inputStream()
+        ?.use { stream -> properties.load(stream) }
     return properties.getProperty(name) ?: defaultValue
 }
 

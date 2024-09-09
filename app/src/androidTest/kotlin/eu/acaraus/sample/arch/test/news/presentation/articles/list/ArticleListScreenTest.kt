@@ -52,11 +52,11 @@ class ArticleListScreenTest {
 // TODO test the navigation with the following article
 
 val bugArticle = Article(
-        id="35196327",
-        source="Forbes",
-        title="Bitcoin Prices Plunge Below $53,000 As Multiple Factors Fuel Losses - Forbes",
-        description="Bitcoin prices took a tumble today, falling close to 8% in less than 24 hours as markets responded to several bearish variables including lackluster jobs data.",
-        content="Bitcoin prices approached $52,000 earlier today. (Photo by Chesnot/Getty Images) Getty Images Bitcoin prices took a tumble today, falling close to 8% in less than 24 hours as markets responded to s… [+4975 chars]",
-        imageURL="https://imageio.forbes.com/specials-images/imageserve/636c073967f1b835c87fde53/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
-        contentUrl="https://www.forbes.com/sites/digital-assets/2024/09/06/bitcoin-prices-plunge-below-53000-as-multiple-factors-fuel-losses/"
-    )
+    id = "35196327",
+    source = "Forbes",
+    title = "Bitcoin Prices Plunge Below $53,000 As Multiple Factors Fuel Losses - Forbes",
+    description = "Bitcoin prices took a tumble today, falling close to 8% in less than 24 hours as markets responded to several bearish variables including lackluster jobs data.",
+    content = "Bitcoin prices approached $52,000 earlier today. (Photo by Chesnot/Getty Images) Getty Images Bitcoin prices took a tumble today, falling close to 8% in less than 24 hours as markets responded to s… [+4975 chars]",
+    imageURL = "https://imageio.forbes.com/specials-images/imageserve/636c073967f1b835c87fde53/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds",
+    contentUrl = "https://www.forbes.com/sites/digital-assets/2024/09/06/bitcoin-prices-plunge-below-53000-as-multiple-factors-fuel-losses/",
+)
