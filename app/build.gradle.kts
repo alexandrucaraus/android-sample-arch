@@ -198,7 +198,7 @@ fun localPropertyVar(name: String, defaultValue: String = "none"): String {
         file("$rootDir/local.properties")
             .takeIf { it.exists() }
             ?.inputStream()
-            .use { stream -> properties.load(stream) }
+            ?.use { stream -> properties.load(stream) }
     return properties.getProperty(name) ?: defaultValue
 }
 
