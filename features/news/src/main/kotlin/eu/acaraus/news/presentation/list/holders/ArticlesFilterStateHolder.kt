@@ -1,12 +1,12 @@
 package eu.acaraus.news.presentation.list.holders
 
+import eu.acaraus.core.fold
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
 import eu.acaraus.news.domain.entities.SortBy
 import eu.acaraus.news.domain.usecases.GetArticlesLanguages
 import eu.acaraus.news.domain.usecases.GetArticlesSources
 import eu.acaraus.news.presentation.list.components.ArticlesFilterEditorState
-import eu.acaraus.shared.lib.fold
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

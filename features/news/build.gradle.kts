@@ -13,6 +13,8 @@ plugins {
 
 dependencies {
 
+    implementation(project(":core"))
+
     implementation(project(":shared_lib"))
     implementation(project(":uicomponents"))
 
@@ -54,7 +56,6 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.okhttp)
-    implementation(libs.ktor.logback)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -16,8 +16,11 @@ data class ArticleDetailNode(
     val article: Article,
 )
 
-fun NavController.onNavigateToArticleDetail(article: Article) =
-    navigate(ArticleDetailNode(article))
+fun NavController.onNavigateToArticleDetail(article: Article) {
+    kotlin.runCatching {
+        navigate(ArticleDetailNode(article))
+    }.getOrElse { println(it) }
+}
 
 fun NavGraphBuilder.articleDetailNavNode(
     modifier: Modifier = Modifier,

@@ -2,7 +2,8 @@ package eu.acaraus.news.test.screens.articles.list
 
 import app.cash.turbine.test
 import app.cash.turbine.turbineScope
-import eu.acaraus.news.data.Locale
+import eu.acaraus.core.Either
+import eu.acaraus.news.data.LocaleRepositoryImpl
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.ArticlesSources
@@ -13,7 +14,6 @@ import eu.acaraus.news.domain.repositories.NewsRepository
 import eu.acaraus.news.presentation.list.holders.ArticlesFilterStateHolder
 import eu.acaraus.news.presentation.list.holders.ArticlesListKoinScope
 import eu.acaraus.news.test.rules.UTest
-import eu.acaraus.shared.lib.Either
 import eu.acaraus.shared.test.lib.di.injectScoped
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
@@ -148,21 +148,21 @@ class ArticlesFilterStateHolderModule {
         override suspend fun getHeadlines(
             language: String,
             category: String,
-        ): Either<List<Article>, NewsError> {
+        ): Either<NewsError, List<Article>> {
             TODO("Not yet implemented")
         }
 
-        override suspend fun getSources(): Either<List<ArticlesSources>, NewsError> {
+        override suspend fun getSources(): Either<NewsError, List<ArticlesSources>> {
             return Either.Success(dummyArticlesSources)
         }
 
-        override suspend fun getEverything(filter: ArticlesFilter): Either<List<Article>, NewsError> {
+        override suspend fun getEverything(filter: ArticlesFilter): Either<NewsError, List<Article>> {
             TODO("Not yet implemented")
         }
     }
 
     @Single
-    fun localeStore(): LocaleRepository = Locale()
+    fun localeStore(): LocaleRepository = LocaleRepositoryImpl()
 }
 
 val dummyArticlesSources = listOf(

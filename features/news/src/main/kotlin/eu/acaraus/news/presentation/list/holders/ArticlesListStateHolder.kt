@@ -1,12 +1,12 @@
 package eu.acaraus.news.presentation.list.holders
 
+import eu.acaraus.core.onEachError
+import eu.acaraus.core.onEachSuccess
 import eu.acaraus.news.domain.entities.Article
 import eu.acaraus.news.domain.entities.ArticlesFilter
 import eu.acaraus.news.domain.entities.NewsError
 import eu.acaraus.news.domain.usecases.GetArticles
 import eu.acaraus.news.presentation.list.components.ArticleListState
-import eu.acaraus.shared.lib.onEachError
-import eu.acaraus.shared.lib.onEachSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

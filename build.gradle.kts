@@ -2,10 +2,11 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.compose.compiler) apply false
-    alias(libs.plugins.ktlint) apply false
+    alias(libs.plugins.ktlint) apply true
     alias(libs.plugins.test.coverage) apply true
     alias(libs.plugins.dependency.graph.generator) apply true
     alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 
 rootCoverage {
@@ -13,7 +14,7 @@ rootCoverage {
 }
 
 tasks.register("preCommit") {
-    dependsOn("app:ktlintFormat", "rootCoverageReport")
+    dependsOn("ktlintFormat", "rootCoverageReport", "projectDependencyGraph")
 }
 
 tasks.register("projectDependencyGraph") {
@@ -29,4 +30,7 @@ tasks.register("projectDependencyGraph") {
             }
         }
     }
+}
+
+ktlint {
 }

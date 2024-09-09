@@ -1,5 +1,7 @@
 @file:Suppress("UnstableApiUsage")
 
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -55,7 +57,6 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.encoding)
     implementation(libs.ktor.okhttp)
-    implementation(libs.ktor.logback)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -86,33 +87,69 @@ android {
         applicationId = libs.versions.appPackageId.get()
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+
+        val (code, name) = versionCodeAndName()
+        versionCode = code
+        versionName = name
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            type = "String",
+            name = "NEWS_BASE_URL",
+            value = quoted(value = "https://newsapi.org/"),
+        )
+        buildConfigField(
+            type = "String",
+            name = "NEWS_API_KEY",
+            value = buildConfigPipelineVar(
+                name = "NEWS_API_KEY",
+                defaultValue = localPropertyVar("NEWS_API_KEY"),
+            ),
+        )
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = pipelineFile(
+                name = "RELEASE_KEY_STORE_FILE",
+                defaultPath = localPropertyVar("RELEASE_KEY_STORE_FILE"),
+            )
+            storePassword = pipelineVar(
+                name = "RELEASE_KEY_STORE_PASS",
+                defaultValue = localPropertyVar("RELEASE_KEY_STORE_PASS"),
+            )
+            keyAlias = pipelineVar(
+                name = "RELEASE_KEY_ALIAS",
+                defaultValue = localPropertyVar("RELEASE_KEY_ALIAS"),
+            )
+            keyPassword = pipelineVar(
+                name = "RELEASE_KEY_PASS",
+                defaultValue = localPropertyVar("RELEASE_KEY_PASS"),
+            )
+        }
+        getByName("debug") {
+            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
+            storePassword = "password"
+            keyAlias = "androiddebugkey"
+            keyPassword = "password"
+        }
     }
 
     buildTypes {
         release {
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             enableUnitTestCoverage = true
             enableAndroidTestCoverage = true
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("debug")
-        }
-    }
-
-    signingConfigs {
-        getByName("debug") {
-            storeFile = file("$rootDir/config/debugKeyStore/debug.keystore")
-            storePassword = "password"
-            keyAlias = "androiddebugkey"
-            keyPassword = "password"
         }
     }
 
@@ -127,6 +164,7 @@ android {
 
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 
     packaging {
@@ -142,4 +180,27 @@ android {
 
 ksp {
     arg("KOIN_CONFIG_CHECK", "true")
+}
+
+fun quoted(value: String): String = "\"$value\""
+
+fun buildConfigPipelineVar(name: String, defaultValue: String): String =
+    quoted(System.getenv(name) ?: defaultValue)
+
+fun pipelineVar(name: String, defaultValue: String = "none"): String =
+    System.getenv(name) ?: defaultValue
+
+fun pipelineFile(name: String, defaultPath: String = "none"): File =
+    file(System.getenv(name) ?: defaultPath)
+
+fun localPropertyVar(name: String, defaultValue: String = "none"): String {
+    val properties = Properties()
+    file("$rootDir/local.properties").takeIf { it.exists() }?.inputStream()
+        ?.use { stream -> properties.load(stream) }
+    return properties.getProperty(name) ?: defaultValue
+}
+
+fun versionCodeAndName(): Pair<Int, String> {
+    val timestamp = (System.currentTimeMillis() / 1000).toInt()
+    return timestamp to "$timestamp"
 }

@@ -1,6 +1,8 @@
 package eu.acaraus.shared.lib.coroutines
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.Dispatchers as KotlinProvidedDispatchers
 
 interface DispatcherProvider {
@@ -8,6 +10,10 @@ interface DispatcherProvider {
     val cpu: CoroutineDispatcher
     val unconfined: CoroutineDispatcher
     val ui: CoroutineDispatcher
+    fun vmCoroutineScope() = CoroutineScope(SupervisorJob() + ui)
+    companion object {
+        const val VM_COROUTINE_SCOPE = "VM_COROUTINE_SCOPE"
+    }
 }
 
 class DispatcherProviderApp : DispatcherProvider {
