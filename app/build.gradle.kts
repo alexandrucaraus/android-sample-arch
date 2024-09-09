@@ -193,10 +193,14 @@ fun pipelineVar(name: String, defaultValue: String = "none"): String =
 fun pipelineFile(name: String, defaultPath: String = "none"): File =
     file(System.getenv(name) ?: defaultPath)
 
-fun localPropertyVar(name: String, defaultValue: String = "none"): String =
-    Properties().apply {
-        file("$rootDir/local.properties").inputStream().use { load(it) }
-    }.getProperty(name) ?: defaultValue
+fun localPropertyVar(name: String, defaultValue: String = "none"): String {
+    val properties = Properties()
+        file("$rootDir/local.properties")
+            .takeIf { it.exists() }
+            ?.inputStream()
+            .use { stream -> properties.load(stream) }
+    return properties.getProperty(name) ?: defaultValue
+}
 
 fun versionCodeAndName(): Pair<Int, String> {
     val timestamp = (System.currentTimeMillis() / 1000).toInt()
